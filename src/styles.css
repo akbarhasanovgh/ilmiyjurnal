@@ -40,7 +40,7 @@
   --secondary-foreground: var(--ink);
   --muted: oklch(0.96 0.003 285);
   --muted-foreground: var(--ink-muted);
-  --accent: var(--ink-soft);
+  --accent: var(--accent-oxblood);
   --accent-foreground: var(--page);
   --destructive: oklch(0.55 0.19 27);
   --destructive-foreground: var(--page);
