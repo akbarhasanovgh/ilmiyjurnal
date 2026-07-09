@@ -92,7 +92,7 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
     );
   }
 
-  const items = NAV.filter((n) => n.alwaysShow || (n.perm && perms.has(n.perm)));
+  const items = NAV.filter((n) => !n.perm || perms.has(n.perm));
 
   return (
     <div className="min-h-screen flex bg-background">
