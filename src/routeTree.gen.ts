@@ -25,7 +25,12 @@ import { Route as ArxivJildSonRouteImport } from './routes/arxiv.$jild.$son'
 import { Route as AuthenticatedSettingsProfileRouteImport } from './routes/_authenticated/settings.profile'
 import { Route as AuthenticatedEditorQueueRouteImport } from './routes/_authenticated/editor.queue'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
+import { Route as AuthenticatedAdminToolsRouteImport } from './routes/_authenticated/admin.tools'
+import { Route as AuthenticatedAdminStatisticsRouteImport } from './routes/_authenticated/admin.statistics'
+import { Route as AuthenticatedAdminReportsRouteImport } from './routes/_authenticated/admin.reports'
+import { Route as AuthenticatedAdminIssuesRouteImport } from './routes/_authenticated/admin.issues'
 import { Route as AuthenticatedAdminInboxRouteImport } from './routes/_authenticated/admin.inbox'
+import { Route as AuthenticatedAdminDoisRouteImport } from './routes/_authenticated/admin.dois'
 import { Route as AuthenticatedSubmissionsIdIndexRouteImport } from './routes/_authenticated/submissions.$id.index'
 import { Route as AuthenticatedSubmissionsIdEditRouteImport } from './routes/_authenticated/submissions.$id.edit'
 
@@ -111,9 +116,37 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   path: '/admin/users',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminToolsRoute = AuthenticatedAdminToolsRouteImport.update({
+  id: '/admin/tools',
+  path: '/admin/tools',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminStatisticsRoute =
+  AuthenticatedAdminStatisticsRouteImport.update({
+    id: '/admin/statistics',
+    path: '/admin/statistics',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminReportsRoute =
+  AuthenticatedAdminReportsRouteImport.update({
+    id: '/admin/reports',
+    path: '/admin/reports',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminIssuesRoute =
+  AuthenticatedAdminIssuesRouteImport.update({
+    id: '/admin/issues',
+    path: '/admin/issues',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminInboxRoute = AuthenticatedAdminInboxRouteImport.update({
   id: '/admin/inbox',
   path: '/admin/inbox',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminDoisRoute = AuthenticatedAdminDoisRouteImport.update({
+  id: '/admin/dois',
+  path: '/admin/dois',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSubmissionsIdIndexRoute =
@@ -139,7 +172,12 @@ export interface FileRoutesByFullPath {
   '/audit': typeof AuthenticatedAuditRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/arxiv/': typeof ArxivIndexRoute
+  '/admin/dois': typeof AuthenticatedAdminDoisRoute
   '/admin/inbox': typeof AuthenticatedAdminInboxRoute
+  '/admin/issues': typeof AuthenticatedAdminIssuesRoute
+  '/admin/reports': typeof AuthenticatedAdminReportsRoute
+  '/admin/statistics': typeof AuthenticatedAdminStatisticsRoute
+  '/admin/tools': typeof AuthenticatedAdminToolsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
@@ -159,7 +197,12 @@ export interface FileRoutesByTo {
   '/audit': typeof AuthenticatedAuditRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/arxiv': typeof ArxivIndexRoute
+  '/admin/dois': typeof AuthenticatedAdminDoisRoute
   '/admin/inbox': typeof AuthenticatedAdminInboxRoute
+  '/admin/issues': typeof AuthenticatedAdminIssuesRoute
+  '/admin/reports': typeof AuthenticatedAdminReportsRoute
+  '/admin/statistics': typeof AuthenticatedAdminStatisticsRoute
+  '/admin/tools': typeof AuthenticatedAdminToolsRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
@@ -181,7 +224,12 @@ export interface FileRoutesById {
   '/_authenticated/audit': typeof AuthenticatedAuditRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/arxiv/': typeof ArxivIndexRoute
+  '/_authenticated/admin/dois': typeof AuthenticatedAdminDoisRoute
   '/_authenticated/admin/inbox': typeof AuthenticatedAdminInboxRoute
+  '/_authenticated/admin/issues': typeof AuthenticatedAdminIssuesRoute
+  '/_authenticated/admin/reports': typeof AuthenticatedAdminReportsRoute
+  '/_authenticated/admin/statistics': typeof AuthenticatedAdminStatisticsRoute
+  '/_authenticated/admin/tools': typeof AuthenticatedAdminToolsRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/_authenticated/settings/profile': typeof AuthenticatedSettingsProfileRoute
@@ -203,7 +251,12 @@ export interface FileRouteTypes {
     | '/audit'
     | '/dashboard'
     | '/arxiv/'
+    | '/admin/dois'
     | '/admin/inbox'
+    | '/admin/issues'
+    | '/admin/reports'
+    | '/admin/statistics'
+    | '/admin/tools'
     | '/admin/users'
     | '/editor/queue'
     | '/settings/profile'
@@ -223,7 +276,12 @@ export interface FileRouteTypes {
     | '/audit'
     | '/dashboard'
     | '/arxiv'
+    | '/admin/dois'
     | '/admin/inbox'
+    | '/admin/issues'
+    | '/admin/reports'
+    | '/admin/statistics'
+    | '/admin/tools'
     | '/admin/users'
     | '/editor/queue'
     | '/settings/profile'
@@ -244,7 +302,12 @@ export interface FileRouteTypes {
     | '/_authenticated/audit'
     | '/_authenticated/dashboard'
     | '/arxiv/'
+    | '/_authenticated/admin/dois'
     | '/_authenticated/admin/inbox'
+    | '/_authenticated/admin/issues'
+    | '/_authenticated/admin/reports'
+    | '/_authenticated/admin/statistics'
+    | '/_authenticated/admin/tools'
     | '/_authenticated/admin/users'
     | '/_authenticated/editor/queue'
     | '/_authenticated/settings/profile'
@@ -381,11 +444,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/tools': {
+      id: '/_authenticated/admin/tools'
+      path: '/admin/tools'
+      fullPath: '/admin/tools'
+      preLoaderRoute: typeof AuthenticatedAdminToolsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/statistics': {
+      id: '/_authenticated/admin/statistics'
+      path: '/admin/statistics'
+      fullPath: '/admin/statistics'
+      preLoaderRoute: typeof AuthenticatedAdminStatisticsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/reports': {
+      id: '/_authenticated/admin/reports'
+      path: '/admin/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AuthenticatedAdminReportsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/issues': {
+      id: '/_authenticated/admin/issues'
+      path: '/admin/issues'
+      fullPath: '/admin/issues'
+      preLoaderRoute: typeof AuthenticatedAdminIssuesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/inbox': {
       id: '/_authenticated/admin/inbox'
       path: '/admin/inbox'
       fullPath: '/admin/inbox'
       preLoaderRoute: typeof AuthenticatedAdminInboxRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/dois': {
+      id: '/_authenticated/admin/dois'
+      path: '/admin/dois'
+      fullPath: '/admin/dois'
+      preLoaderRoute: typeof AuthenticatedAdminDoisRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/submissions/$id/': {
@@ -408,7 +506,12 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAuditRoute: typeof AuthenticatedAuditRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedAdminDoisRoute: typeof AuthenticatedAdminDoisRoute
   AuthenticatedAdminInboxRoute: typeof AuthenticatedAdminInboxRoute
+  AuthenticatedAdminIssuesRoute: typeof AuthenticatedAdminIssuesRoute
+  AuthenticatedAdminReportsRoute: typeof AuthenticatedAdminReportsRoute
+  AuthenticatedAdminStatisticsRoute: typeof AuthenticatedAdminStatisticsRoute
+  AuthenticatedAdminToolsRoute: typeof AuthenticatedAdminToolsRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedEditorQueueRoute: typeof AuthenticatedEditorQueueRoute
   AuthenticatedSettingsProfileRoute: typeof AuthenticatedSettingsProfileRoute
@@ -421,7 +524,12 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAuditRoute: AuthenticatedAuditRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedAdminDoisRoute: AuthenticatedAdminDoisRoute,
   AuthenticatedAdminInboxRoute: AuthenticatedAdminInboxRoute,
+  AuthenticatedAdminIssuesRoute: AuthenticatedAdminIssuesRoute,
+  AuthenticatedAdminReportsRoute: AuthenticatedAdminReportsRoute,
+  AuthenticatedAdminStatisticsRoute: AuthenticatedAdminStatisticsRoute,
+  AuthenticatedAdminToolsRoute: AuthenticatedAdminToolsRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedEditorQueueRoute: AuthenticatedEditorQueueRoute,
   AuthenticatedSettingsProfileRoute: AuthenticatedSettingsProfileRoute,
