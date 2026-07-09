@@ -129,20 +129,20 @@ function AdminUsersPage() {
       <div className="space-y-4">
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Ism, email, muassasa bo‘yicha qidirish…"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              className="pl-10"
+              className="pl-11 h-11 rounded-2xl bg-muted/50 border-transparent focus-visible:bg-background focus-visible:border-border transition-colors text-[14.5px]"
             />
           </div>
           <Select value={roleFilter} onValueChange={setRoleFilter}>
-            <SelectTrigger className="w-52">
+            <SelectTrigger className="w-56 h-11 rounded-2xl bg-muted/50 border-transparent text-[14.5px]">
               <SelectValue placeholder="Rol bo‘yicha filtr" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-2xl">
               <SelectItem value="all">Barcha rollar</SelectItem>
               <SelectItem value="author">Muallif (standart)</SelectItem>
               {(roles.data ?? []).map((r) => (
