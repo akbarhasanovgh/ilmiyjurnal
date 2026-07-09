@@ -17,11 +17,13 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ArxivIndexRouteImport } from './routes/arxiv.index'
+import { Route as AuthenticatedKutubxonaRouteImport } from './routes/_authenticated/kutubxona'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAuditRouteImport } from './routes/_authenticated/audit'
 import { Route as AuthenticatedSubmissionsIndexRouteImport } from './routes/_authenticated/submissions.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as ArxivJildSonRouteImport } from './routes/arxiv.$jild.$son'
+import { Route as AuthenticatedSubmissionsNewRouteImport } from './routes/_authenticated/submissions.new'
 import { Route as AuthenticatedSettingsProfileRouteImport } from './routes/_authenticated/settings.profile'
 import { Route as AuthenticatedEditorQueueRouteImport } from './routes/_authenticated/editor.queue'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
@@ -73,6 +75,11 @@ const ArxivIndexRoute = ArxivIndexRouteImport.update({
   path: '/arxiv/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedKutubxonaRoute = AuthenticatedKutubxonaRouteImport.update({
+  id: '/kutubxona',
+  path: '/kutubxona',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -99,6 +106,12 @@ const ArxivJildSonRoute = ArxivJildSonRouteImport.update({
   path: '/arxiv/$jild/$son',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSubmissionsNewRoute =
+  AuthenticatedSubmissionsNewRouteImport.update({
+    id: '/submissions/new',
+    path: '/submissions/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsProfileRoute =
   AuthenticatedSettingsProfileRouteImport.update({
     id: '/settings/profile',
@@ -171,6 +184,7 @@ export interface FileRoutesByFullPath {
   '/joriy-son': typeof JoriySonRoute
   '/audit': typeof AuthenticatedAuditRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/kutubxona': typeof AuthenticatedKutubxonaRoute
   '/arxiv/': typeof ArxivIndexRoute
   '/admin/dois': typeof AuthenticatedAdminDoisRoute
   '/admin/inbox': typeof AuthenticatedAdminInboxRoute
@@ -181,6 +195,7 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
+  '/submissions/new': typeof AuthenticatedSubmissionsNewRoute
   '/arxiv/$jild/$son': typeof ArxivJildSonRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/submissions/': typeof AuthenticatedSubmissionsIndexRoute
@@ -196,6 +211,7 @@ export interface FileRoutesByTo {
   '/joriy-son': typeof JoriySonRoute
   '/audit': typeof AuthenticatedAuditRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/kutubxona': typeof AuthenticatedKutubxonaRoute
   '/arxiv': typeof ArxivIndexRoute
   '/admin/dois': typeof AuthenticatedAdminDoisRoute
   '/admin/inbox': typeof AuthenticatedAdminInboxRoute
@@ -206,6 +222,7 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
+  '/submissions/new': typeof AuthenticatedSubmissionsNewRoute
   '/arxiv/$jild/$son': typeof ArxivJildSonRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/submissions': typeof AuthenticatedSubmissionsIndexRoute
@@ -223,6 +240,7 @@ export interface FileRoutesById {
   '/joriy-son': typeof JoriySonRoute
   '/_authenticated/audit': typeof AuthenticatedAuditRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/kutubxona': typeof AuthenticatedKutubxonaRoute
   '/arxiv/': typeof ArxivIndexRoute
   '/_authenticated/admin/dois': typeof AuthenticatedAdminDoisRoute
   '/_authenticated/admin/inbox': typeof AuthenticatedAdminInboxRoute
@@ -233,6 +251,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/_authenticated/settings/profile': typeof AuthenticatedSettingsProfileRoute
+  '/_authenticated/submissions/new': typeof AuthenticatedSubmissionsNewRoute
   '/arxiv/$jild/$son': typeof ArxivJildSonRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/submissions/': typeof AuthenticatedSubmissionsIndexRoute
@@ -250,6 +269,7 @@ export interface FileRouteTypes {
     | '/joriy-son'
     | '/audit'
     | '/dashboard'
+    | '/kutubxona'
     | '/arxiv/'
     | '/admin/dois'
     | '/admin/inbox'
@@ -260,6 +280,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/editor/queue'
     | '/settings/profile'
+    | '/submissions/new'
     | '/arxiv/$jild/$son'
     | '/admin/'
     | '/submissions/'
@@ -275,6 +296,7 @@ export interface FileRouteTypes {
     | '/joriy-son'
     | '/audit'
     | '/dashboard'
+    | '/kutubxona'
     | '/arxiv'
     | '/admin/dois'
     | '/admin/inbox'
@@ -285,6 +307,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/editor/queue'
     | '/settings/profile'
+    | '/submissions/new'
     | '/arxiv/$jild/$son'
     | '/admin'
     | '/submissions'
@@ -301,6 +324,7 @@ export interface FileRouteTypes {
     | '/joriy-son'
     | '/_authenticated/audit'
     | '/_authenticated/dashboard'
+    | '/_authenticated/kutubxona'
     | '/arxiv/'
     | '/_authenticated/admin/dois'
     | '/_authenticated/admin/inbox'
@@ -311,6 +335,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/users'
     | '/_authenticated/editor/queue'
     | '/_authenticated/settings/profile'
+    | '/_authenticated/submissions/new'
     | '/arxiv/$jild/$son'
     | '/_authenticated/admin/'
     | '/_authenticated/submissions/'
@@ -388,6 +413,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArxivIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/kutubxona': {
+      id: '/_authenticated/kutubxona'
+      path: '/kutubxona'
+      fullPath: '/kutubxona'
+      preLoaderRoute: typeof AuthenticatedKutubxonaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -422,6 +454,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/arxiv/$jild/$son'
       preLoaderRoute: typeof ArxivJildSonRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/submissions/new': {
+      id: '/_authenticated/submissions/new'
+      path: '/submissions/new'
+      fullPath: '/submissions/new'
+      preLoaderRoute: typeof AuthenticatedSubmissionsNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings/profile': {
       id: '/_authenticated/settings/profile'
@@ -506,6 +545,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAuditRoute: typeof AuthenticatedAuditRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedKutubxonaRoute: typeof AuthenticatedKutubxonaRoute
   AuthenticatedAdminDoisRoute: typeof AuthenticatedAdminDoisRoute
   AuthenticatedAdminInboxRoute: typeof AuthenticatedAdminInboxRoute
   AuthenticatedAdminIssuesRoute: typeof AuthenticatedAdminIssuesRoute
@@ -515,6 +555,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedEditorQueueRoute: typeof AuthenticatedEditorQueueRoute
   AuthenticatedSettingsProfileRoute: typeof AuthenticatedSettingsProfileRoute
+  AuthenticatedSubmissionsNewRoute: typeof AuthenticatedSubmissionsNewRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedSubmissionsIndexRoute: typeof AuthenticatedSubmissionsIndexRoute
   AuthenticatedSubmissionsIdEditRoute: typeof AuthenticatedSubmissionsIdEditRoute
@@ -524,6 +565,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAuditRoute: AuthenticatedAuditRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedKutubxonaRoute: AuthenticatedKutubxonaRoute,
   AuthenticatedAdminDoisRoute: AuthenticatedAdminDoisRoute,
   AuthenticatedAdminInboxRoute: AuthenticatedAdminInboxRoute,
   AuthenticatedAdminIssuesRoute: AuthenticatedAdminIssuesRoute,
@@ -533,6 +575,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedEditorQueueRoute: AuthenticatedEditorQueueRoute,
   AuthenticatedSettingsProfileRoute: AuthenticatedSettingsProfileRoute,
+  AuthenticatedSubmissionsNewRoute: AuthenticatedSubmissionsNewRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedSubmissionsIndexRoute: AuthenticatedSubmissionsIndexRoute,
   AuthenticatedSubmissionsIdEditRoute: AuthenticatedSubmissionsIdEditRoute,
