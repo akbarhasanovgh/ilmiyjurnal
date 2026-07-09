@@ -11,6 +11,7 @@ import {
   Shield,
   ChevronLeft,
   LogOut,
+  type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -18,23 +19,50 @@ import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { getSessionContext } from "@/lib/auth.functions";
 
+type ToneKey = "indigo" | "cyan" | "amber" | "green" | "rose" | "violet";
+
+const TONE: Record<ToneKey, { bg: string; icon: string; active: string }> = {
+  indigo: { bg: "bg-indigo-500/10", icon: "text-indigo-500", active: "bg-indigo-500/15" },
+  cyan: { bg: "bg-sky-500/10", icon: "text-sky-500", active: "bg-sky-500/15" },
+  amber: { bg: "bg-amber-500/10", icon: "text-amber-500", active: "bg-amber-500/15" },
+  green: { bg: "bg-emerald-500/10", icon: "text-emerald-500", active: "bg-emerald-500/15" },
+  rose: { bg: "bg-rose-500/10", icon: "text-rose-500", active: "bg-rose-500/15" },
+  violet: { bg: "bg-violet-500/10", icon: "text-violet-500", active: "bg-violet-500/15" },
+};
+
 type NavItem = {
   title: string;
   url: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  icon: any;
+  icon: LucideIcon;
+  tone: ToneKey;
   perm?: string;
   exact?: boolean;
 };
 
-const NAV: NavItem[] = [
-  { title: "Umumiy ko‘rinish", url: "/admin", icon: LayoutDashboard, exact: true },
-  { title: "Tahririyat qutisi", url: "/admin/inbox", icon: Inbox, perm: "submissions.view_all" },
-  { title: "Foydalanuvchilar", url: "/admin/users", icon: Users, perm: "users.view" },
-  { title: "Menga tayinlangan", url: "/editor/queue", icon: ClipboardList, perm: "submissions.view_assigned" },
-  { title: "Audit jurnali", url: "/audit", icon: History, perm: "audit.view" },
-];
+type NavSection = { label: string | null; items: NavItem[] };
 
+const SECTIONS: NavSection[] = [
+  {
+    label: null,
+    items: [
+      { title: "Umumiy ko‘rinish", url: "/admin", icon: LayoutDashboard, tone: "indigo", exact: true },
+    ],
+  },
+  {
+    label: "Tahririyat",
+    items: [
+      { title: "Qabul qutisi", url: "/admin/inbox", icon: Inbox, tone: "amber", perm: "submissions.view_all" },
+      { title: "Menga tayinlangan", url: "/editor/queue", icon: ClipboardList, tone: "green", perm: "submissions.view_assigned" },
+    ],
+  },
+  {
+    label: "Boshqaruv",
+    items: [
+      { title: "Foydalanuvchilar", url: "/admin/users", icon: Users, tone: "violet", perm: "users.view" },
+      { title: "Audit jurnali", url: "/audit", icon: History, tone: "rose", perm: "audit.view" },
+    ],
+  },
+];
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -69,7 +97,7 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
 
   if (isPending) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center bg-muted/30">
         <div className="animate-pulse text-muted-foreground text-sm">Yuklanmoqda…</div>
       </div>
     );
@@ -77,14 +105,16 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
 
   if (!canAccessAdmin) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center max-w-md p-8">
-          <Shield className="h-16 w-16 mx-auto mb-4 text-destructive" />
-          <h1 className="text-2xl font-bold mb-2">Ruxsat yo‘q</h1>
-          <p className="text-muted-foreground mb-6">
+      <div className="min-h-screen flex items-center justify-center bg-muted/30 p-6">
+        <div className="text-center max-w-md p-10 rounded-3xl bg-card border shadow-sm animate-scale-in">
+          <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-destructive/10 flex items-center justify-center">
+            <Shield className="h-7 w-7 text-destructive" />
+          </div>
+          <h1 className="text-2xl font-semibold mb-2 tracking-tight">Ruxsat yo‘q</h1>
+          <p className="text-muted-foreground mb-6 text-[15px]">
             Bu bo‘limga faqat tahririyat xodimlari kira oladi.
           </p>
-          <Button asChild>
+          <Button asChild size="lg" className="rounded-full h-11 px-6">
             <Link to="/">Bosh sahifaga qaytish</Link>
           </Button>
         </div>
@@ -92,84 +122,127 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
     );
   }
 
-  const items = NAV.filter((n) => !n.perm || perms.has(n.perm));
+  const renderItem = (item: NavItem) => {
+    const active = item.exact
+      ? pathname === item.url
+      : pathname === item.url || pathname.startsWith(item.url + "/");
+    const tone = TONE[item.tone];
+    const Icon = item.icon;
+    return (
+      <Link
+        key={item.url}
+        to={item.url}
+        className={cn(
+          "group relative flex items-center gap-3 rounded-2xl px-2.5 py-2 transition-all duration-200",
+          active
+            ? "bg-background shadow-sm ring-1 ring-border/60"
+            : "hover:bg-background/60",
+        )}
+      >
+        <div
+          className={cn(
+            "w-9 h-9 shrink-0 rounded-xl flex items-center justify-center transition-all duration-200",
+            active ? tone.active : tone.bg,
+            "group-hover:scale-105",
+          )}
+        >
+          <Icon className={cn("h-[18px] w-[18px]", tone.icon)} strokeWidth={2.2} />
+        </div>
+        <span
+          className={cn(
+            "text-[14.5px] tracking-tight truncate",
+            active ? "font-semibold text-foreground" : "font-medium text-muted-foreground group-hover:text-foreground",
+          )}
+        >
+          {item.title}
+        </span>
+      </Link>
+    );
+  };
 
   return (
-    <div className="min-h-screen flex bg-background">
-      <aside className="w-64 border-r bg-card shrink-0 flex flex-col">
-        <div className="p-4 border-b">
-          <Link
-            to="/"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            <span className="text-sm">Saytga qaytish</span>
-          </Link>
-          <h1 className="text-xl font-bold mt-3 flex items-center gap-2 font-serif">
-            <Shield className="h-5 w-5 text-primary" />
-            Admin paneli
-          </h1>
-        </div>
-        <ScrollArea className="flex-1">
-          <nav className="p-3 space-y-1">
-            {items.map((item) => {
-              const active = item.exact
-                ? pathname === item.url
-                : pathname === item.url || pathname.startsWith(item.url + "/");
-
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.url}
-                  to={item.url}
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-                    active
-                      ? "bg-primary text-primary-foreground font-medium"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                  )}
-                >
-                  <Icon className="h-4 w-4 shrink-0" />
-                  <span className="truncate">{item.title}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        </ScrollArea>
-        <div className="p-4 border-t space-y-3">
-          {ctx?.profile ? (
-            <div className="min-w-0">
-              <p className="text-sm font-medium truncate">
-                {ctx.profile.full_name || ctx.profile.email}
-              </p>
-              <p className="text-xs text-muted-foreground truncate">
-                {ctx.roles.map((r) => r.name).join(" · ") || "Muallif"}
-              </p>
+    <div className="min-h-screen flex bg-muted/40">
+      <aside className="w-[260px] shrink-0 flex flex-col p-3">
+        <div className="flex-1 flex flex-col rounded-3xl bg-card/70 backdrop-blur border border-border/60 shadow-sm overflow-hidden">
+          <div className="p-4 pb-3">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors rounded-full px-2 py-1 -ml-2 hover:bg-muted"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+              Saytga qaytish
+            </Link>
+            <div className="mt-3 flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Shield className="h-[18px] w-[18px] text-primary" strokeWidth={2.2} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[15px] font-semibold font-serif tracking-tight leading-tight">Admin</p>
+                <p className="text-[11px] text-muted-foreground leading-tight">Tahririyat paneli</p>
+              </div>
             </div>
-          ) : null}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={signOut}
-            className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground"
-          >
-            <LogOut className="h-4 w-4" />
-            Chiqish
-          </Button>
+          </div>
+
+          <ScrollArea className="flex-1 px-2">
+            <nav className="py-2 space-y-4">
+              {SECTIONS.map((section, idx) => {
+                const items = section.items.filter((n) => !n.perm || perms.has(n.perm));
+                if (items.length === 0) return null;
+                return (
+                  <div key={idx}>
+                    {section.label ? (
+                      <p className="px-3 mb-1 text-[10.5px] font-semibold tracking-[0.08em] uppercase text-muted-foreground/60">
+                        {section.label}
+                      </p>
+                    ) : null}
+                    <div className="space-y-0.5">{items.map(renderItem)}</div>
+                  </div>
+                );
+              })}
+            </nav>
+          </ScrollArea>
+
+          <div className="p-3 border-t border-border/60 mt-2">
+            {ctx?.profile ? (
+              <div className="flex items-center gap-2.5 px-2 py-2 rounded-2xl">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-[13px] font-semibold text-primary shrink-0">
+                  {(ctx.profile.full_name || ctx.profile.email || "?").trim().charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[13px] font-medium truncate leading-tight">
+                    {ctx.profile.full_name || ctx.profile.email}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground truncate leading-tight">
+                    {ctx.roles.map((r) => r.name).join(" · ") || "Muallif"}
+                  </p>
+                </div>
+              </div>
+            ) : null}
+            <Button
+              variant="ghost"
+              onClick={signOut}
+              className="w-full justify-start gap-2 h-10 rounded-2xl text-muted-foreground hover:text-foreground mt-1 text-[13.5px]"
+            >
+              <LogOut className="h-4 w-4" />
+              Chiqish
+            </Button>
+          </div>
         </div>
       </aside>
 
-      <main className="flex-1 overflow-auto min-w-0">
-        <header className="border-b bg-card px-6 py-4 flex items-center justify-between gap-4">
-          <div className="min-w-0">
-            <h2 className="text-2xl font-semibold font-serif truncate">{title}</h2>
-            {description ? (
-              <p className="text-sm text-muted-foreground mt-1">{description}</p>
-            ) : null}
-          </div>
-          {actions ? <div className="flex items-center gap-2 shrink-0">{actions}</div> : null}
-        </header>
-        <div className="p-6">{children}</div>
+      <main className="flex-1 min-w-0 py-3 pr-3">
+        <div className="rounded-3xl bg-card border border-border/60 shadow-sm min-h-[calc(100vh-1.5rem)] overflow-hidden">
+          <header className="px-8 pt-8 pb-6 flex items-start justify-between gap-6">
+            <div className="min-w-0">
+              <h2 className="text-[28px] font-semibold font-serif tracking-tight leading-tight">{title}</h2>
+              {description ? (
+                <p className="text-[15px] text-muted-foreground mt-1.5 max-w-2xl">{description}</p>
+              ) : null}
+            </div>
+            {actions ? <div className="flex items-center gap-2 shrink-0">{actions}</div> : null}
+          </header>
+          <div className="px-8 pb-8 animate-fade-in">{children}</div>
+        </div>
       </main>
     </div>
   );
