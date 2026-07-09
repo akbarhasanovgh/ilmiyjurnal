@@ -144,11 +144,9 @@ function Dashboard() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {publishedIssues.map((iss) => (
-              <Link
+              <a
                 key={`${iss.volume}-${iss.number}`}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                to={"/arxiv/$jild/$son" as any}
-                params={{ jild: String(iss.volume), son: String(iss.number) }}
+                href={`/arxiv/${iss.volume}/${iss.number}`}
                 className="rounded-2xl border border-border/60 p-5 hover:border-foreground/40 hover:shadow-sm transition-all group"
               >
                 <BookMarked className="h-4 w-4 text-muted-foreground mb-3" strokeWidth={1.8} />
@@ -158,7 +156,7 @@ function Dashboard() {
                 <p className="text-[11.5px] font-mono tracking-wide text-muted-foreground mt-2">
                   {iss.year}
                 </p>
-              </Link>
+              </a>
             ))}
           </div>
         </section>
