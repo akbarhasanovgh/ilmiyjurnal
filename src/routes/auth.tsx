@@ -97,11 +97,11 @@ function AuthPage() {
 
   return (
     <div className="min-h-dvh bg-page text-ink grid md:grid-cols-2">
-      <aside className="hidden md:block relative overflow-hidden border-r border-rule bg-page">
+      <aside className="hidden md:flex relative overflow-hidden border-r border-rule bg-page items-center justify-center p-12">
         <img
           src={authEnsemble}
           alt="Uzbek scholars and writers — pencil ensemble portrait"
-          className="absolute inset-0 w-full h-full object-cover object-center select-none"
+          className="max-w-full max-h-full object-contain object-center select-none"
           draggable={false}
         />
         {/* Corner marks: publication signature + year, kept minimal so the drawing dominates */}
