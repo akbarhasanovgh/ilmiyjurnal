@@ -17,10 +17,7 @@ export function EditorialShell({ children }: { children: ReactNode }) {
   });
 
   const perms = useMemo(() => new Set(ctx?.permissions ?? []), [ctx]);
-  const canAdminInbox = perms.has("submissions.view_all");
-  const canAssign = perms.has("submissions.assign_editor");
-  const canAudit = perms.has("audit.view");
-  const canManageUsers = perms.has("users.view");
+  const canReview = perms.has("submissions.view_assigned");
 
   async function signOut() {
     await qc.cancelQueries();
@@ -29,15 +26,14 @@ export function EditorialShell({ children }: { children: ReactNode }) {
     navigate({ to: "/auth", replace: true });
   }
 
+  // Author-side navigation only. Admin/staff users get the AdminLayout.
   const nav = [
     { to: "/dashboard", label: "Bosh panel" },
     { to: "/submissions", label: "Mening maqolalarim" },
-    ...(canAdminInbox ? [{ to: "/admin/inbox", label: "Tahririyat qutisi" }] : []),
-    ...(canManageUsers ? [{ to: "/admin/users", label: "Foydalanuvchilar" }] : []),
-    ...(canAssign ? [{ to: "/editor/queue", label: "Menga tayinlangan" }] : [{ to: "/editor/queue", label: "Menga tayinlangan" }]),
+    ...(canReview ? [{ to: "/editor/queue", label: "Menga tayinlangan" }] : []),
     { to: "/settings/profile", label: "Profil" },
-    ...(canAudit ? [{ to: "/audit", label: "Audit jurnali" }] : []),
   ];
+
 
   return (
     <div className="min-h-dvh bg-page text-ink grid grid-cols-1 md:grid-cols-[240px_1fr]">

@@ -8,7 +8,6 @@ import {
   ClipboardList,
   Users,
   History,
-  UserCog,
   Shield,
   ChevronLeft,
   LogOut,
@@ -25,17 +24,17 @@ type NavItem = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   perm?: string;
-  alwaysShow?: boolean;
+  exact?: boolean;
 };
 
 const NAV: NavItem[] = [
-  { title: "Boshqaruv paneli", url: "/dashboard", icon: LayoutDashboard, alwaysShow: true },
+  { title: "Umumiy ko‘rinish", url: "/admin", icon: LayoutDashboard, exact: true },
   { title: "Tahririyat qutisi", url: "/admin/inbox", icon: Inbox, perm: "submissions.view_all" },
-  { title: "Menga tayinlangan", url: "/editor/queue", icon: ClipboardList, alwaysShow: true },
   { title: "Foydalanuvchilar", url: "/admin/users", icon: Users, perm: "users.view" },
+  { title: "Menga tayinlangan", url: "/editor/queue", icon: ClipboardList, perm: "submissions.view_assigned" },
   { title: "Audit jurnali", url: "/audit", icon: History, perm: "audit.view" },
-  { title: "Profil", url: "/settings/profile", icon: UserCog, alwaysShow: true },
 ];
+
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -93,7 +92,7 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
     );
   }
 
-  const items = NAV.filter((n) => n.alwaysShow || (n.perm && perms.has(n.perm)));
+  const items = NAV.filter((n) => !n.perm || perms.has(n.perm));
 
   return (
     <div className="min-h-screen flex bg-background">
@@ -114,7 +113,10 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
         <ScrollArea className="flex-1">
           <nav className="p-3 space-y-1">
             {items.map((item) => {
-              const active = pathname === item.url || pathname.startsWith(item.url + "/");
+              const active = item.exact
+                ? pathname === item.url
+                : pathname === item.url || pathname.startsWith(item.url + "/");
+
               const Icon = item.icon;
               return (
                 <Link
