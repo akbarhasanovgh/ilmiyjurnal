@@ -3,6 +3,8 @@ import type { ReactNode } from "react";
 
 const NAV = [
   { to: "/", label: "Maqolalar", exact: true as const },
+  { to: "/joriy-son", label: "Joriy son" },
+  { to: "/arxiv", label: "Arxiv" },
   { to: "/for-authors", label: "Mualliflar uchun" },
   { to: "/about", label: "Jurnal haqida" },
 ];

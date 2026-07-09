@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { PublicShell } from "@/components/public-shell";
-import { findIssue } from "@/lib/archive-preview";
+import { findIssue, type ArchiveIssue } from "@/lib/archive-preview";
 
 export const Route = createFileRoute("/arxiv/$jild/$son")({
   loader: ({ params }) => {
@@ -65,7 +65,7 @@ function IssueNotFound() {
 }
 
 function IssuePage() {
-  const { issue } = Route.useLoaderData();
+  const { issue } = Route.useLoaderData() as { issue: ArchiveIssue };
   return (
     <PublicShell>
       <div className="max-w-6xl mx-auto px-6 md:px-10 py-12">
