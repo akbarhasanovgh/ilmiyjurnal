@@ -288,18 +288,27 @@ function AdminUsersPage() {
                 </TableBody>
               </Table>
             ) : (
-              <div className="text-center py-16 text-muted-foreground text-sm">
-                Foydalanuvchi topilmadi
+              <div className="text-center py-20 animate-fade-in">
+                <p className="text-[15px] font-medium">Foydalanuvchi topilmadi</p>
+                <p className="text-sm text-muted-foreground mt-1">Filtrlarni tozalab ko‘ring</p>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+
+          <div className="px-4 py-2.5 text-xs text-muted-foreground">
+            {filtered.length} ta ko‘rsatilmoqda
+            {filtered.length !== (users.data ?? []).length
+              ? ` · jami ${(users.data ?? []).length}`
+              : ""}
+          </div>
+        </div>
 
         {(grantMut.error || revokeMut.error) && (
-          <p className="text-sm text-destructive">
+          <p className="text-sm text-destructive px-1">
             {((grantMut.error ?? revokeMut.error) as Error).message}
           </p>
         )}
+
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
