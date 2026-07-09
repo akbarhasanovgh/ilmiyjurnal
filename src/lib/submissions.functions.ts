@@ -25,8 +25,20 @@ const MetaSchema = z.object({
   abstract_en: z.string().max(5000).optional().nullable(),
   keywords: z.array(z.string().max(80)).max(20).default([]),
   keywords_en: z.array(z.string().max(80)).max(20).default([]),
-  declarations: z.any().default({}),
+  // New stable core columns
+  terms_accepted: z.boolean().optional(),
+  article_format: z.enum(["word", "latex"]).optional().nullable(),
+  cover_letter: z.string().max(10000).optional().nullable(),
+  special_issue: z.boolean().optional().nullable(),
+  ai_section: z.string().max(200).optional().nullable(),
+  originality_confirmed: z.boolean().optional(),
 });
+
+const CREDIT_ROLES = [
+  "conceptualization","methodology","software","validation","formal_analysis",
+  "investigation","resources","data_curation","writing_original","writing_review",
+  "visualization","supervision","project_administration","funding_acquisition",
+] as const;
 
 const AuthorSchema = z.object({
   id: z.string().uuid().optional(),
@@ -37,10 +49,19 @@ const AuthorSchema = z.object({
   country: z.string().max(80).optional().nullable(),
   orcid: z.string().max(30).optional().nullable(),
   academic_degree: z.string().max(120).optional().nullable(),
+  phone: z.string().max(60).optional().nullable(),
+  institution_url: z.string().url().max(500).optional().nullable().or(z.literal("")),
+  scopus_url: z.string().url().max(500).optional().nullable().or(z.literal("")),
+  credit_roles: z.array(z.enum(CREDIT_ROLES)).default([]),
   contributor_role: z.enum(["author", "co_author", "corresponding", "translator", "editor"]).default("author"),
   is_corresponding: z.boolean().default(false),
   sort_order: z.number().int().default(0),
 });
+
+const DECLARATION_KEYS = [
+  "conflicts_of_interest","data_availability","sample_availability","ethics",
+  "informed_consent","funding","author_contributions","irb","apc_choice","ai_usage",
+] as const;
 
 // ---------- Create draft ----------
 export const createDraftSubmission = createServerFn({ method: "POST" })
