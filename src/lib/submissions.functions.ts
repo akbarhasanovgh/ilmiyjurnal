@@ -439,3 +439,27 @@ export const getFileDownloadUrl = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { url: signed.signedUrl, filename: file.filename };
   });
+
+// ---------- Delete draft submission ----------
+export const deleteDraftSubmission = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({ id: z.string().uuid() }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    // Best-effort: remove storage objects tied to the draft's files first.
+    const { data: files } = await supabase
+      .from("submission_files")
+      .select("storage_path")
+      .eq("submission_id", data.id);
+    if (files && files.length > 0) {
+      await supabase.storage
+        .from("manuscripts")
+        .remove(files.map((f) => f.storage_path));
+    }
+    const { error } = await supabase
+      .from("submissions")
+      .delete()
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });

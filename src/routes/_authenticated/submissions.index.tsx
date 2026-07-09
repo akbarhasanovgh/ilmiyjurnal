@@ -1,10 +1,15 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { FilePlus2 } from "lucide-react";
+import { useState } from "react";
+import { FilePlus2, ChevronDown, Pencil, Trash2, Send, Eye } from "lucide-react";
 import { AuthorShell } from "@/components/author-shell";
 import { WorkflowBadge } from "@/components/workflow-badge";
-import { listMySubmissions, createDraftSubmission } from "@/lib/submissions.functions";
+import {
+  listMySubmissions,
+  createDraftSubmission,
+  deleteDraftSubmission,
+} from "@/lib/submissions.functions";
 import type { WorkflowState } from "@/lib/workflow";
 import { toast } from "sonner";
 
@@ -12,6 +17,14 @@ export const Route = createFileRoute("/_authenticated/submissions/")({
   head: () => ({ meta: [{ title: "Mening maqolalarim" }, { name: "robots", content: "noindex" }] }),
   component: MySubmissions,
 });
+
+type Row = {
+  id: string;
+  title: string | null;
+  manuscript_id: string;
+  workflow_state: string;
+  updated_at: string;
+};
 
 function MySubmissions() {
   const list = useServerFn(listMySubmissions);
@@ -25,6 +38,8 @@ function MySubmissions() {
     },
     onError: (e: Error) => toast.error(e.message),
   });
+
+  const [openId, setOpenId] = useState<string | null>(null);
 
   return (
     <AuthorShell>
@@ -66,7 +81,7 @@ function MySubmissions() {
             </p>
             <p className="font-serif text-[24px] mt-3 text-foreground">Hali maqola topshirmadingiz</p>
             <p className="text-[14px] text-muted-foreground mt-2 max-w-md mx-auto leading-relaxed">
-              Birinchi maqolangizni topshirish uchun besh bosqichli shaklni to‘ldiring.
+              Birinchi maqolangizni topshirish uchun shaklni to‘ldiring.
             </p>
             <button
               onClick={() => m.mutate()}
@@ -79,30 +94,146 @@ function MySubmissions() {
           </div>
         ) : (
           <div className="rounded-3xl border border-border/60 divide-y divide-border/60 overflow-hidden">
-            {q.data!.map((s) => (
-              <Link
+            {(q.data as Row[]).map((s) => (
+              <SubmissionRow
                 key={s.id}
-                to="/submissions/$id"
-                params={{ id: s.id }}
-                className="flex items-center gap-5 px-5 py-5 hover:bg-muted/40 transition-colors group"
-              >
-                <div className="w-24 shrink-0 text-[11.5px] font-mono tracking-wide text-muted-foreground">
-                  {s.manuscript_id}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[15.5px] font-medium text-foreground leading-snug truncate group-hover:text-foreground">
-                    {s.title || <span className="italic text-muted-foreground">Sarlavhasiz qoralama</span>}
-                  </p>
-                  <p className="text-[11.5px] text-muted-foreground mt-1">
-                    {new Date(s.updated_at).toLocaleString("uz-UZ")}
-                  </p>
-                </div>
-                <WorkflowBadge state={s.workflow_state as WorkflowState} />
-              </Link>
+                row={s}
+                open={openId === s.id}
+                onToggle={() => setOpenId((cur) => (cur === s.id ? null : s.id))}
+              />
             ))}
           </div>
         )}
       </div>
     </AuthorShell>
+  );
+}
+
+function SubmissionRow({
+  row,
+  open,
+  onToggle,
+}: {
+  row: Row;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const qc = useQueryClient();
+  const del = useServerFn(deleteDraftSubmission);
+  const state = row.workflow_state as WorkflowState;
+  const isDraft = state === "draft";
+  const canRevise = state === "revision_requested";
+  const isReviewed =
+    state === "revision_requested" ||
+    state === "accepted" ||
+    state === "rejected" ||
+    state === "under_review";
+
+  const dm = useMutation({
+    mutationFn: () => del({ data: { id: row.id } }),
+    onSuccess: () => {
+      toast.success("Qoralama o‘chirildi");
+      qc.invalidateQueries({ queryKey: ["my-submissions"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const [confirming, setConfirming] = useState(false);
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={onToggle}
+        className="w-full flex items-center gap-5 px-5 py-5 hover:bg-muted/40 transition-colors text-left"
+      >
+        <div className="w-24 shrink-0 text-[11.5px] font-mono tracking-wide text-muted-foreground">
+          {row.manuscript_id}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-[15.5px] font-medium text-foreground leading-snug truncate">
+            {row.title || <span className="italic text-muted-foreground">Sarlavhasiz qoralama</span>}
+          </p>
+          <p className="text-[11.5px] text-muted-foreground mt-1">
+            {new Date(row.updated_at).toLocaleString("uz-UZ")}
+          </p>
+        </div>
+        <WorkflowBadge state={state} />
+        <ChevronDown
+          className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+          strokeWidth={1.8}
+        />
+      </button>
+
+      {open && (
+        <div className="px-5 pb-5 pt-1 bg-muted/20 border-t border-border/60">
+          <div className="flex flex-wrap gap-2">
+            {(isDraft || canRevise) && (
+              <Link
+                to="/submissions/$id/edit"
+                params={{ id: row.id }}
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-[13px] font-medium hover:bg-muted/60 transition-colors"
+              >
+                <Pencil className="h-3.5 w-3.5" strokeWidth={1.8} />
+                Tahrirlash
+              </Link>
+            )}
+            {isDraft && (
+              <Link
+                to="/submissions/$id/edit"
+                params={{ id: row.id }}
+                className="inline-flex items-center gap-2 rounded-full bg-foreground text-background px-4 py-2 text-[13px] font-medium hover:opacity-90 transition-opacity"
+              >
+                <Send className="h-3.5 w-3.5" strokeWidth={1.8} />
+                Topshirish
+              </Link>
+            )}
+            {isReviewed && (
+              <Link
+                to="/submissions/$id"
+                params={{ id: row.id }}
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-[13px] font-medium hover:bg-muted/60 transition-colors"
+              >
+                <Eye className="h-3.5 w-3.5" strokeWidth={1.8} />
+                Ko‘rib chiqilganini ko‘rish
+              </Link>
+            )}
+            {isDraft && (
+              <>
+                {!confirming ? (
+                  <button
+                    type="button"
+                    onClick={() => setConfirming(true)}
+                    className="inline-flex items-center gap-2 rounded-full border border-destructive/40 text-destructive px-4 py-2 text-[13px] font-medium hover:bg-destructive/5 transition-colors"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" strokeWidth={1.8} />
+                    O‘chirish
+                  </button>
+                ) : (
+                  <div className="inline-flex items-center gap-2">
+                    <span className="text-[13px] text-muted-foreground">Ishonchingiz komilmi?</span>
+                    <button
+                      type="button"
+                      disabled={dm.isPending}
+                      onClick={() => dm.mutate()}
+                      className="rounded-full bg-destructive text-destructive-foreground px-3 py-1.5 text-[12.5px] font-medium hover:opacity-90 disabled:opacity-50"
+                    >
+                      {dm.isPending ? "..." : "Ha, o‘chir"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirming(false)}
+                      className="rounded-full border border-border px-3 py-1.5 text-[12.5px] font-medium hover:bg-muted/60"
+                    >
+                      Bekor
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
