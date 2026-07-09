@@ -24,8 +24,8 @@
   --rule:            rgba(26, 26, 26, 0.10);
   --rule-strong:     rgba(26, 26, 26, 0.18);
   --surface-sunken:  #F7F4F0;                    /* toned paper */
-  --accent-oxblood:  #630D16;                    /* single institutional accent */
-  --accent-oxblood-strong: #7a0f1a;
+  --accent-oxblood:  #9B2226;                    /* editorial carmine — mature, not childish */
+  --accent-oxblood-strong: #7A1A1D;
 
   /* Semantic (shadcn compat) */
   --background: var(--page);
