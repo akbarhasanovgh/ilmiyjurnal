@@ -141,3 +141,121 @@ export const updateMyProfile = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return updated;
   });
+
+// ============= User & role management =============
+
+async function requirePerm(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
+  userId: string,
+  perm: string,
+) {
+  const { data, error } = await supabase.rpc("has_permission", { _user_id: userId, _permission_key: perm });
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Sizda bu amal uchun ruxsat yo‘q");
+}
+
+export const adminListUsers = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    await requirePerm(supabase, userId, "users.view");
+
+    const { data: profs, error: pErr } = await supabase
+      .from("profiles")
+      .select("id, full_name, email, institution_text, country, created_at")
+      .order("created_at", { ascending: false });
+    if (pErr) throw new Error(pErr.message);
+
+    const { data: urs, error: rErr } = await supabase
+      .from("user_roles")
+      .select("user_id, granted_at, roles!inner(id, key, name)");
+    if (rErr) throw new Error(rErr.message);
+
+    const rolesByUser = new Map<string, Array<{ id: string; key: string; name: string; granted_at: string | null }>>();
+    (urs ?? []).forEach((r) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const role = (r as any).roles;
+      if (!role) return;
+      const arr = rolesByUser.get(r.user_id) ?? [];
+      arr.push({ id: role.id, key: role.key, name: role.name, granted_at: r.granted_at ?? null });
+      rolesByUser.set(r.user_id, arr);
+    });
+
+    return (profs ?? []).map((p) => ({
+      ...p,
+      roles: rolesByUser.get(p.id) ?? [],
+    }));
+  });
+
+export const adminListRoles = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    await requirePerm(supabase, userId, "roles.view");
+    const { data, error } = await supabase.from("roles").select("id, key, name, description").order("name");
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  });
+
+export const adminGrantRole = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z.object({ user_id: z.string().uuid(), role_id: z.string().uuid() }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await requirePerm(supabase, userId, "users.assign_roles");
+
+    // Prevent self-demotion? Allow but block removing your own super_admin only in revoke.
+    const { error } = await supabase
+      .from("user_roles")
+      .insert({ user_id: data.user_id, role_id: data.role_id, granted_by: userId });
+    if (error && !/duplicate|unique/i.test(error.message)) throw new Error(error.message);
+
+    await supabase.from("audit_logs").insert({
+      actor_id: userId,
+      action: "role.grant",
+      resource_type: "user_role",
+      resource_id: data.user_id,
+      after: { role_id: data.role_id },
+    });
+    return { ok: true };
+  });
+
+export const adminRevokeRole = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z.object({ user_id: z.string().uuid(), role_id: z.string().uuid() }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await requirePerm(supabase, userId, "users.assign_roles");
+
+    // Guard: don't allow removing the last super_admin
+    const { data: role } = await supabase.from("roles").select("key").eq("id", data.role_id).maybeSingle();
+    if (role?.key === "super_admin") {
+      const { count } = await supabase
+        .from("user_roles")
+        .select("user_id", { count: "exact", head: true })
+        .eq("role_id", data.role_id);
+      if ((count ?? 0) <= 1) throw new Error("Oxirgi super administratorni olib bo‘lmaydi");
+    }
+
+    const { error } = await supabase
+      .from("user_roles")
+      .delete()
+      .eq("user_id", data.user_id)
+      .eq("role_id", data.role_id);
+    if (error) throw new Error(error.message);
+
+    await supabase.from("audit_logs").insert({
+      actor_id: userId,
+      action: "role.revoke",
+      resource_type: "user_role",
+      resource_id: data.user_id,
+      after: { role_id: data.role_id },
+    });
+    return { ok: true };
+  });
+

@@ -23,6 +23,7 @@ import { Route as AuthenticatedSubmissionsIndexRouteImport } from './routes/_aut
 import { Route as ArxivJildSonRouteImport } from './routes/arxiv.$jild.$son'
 import { Route as AuthenticatedSettingsProfileRouteImport } from './routes/_authenticated/settings.profile'
 import { Route as AuthenticatedEditorQueueRouteImport } from './routes/_authenticated/editor.queue'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedAdminInboxRouteImport } from './routes/_authenticated/admin.inbox'
 import { Route as AuthenticatedSubmissionsIdIndexRouteImport } from './routes/_authenticated/submissions.$id.index'
 import { Route as AuthenticatedSubmissionsIdEditRouteImport } from './routes/_authenticated/submissions.$id.edit'
@@ -99,6 +100,11 @@ const AuthenticatedEditorQueueRoute =
     path: '/editor/queue',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminInboxRoute = AuthenticatedAdminInboxRouteImport.update({
   id: '/admin/inbox',
   path: '/admin/inbox',
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/arxiv/': typeof ArxivIndexRoute
   '/admin/inbox': typeof AuthenticatedAdminInboxRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/arxiv/$jild/$son': typeof ArxivJildSonRoute
@@ -146,6 +153,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/arxiv': typeof ArxivIndexRoute
   '/admin/inbox': typeof AuthenticatedAdminInboxRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/arxiv/$jild/$son': typeof ArxivJildSonRoute
@@ -166,6 +174,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/arxiv/': typeof ArxivIndexRoute
   '/_authenticated/admin/inbox': typeof AuthenticatedAdminInboxRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/_authenticated/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/arxiv/$jild/$son': typeof ArxivJildSonRoute
@@ -186,6 +195,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/arxiv/'
     | '/admin/inbox'
+    | '/admin/users'
     | '/editor/queue'
     | '/settings/profile'
     | '/arxiv/$jild/$son'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/arxiv'
     | '/admin/inbox'
+    | '/admin/users'
     | '/editor/queue'
     | '/settings/profile'
     | '/arxiv/$jild/$son'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/arxiv/'
     | '/_authenticated/admin/inbox'
+    | '/_authenticated/admin/users'
     | '/_authenticated/editor/queue'
     | '/_authenticated/settings/profile'
     | '/arxiv/$jild/$son'
@@ -343,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEditorQueueRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/inbox': {
       id: '/_authenticated/admin/inbox'
       path: '/admin/inbox'
@@ -371,6 +390,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAuditRoute: typeof AuthenticatedAuditRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedAdminInboxRoute: typeof AuthenticatedAdminInboxRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedEditorQueueRoute: typeof AuthenticatedEditorQueueRoute
   AuthenticatedSettingsProfileRoute: typeof AuthenticatedSettingsProfileRoute
   AuthenticatedSubmissionsIndexRoute: typeof AuthenticatedSubmissionsIndexRoute
@@ -382,6 +402,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAuditRoute: AuthenticatedAuditRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedAdminInboxRoute: AuthenticatedAdminInboxRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedEditorQueueRoute: AuthenticatedEditorQueueRoute,
   AuthenticatedSettingsProfileRoute: AuthenticatedSettingsProfileRoute,
   AuthenticatedSubmissionsIndexRoute: AuthenticatedSubmissionsIndexRoute,
