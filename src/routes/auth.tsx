@@ -4,6 +4,7 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
+import authPortrait from "@/assets/auth-portrait.png";
 
 const searchSchema = z.object({ next: z.string().optional() });
 
@@ -102,6 +103,12 @@ function AuthPage() {
           <h1 className="font-serif text-3xl leading-tight tracking-tight">O‘zbek tili va adabiyoti</h1>
         </Link>
         <div className="max-w-md space-y-6">
+          <img
+            src={authPortrait}
+            alt="Pencil portrait"
+            className="w-56 h-auto select-none"
+            draggable={false}
+          />
           <p className="font-serif text-2xl leading-snug text-ink">
             «Til — millatning ruhi, adabiyot — uning ongi.»
           </p>
