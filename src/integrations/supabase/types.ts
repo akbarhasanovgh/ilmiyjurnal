@@ -294,14 +294,18 @@ export type Database = {
           contributor_role: Database["public"]["Enums"]["contributor_role"]
           country: string | null
           created_at: string
+          credit_roles: string[]
           department: string | null
           email: string | null
           full_name: string
           id: string
           institution: string | null
+          institution_url: string | null
           is_corresponding: boolean
           orcid: string | null
+          phone: string | null
           profile_id: string | null
+          scopus_url: string | null
           sort_order: number
           submission_id: string
         }
@@ -310,14 +314,18 @@ export type Database = {
           contributor_role?: Database["public"]["Enums"]["contributor_role"]
           country?: string | null
           created_at?: string
+          credit_roles?: string[]
           department?: string | null
           email?: string | null
           full_name: string
           id?: string
           institution?: string | null
+          institution_url?: string | null
           is_corresponding?: boolean
           orcid?: string | null
+          phone?: string | null
           profile_id?: string | null
+          scopus_url?: string | null
           sort_order?: number
           submission_id: string
         }
@@ -326,14 +334,18 @@ export type Database = {
           contributor_role?: Database["public"]["Enums"]["contributor_role"]
           country?: string | null
           created_at?: string
+          credit_roles?: string[]
           department?: string | null
           email?: string | null
           full_name?: string
           id?: string
           institution?: string | null
+          institution_url?: string | null
           is_corresponding?: boolean
           orcid?: string | null
+          phone?: string | null
           profile_id?: string | null
+          scopus_url?: string | null
           sort_order?: number
           submission_id?: string
         }
@@ -347,6 +359,47 @@ export type Database = {
           },
           {
             foreignKeyName: "submission_authors_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      submission_declarations: {
+        Row: {
+          created_at: string
+          declaration_key: string
+          explanation: string | null
+          id: string
+          response_type: string
+          response_value: string | null
+          submission_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          declaration_key: string
+          explanation?: string | null
+          id?: string
+          response_type: string
+          response_value?: string | null
+          submission_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          declaration_key?: string
+          explanation?: string | null
+          id?: string
+          response_type?: string
+          response_value?: string | null
+          submission_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submission_declarations_submission_id_fkey"
             columns: ["submission_id"]
             isOneToOne: false
             referencedRelation: "submissions"
@@ -449,6 +502,50 @@ export type Database = {
           },
         ]
       }
+      submission_suggested_reviewers: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          institution: string | null
+          reason: string | null
+          sort_order: number
+          submission_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          institution?: string | null
+          reason?: string | null
+          sort_order?: number
+          submission_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          institution?: string | null
+          reason?: string | null
+          sort_order?: number
+          submission_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submission_suggested_reviewers_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       submission_versions: {
         Row: {
           created_at: string
@@ -488,17 +585,23 @@ export type Database = {
         Row: {
           abstract: string | null
           abstract_en: string | null
+          ai_section: string | null
+          article_format: string | null
           article_type: Database["public"]["Enums"]["article_type"]
+          cover_letter: string | null
           created_at: string
           declarations: Json
           id: string
           keywords: string[]
           keywords_en: string[]
           manuscript_id: string
+          originality_confirmed: boolean
           owner_id: string
           primary_language: Database["public"]["Enums"]["primary_language"]
           research_field: string | null
+          special_issue: boolean | null
           submitted_at: string | null
+          terms_accepted: boolean
           title: string
           title_en: string | null
           title_original: string | null
@@ -508,17 +611,23 @@ export type Database = {
         Insert: {
           abstract?: string | null
           abstract_en?: string | null
+          ai_section?: string | null
+          article_format?: string | null
           article_type?: Database["public"]["Enums"]["article_type"]
+          cover_letter?: string | null
           created_at?: string
           declarations?: Json
           id?: string
           keywords?: string[]
           keywords_en?: string[]
           manuscript_id?: string
+          originality_confirmed?: boolean
           owner_id: string
           primary_language?: Database["public"]["Enums"]["primary_language"]
           research_field?: string | null
+          special_issue?: boolean | null
           submitted_at?: string | null
+          terms_accepted?: boolean
           title?: string
           title_en?: string | null
           title_original?: string | null
@@ -528,17 +637,23 @@ export type Database = {
         Update: {
           abstract?: string | null
           abstract_en?: string | null
+          ai_section?: string | null
+          article_format?: string | null
           article_type?: Database["public"]["Enums"]["article_type"]
+          cover_letter?: string | null
           created_at?: string
           declarations?: Json
           id?: string
           keywords?: string[]
           keywords_en?: string[]
           manuscript_id?: string
+          originality_confirmed?: boolean
           owner_id?: string
           primary_language?: Database["public"]["Enums"]["primary_language"]
           research_field?: string | null
+          special_issue?: boolean | null
           submitted_at?: string | null
+          terms_accepted?: boolean
           title?: string
           title_en?: string | null
           title_original?: string | null
@@ -591,17 +706,23 @@ export type Database = {
         Returns: {
           abstract: string | null
           abstract_en: string | null
+          ai_section: string | null
+          article_format: string | null
           article_type: Database["public"]["Enums"]["article_type"]
+          cover_letter: string | null
           created_at: string
           declarations: Json
           id: string
           keywords: string[]
           keywords_en: string[]
           manuscript_id: string
+          originality_confirmed: boolean
           owner_id: string
           primary_language: Database["public"]["Enums"]["primary_language"]
           research_field: string | null
+          special_issue: boolean | null
           submitted_at: string | null
+          terms_accepted: boolean
           title: string
           title_en: string | null
           title_original: string | null
@@ -642,17 +763,23 @@ export type Database = {
         Returns: {
           abstract: string | null
           abstract_en: string | null
+          ai_section: string | null
+          article_format: string | null
           article_type: Database["public"]["Enums"]["article_type"]
+          cover_letter: string | null
           created_at: string
           declarations: Json
           id: string
           keywords: string[]
           keywords_en: string[]
           manuscript_id: string
+          originality_confirmed: boolean
           owner_id: string
           primary_language: Database["public"]["Enums"]["primary_language"]
           research_field: string | null
+          special_issue: boolean | null
           submitted_at: string | null
+          terms_accepted: boolean
           title: string
           title_en: string | null
           title_original: string | null
