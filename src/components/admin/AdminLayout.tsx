@@ -11,6 +11,11 @@ import {
   Shield,
   ChevronLeft,
   LogOut,
+  BookOpen,
+  Hash,
+  BarChart3,
+  FileBarChart,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,7 +24,7 @@ import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { getSessionContext } from "@/lib/auth.functions";
 
-type ToneKey = "indigo" | "cyan" | "amber" | "green" | "rose" | "violet";
+type ToneKey = "indigo" | "cyan" | "amber" | "green" | "rose" | "violet" | "blue" | "orange" | "teal" | "slate";
 
 const TONE: Record<ToneKey, { bg: string; icon: string; active: string }> = {
   indigo: { bg: "bg-indigo-500/10", icon: "text-indigo-500", active: "bg-indigo-500/15" },
@@ -28,6 +33,10 @@ const TONE: Record<ToneKey, { bg: string; icon: string; active: string }> = {
   green: { bg: "bg-emerald-500/10", icon: "text-emerald-500", active: "bg-emerald-500/15" },
   rose: { bg: "bg-rose-500/10", icon: "text-rose-500", active: "bg-rose-500/15" },
   violet: { bg: "bg-violet-500/10", icon: "text-violet-500", active: "bg-violet-500/15" },
+  blue: { bg: "bg-blue-500/10", icon: "text-blue-500", active: "bg-blue-500/15" },
+  orange: { bg: "bg-orange-500/10", icon: "text-orange-500", active: "bg-orange-500/15" },
+  teal: { bg: "bg-teal-500/10", icon: "text-teal-500", active: "bg-teal-500/15" },
+  slate: { bg: "bg-slate-500/10", icon: "text-slate-500", active: "bg-slate-500/15" },
 };
 
 type NavItem = {
@@ -53,6 +62,15 @@ const SECTIONS: NavSection[] = [
     items: [
       { title: "Qabul qutisi", url: "/admin/inbox", icon: Inbox, tone: "amber", perm: "submissions.view_all" },
       { title: "Menga tayinlangan", url: "/editor/queue", icon: ClipboardList, tone: "green", perm: "submissions.view_assigned" },
+      { title: "Sonlar", url: "/admin/issues", icon: BookOpen, tone: "blue", perm: "submissions.view_all" },
+      { title: "DOI’lar", url: "/admin/dois", icon: Hash, tone: "teal", perm: "submissions.view_all" },
+    ],
+  },
+  {
+    label: "Statistika",
+    items: [
+      { title: "Statistika", url: "/admin/statistics", icon: BarChart3, tone: "cyan", perm: "submissions.view_all" },
+      { title: "Hisobotlar", url: "/admin/reports", icon: FileBarChart, tone: "orange", perm: "submissions.view_all" },
     ],
   },
   {
@@ -60,9 +78,11 @@ const SECTIONS: NavSection[] = [
     items: [
       { title: "Foydalanuvchilar", url: "/admin/users", icon: Users, tone: "violet", perm: "users.view" },
       { title: "Audit jurnali", url: "/audit", icon: History, tone: "rose", perm: "audit.view" },
+      { title: "Vositalar", url: "/admin/tools", icon: Wrench, tone: "slate", perm: "roles.manage" },
     ],
   },
 ];
+
 
 interface AdminLayoutProps {
   children: ReactNode;
