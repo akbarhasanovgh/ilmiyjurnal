@@ -10,35 +10,48 @@ const NAV = [
 export function PublicShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-dvh bg-page text-ink flex flex-col">
-      <header className="border-b border-rule">
-        <div className="max-w-6xl mx-auto px-6 md:px-10 pt-10 pb-6">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
+      <header className="border-b border-ink">
+        <div className="max-w-6xl mx-auto px-6 md:px-10 pt-8 pb-5">
+          <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.22em] font-mono text-ink-faint pb-4 border-b border-rule">
+            <span>ISSN 2010-5584</span>
+            <span className="hidden md:inline">Ochiq kirish · Open Access</span>
+            <span>Toshkent · O‘zbekiston</span>
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 pt-8 pb-6">
             <Link to="/" className="block group">
               <h1
-                className="font-bold tracking-tight leading-[0.95] text-balance uppercase group-hover:text-[color:var(--accent-oxblood)] transition-colors"
+                className="leading-[0.95] tracking-tight text-balance group-hover:text-[color:var(--accent-oxblood)] transition-colors"
                 style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
+                  fontFamily: "var(--font-editorial)",
+                  fontSize: "clamp(2rem, 5vw, 3.5rem)",
+                  fontWeight: 400,
                 }}
               >
                 O‘zbek tili va adabiyoti
               </h1>
-              <p className="mt-2 text-[11px] md:text-xs uppercase tracking-[0.22em] font-medium text-ink-muted">
-                O‘zbek tili, adabiyoti va filologiyasi bo‘yicha ilmiy jurnal
+              <p className="mt-3 text-[11px] md:text-xs uppercase tracking-[0.22em] font-medium text-ink-muted">
+                Ilmiy-nazariy jurnal · O‘zbek filologiyasi bo‘yicha
               </p>
             </Link>
-            <div className="md:pl-8 md:border-l border-rule">
-              <span className="block text-[10px] uppercase tracking-[0.22em] font-bold text-ink-faint mb-1">
+            <div className="md:pl-8 md:border-l border-rule-strong shrink-0">
+              <span className="block text-[10px] uppercase tracking-[0.22em] font-bold text-ink-faint mb-1.5">
                 Joriy son
               </span>
-              <span className="text-sm font-medium text-[color:var(--accent-oxblood)]">
-                70-jild · 3-son · 2026
+              <span
+                className="block text-[color:var(--accent-oxblood)] leading-none"
+                style={{ fontFamily: "var(--font-editorial)", fontSize: "1.35rem" }}
+              >
+                70-jild · 3-son
+              </span>
+              <span className="mt-1 block text-[11px] font-mono tracking-wider text-ink-faint">
+                Iyul 2026
               </span>
             </div>
           </div>
 
-          <nav className="flex flex-wrap items-center justify-between gap-y-3">
-            <div className="flex flex-wrap gap-x-6 gap-y-2 text-[12px] uppercase tracking-[0.15em] font-medium">
+          <nav className="flex flex-wrap items-center justify-between gap-y-3 pt-2">
+            <div className="flex flex-wrap gap-x-7 gap-y-2 text-[12px] uppercase tracking-[0.18em] font-medium">
               {NAV.map((n) => (
                 <Link
                   key={n.to}
