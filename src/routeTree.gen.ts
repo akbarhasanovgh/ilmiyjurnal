@@ -20,6 +20,7 @@ import { Route as ArxivIndexRouteImport } from './routes/arxiv.index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAuditRouteImport } from './routes/_authenticated/audit'
 import { Route as AuthenticatedSubmissionsIndexRouteImport } from './routes/_authenticated/submissions.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as ArxivJildSonRouteImport } from './routes/arxiv.$jild.$son'
 import { Route as AuthenticatedSettingsProfileRouteImport } from './routes/_authenticated/settings.profile'
 import { Route as AuthenticatedEditorQueueRouteImport } from './routes/_authenticated/editor.queue'
@@ -83,6 +84,11 @@ const AuthenticatedSubmissionsIndexRoute =
     path: '/submissions/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const ArxivJildSonRoute = ArxivJildSonRouteImport.update({
   id: '/arxiv/$jild/$son',
   path: '/arxiv/$jild/$son',
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/arxiv/$jild/$son': typeof ArxivJildSonRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/submissions/': typeof AuthenticatedSubmissionsIndexRoute
   '/submissions/$id/edit': typeof AuthenticatedSubmissionsIdEditRoute
   '/submissions/$id/': typeof AuthenticatedSubmissionsIdIndexRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/arxiv/$jild/$son': typeof ArxivJildSonRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/submissions': typeof AuthenticatedSubmissionsIndexRoute
   '/submissions/$id/edit': typeof AuthenticatedSubmissionsIdEditRoute
   '/submissions/$id': typeof AuthenticatedSubmissionsIdIndexRoute
@@ -178,6 +186,7 @@ export interface FileRoutesById {
   '/_authenticated/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/_authenticated/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/arxiv/$jild/$son': typeof ArxivJildSonRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/submissions/': typeof AuthenticatedSubmissionsIndexRoute
   '/_authenticated/submissions/$id/edit': typeof AuthenticatedSubmissionsIdEditRoute
   '/_authenticated/submissions/$id/': typeof AuthenticatedSubmissionsIdIndexRoute
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
     | '/editor/queue'
     | '/settings/profile'
     | '/arxiv/$jild/$son'
+    | '/admin/'
     | '/submissions/'
     | '/submissions/$id/edit'
     | '/submissions/$id/'
@@ -218,6 +228,7 @@ export interface FileRouteTypes {
     | '/editor/queue'
     | '/settings/profile'
     | '/arxiv/$jild/$son'
+    | '/admin'
     | '/submissions'
     | '/submissions/$id/edit'
     | '/submissions/$id'
@@ -238,6 +249,7 @@ export interface FileRouteTypes {
     | '/_authenticated/editor/queue'
     | '/_authenticated/settings/profile'
     | '/arxiv/$jild/$son'
+    | '/_authenticated/admin/'
     | '/_authenticated/submissions/'
     | '/_authenticated/submissions/$id/edit'
     | '/_authenticated/submissions/$id/'
@@ -334,6 +346,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSubmissionsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/arxiv/$jild/$son': {
       id: '/arxiv/$jild/$son'
       path: '/arxiv/$jild/$son'
@@ -393,6 +412,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedEditorQueueRoute: typeof AuthenticatedEditorQueueRoute
   AuthenticatedSettingsProfileRoute: typeof AuthenticatedSettingsProfileRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedSubmissionsIndexRoute: typeof AuthenticatedSubmissionsIndexRoute
   AuthenticatedSubmissionsIdEditRoute: typeof AuthenticatedSubmissionsIdEditRoute
   AuthenticatedSubmissionsIdIndexRoute: typeof AuthenticatedSubmissionsIdIndexRoute
@@ -405,6 +425,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedEditorQueueRoute: AuthenticatedEditorQueueRoute,
   AuthenticatedSettingsProfileRoute: AuthenticatedSettingsProfileRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedSubmissionsIndexRoute: AuthenticatedSubmissionsIndexRoute,
   AuthenticatedSubmissionsIdEditRoute: AuthenticatedSubmissionsIdEditRoute,
   AuthenticatedSubmissionsIdIndexRoute: AuthenticatedSubmissionsIdIndexRoute,

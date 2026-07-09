@@ -166,7 +166,7 @@ function AdminOverview() {
                 <p className="text-xs text-muted-foreground mb-2">Rollaringiz</p>
                 <div className="flex flex-wrap gap-1.5">
                   {(ctxQ.data?.roles ?? []).map((r) => (
-                    <Badge key={r.id} variant="secondary" className="font-normal">
+                    <Badge key={r.key} variant="secondary" className="font-normal">
                       {r.name}
                     </Badge>
                   ))}
