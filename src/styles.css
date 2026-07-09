@@ -198,30 +198,30 @@
   display: block;
   width: 100%;
   border-radius: 12px;
-  border: 1px solid hsl(var(--border));
-  background: hsl(var(--background));
+  border: 1px solid var(--rule-strong);
+  background: var(--page);
   padding: 0.625rem 0.875rem;
   font-size: 0.9rem;
-  color: hsl(var(--foreground));
+  color: var(--ink);
   transition: border-color 150ms, box-shadow 150ms;
 }
 @utility wz-textarea {
   display: block;
   width: 100%;
   border-radius: 12px;
-  border: 1px solid hsl(var(--border));
-  background: hsl(var(--background));
+  border: 1px solid var(--rule-strong);
+  background: var(--page);
   padding: 0.75rem 0.875rem;
   font-size: 0.9rem;
-  color: hsl(var(--foreground));
+  color: var(--ink);
   line-height: 1.65;
   resize: vertical;
   transition: border-color 150ms, box-shadow 150ms;
 }
 input.wz-input:focus, textarea.wz-textarea:focus, select.wz-input:focus {
   outline: none;
-  border-color: hsl(var(--foreground));
-  box-shadow: 0 0 0 3px hsl(var(--foreground) / 0.08);
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(26,26,26,0.08);
 }
 
 input.input:focus, textarea.textarea:focus, select.input:focus {
