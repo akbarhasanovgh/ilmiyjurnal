@@ -101,7 +101,6 @@ function AuthPage() {
 
   return (
     <div className="min-h-dvh bg-page text-ink grid md:grid-cols-2">
-      <aside className="hidden md:flex flex-col justify-between p-12 border-r border-rule">
       <aside className="hidden md:flex flex-col justify-between p-12 border-r border-rule relative overflow-hidden">
         <Link to="/" className="space-y-2 relative z-10">
           <p className="label-mono">ISSN 2010-5584</p>
