@@ -33,22 +33,29 @@ export const adminListEligibleEditors = createServerFn({ method: "GET" })
     const { supabase } = context;
     const { data, error } = await supabase
       .from("user_roles")
-      .select("user_id, roles!inner(key, name), profiles:user_id(full_name, email)")
+      .select("user_id, roles!inner(key, name)")
       .in("roles.key", ["editor", "managing_editor", "administrator", "super_admin"]);
     if (error) throw new Error(error.message);
+    const rows = (data ?? []) as Array<{ user_id: string; roles: { key: string; name: string } | null }>;
+    const uids = Array.from(new Set(rows.map((r) => r.user_id)));
+    let profMap: Record<string, { full_name: string | null; email: string | null }> = {};
+    if (uids.length > 0) {
+      const { data: profs } = await supabase.from("profiles").select("id, full_name, email").in("id", uids);
+      profMap = Object.fromEntries((profs ?? []).map((p) => [p.id, { full_name: p.full_name, email: p.email }]));
+    }
     const seen = new Map<string, { user_id: string; full_name: string; email: string; roles: string[] }>();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (data ?? []).forEach((r: any) => {
+    rows.forEach((r) => {
       const uid = r.user_id;
-      const prev = seen.get(uid);
       const role = r.roles?.name ?? "";
+      const prof = profMap[uid];
+      const prev = seen.get(uid);
       if (prev) {
         if (role && !prev.roles.includes(role)) prev.roles.push(role);
       } else {
         seen.set(uid, {
           user_id: uid,
-          full_name: r.profiles?.full_name || r.profiles?.email || "—",
-          email: r.profiles?.email ?? "",
+          full_name: prof?.full_name || prof?.email || "—",
+          email: prof?.email ?? "",
           roles: role ? [role] : [],
         });
       }
