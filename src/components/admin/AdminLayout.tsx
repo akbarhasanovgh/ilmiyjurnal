@@ -113,7 +113,10 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
         <ScrollArea className="flex-1">
           <nav className="p-3 space-y-1">
             {items.map((item) => {
-              const active = pathname === item.url || pathname.startsWith(item.url + "/");
+              const active = item.exact
+                ? pathname === item.url
+                : pathname === item.url || pathname.startsWith(item.url + "/");
+
               const Icon = item.icon;
               return (
                 <Link
