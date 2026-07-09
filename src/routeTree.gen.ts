@@ -9,21 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as JoriySonRouteImport } from './routes/joriy-son'
 import { Route as ForAuthorsRouteImport } from './routes/for-authors'
 import { Route as BootstrapRouteImport } from './routes/bootstrap'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ArxivIndexRouteImport } from './routes/arxiv.index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAuditRouteImport } from './routes/_authenticated/audit'
 import { Route as AuthenticatedSubmissionsIndexRouteImport } from './routes/_authenticated/submissions.index'
+import { Route as ArxivJildSonRouteImport } from './routes/arxiv.$jild.$son'
 import { Route as AuthenticatedSettingsProfileRouteImport } from './routes/_authenticated/settings.profile'
 import { Route as AuthenticatedEditorQueueRouteImport } from './routes/_authenticated/editor.queue'
 import { Route as AuthenticatedAdminInboxRouteImport } from './routes/_authenticated/admin.inbox'
 import { Route as AuthenticatedSubmissionsIdIndexRouteImport } from './routes/_authenticated/submissions.$id.index'
 import { Route as AuthenticatedSubmissionsIdEditRouteImport } from './routes/_authenticated/submissions.$id.edit'
 
+const JoriySonRoute = JoriySonRouteImport.update({
+  id: '/joriy-son',
+  path: '/joriy-son',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForAuthorsRoute = ForAuthorsRouteImport.update({
   id: '/for-authors',
   path: '/for-authors',
@@ -53,6 +61,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArxivIndexRoute = ArxivIndexRouteImport.update({
+  id: '/arxiv/',
+  path: '/arxiv/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -69,6 +82,11 @@ const AuthenticatedSubmissionsIndexRoute =
     path: '/submissions/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ArxivJildSonRoute = ArxivJildSonRouteImport.update({
+  id: '/arxiv/$jild/$son',
+  path: '/arxiv/$jild/$son',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedSettingsProfileRoute =
   AuthenticatedSettingsProfileRouteImport.update({
     id: '/settings/profile',
@@ -105,11 +123,14 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/bootstrap': typeof BootstrapRoute
   '/for-authors': typeof ForAuthorsRoute
+  '/joriy-son': typeof JoriySonRoute
   '/audit': typeof AuthenticatedAuditRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/arxiv/': typeof ArxivIndexRoute
   '/admin/inbox': typeof AuthenticatedAdminInboxRoute
   '/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
+  '/arxiv/$jild/$son': typeof ArxivJildSonRoute
   '/submissions/': typeof AuthenticatedSubmissionsIndexRoute
   '/submissions/$id/edit': typeof AuthenticatedSubmissionsIdEditRoute
   '/submissions/$id/': typeof AuthenticatedSubmissionsIdIndexRoute
@@ -120,11 +141,14 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/bootstrap': typeof BootstrapRoute
   '/for-authors': typeof ForAuthorsRoute
+  '/joriy-son': typeof JoriySonRoute
   '/audit': typeof AuthenticatedAuditRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/arxiv': typeof ArxivIndexRoute
   '/admin/inbox': typeof AuthenticatedAdminInboxRoute
   '/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
+  '/arxiv/$jild/$son': typeof ArxivJildSonRoute
   '/submissions': typeof AuthenticatedSubmissionsIndexRoute
   '/submissions/$id/edit': typeof AuthenticatedSubmissionsIdEditRoute
   '/submissions/$id': typeof AuthenticatedSubmissionsIdIndexRoute
@@ -137,11 +161,14 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/bootstrap': typeof BootstrapRoute
   '/for-authors': typeof ForAuthorsRoute
+  '/joriy-son': typeof JoriySonRoute
   '/_authenticated/audit': typeof AuthenticatedAuditRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/arxiv/': typeof ArxivIndexRoute
   '/_authenticated/admin/inbox': typeof AuthenticatedAdminInboxRoute
   '/_authenticated/editor/queue': typeof AuthenticatedEditorQueueRoute
   '/_authenticated/settings/profile': typeof AuthenticatedSettingsProfileRoute
+  '/arxiv/$jild/$son': typeof ArxivJildSonRoute
   '/_authenticated/submissions/': typeof AuthenticatedSubmissionsIndexRoute
   '/_authenticated/submissions/$id/edit': typeof AuthenticatedSubmissionsIdEditRoute
   '/_authenticated/submissions/$id/': typeof AuthenticatedSubmissionsIdIndexRoute
@@ -154,11 +181,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bootstrap'
     | '/for-authors'
+    | '/joriy-son'
     | '/audit'
     | '/dashboard'
+    | '/arxiv/'
     | '/admin/inbox'
     | '/editor/queue'
     | '/settings/profile'
+    | '/arxiv/$jild/$son'
     | '/submissions/'
     | '/submissions/$id/edit'
     | '/submissions/$id/'
@@ -169,11 +199,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bootstrap'
     | '/for-authors'
+    | '/joriy-son'
     | '/audit'
     | '/dashboard'
+    | '/arxiv'
     | '/admin/inbox'
     | '/editor/queue'
     | '/settings/profile'
+    | '/arxiv/$jild/$son'
     | '/submissions'
     | '/submissions/$id/edit'
     | '/submissions/$id'
@@ -185,11 +218,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bootstrap'
     | '/for-authors'
+    | '/joriy-son'
     | '/_authenticated/audit'
     | '/_authenticated/dashboard'
+    | '/arxiv/'
     | '/_authenticated/admin/inbox'
     | '/_authenticated/editor/queue'
     | '/_authenticated/settings/profile'
+    | '/arxiv/$jild/$son'
     | '/_authenticated/submissions/'
     | '/_authenticated/submissions/$id/edit'
     | '/_authenticated/submissions/$id/'
@@ -202,10 +238,20 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BootstrapRoute: typeof BootstrapRoute
   ForAuthorsRoute: typeof ForAuthorsRoute
+  JoriySonRoute: typeof JoriySonRoute
+  ArxivIndexRoute: typeof ArxivIndexRoute
+  ArxivJildSonRoute: typeof ArxivJildSonRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/joriy-son': {
+      id: '/joriy-son'
+      path: '/joriy-son'
+      fullPath: '/joriy-son'
+      preLoaderRoute: typeof JoriySonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/for-authors': {
       id: '/for-authors'
       path: '/for-authors'
@@ -248,6 +294,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/arxiv/': {
+      id: '/arxiv/'
+      path: '/arxiv'
+      fullPath: '/arxiv/'
+      preLoaderRoute: typeof ArxivIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -268,6 +321,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/submissions/'
       preLoaderRoute: typeof AuthenticatedSubmissionsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/arxiv/$jild/$son': {
+      id: '/arxiv/$jild/$son'
+      path: '/arxiv/$jild/$son'
+      fullPath: '/arxiv/$jild/$son'
+      preLoaderRoute: typeof ArxivJildSonRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/settings/profile': {
       id: '/_authenticated/settings/profile'
@@ -339,6 +399,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BootstrapRoute: BootstrapRoute,
   ForAuthorsRoute: ForAuthorsRoute,
+  JoriySonRoute: JoriySonRoute,
+  ArxivIndexRoute: ArxivIndexRoute,
+  ArxivJildSonRoute: ArxivJildSonRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
