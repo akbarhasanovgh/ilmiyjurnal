@@ -7,13 +7,23 @@ export const adminListInbox = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase } = context;
-    const { data, error } = await supabase
+    const { data: subs, error } = await supabase
       .from("submissions")
-      .select("id, manuscript_id, title, workflow_state, article_type, submitted_at, created_at, updated_at, owner_id, profiles:owner_id(full_name, email)")
+      .select("id, manuscript_id, title, workflow_state, article_type, submitted_at, created_at, updated_at, owner_id")
       .in("workflow_state", ["submitted", "screening", "editor_assigned", "under_review", "revision_requested", "revised"])
       .order("submitted_at", { ascending: false, nullsFirst: false });
     if (error) throw new Error(error.message);
-    return data ?? [];
+    const rows = subs ?? [];
+    const ownerIds = Array.from(new Set(rows.map((r) => r.owner_id).filter(Boolean)));
+    let ownerMap: Record<string, { full_name: string | null; email: string | null }> = {};
+    if (ownerIds.length > 0) {
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("id, full_name, email")
+        .in("id", ownerIds);
+      ownerMap = Object.fromEntries((profs ?? []).map((p) => [p.id, { full_name: p.full_name, email: p.email }]));
+    }
+    return rows.map((r) => ({ ...r, owner: ownerMap[r.owner_id] ?? null }));
   });
 
 // Users available to be assigned as editors — anyone with editor or higher role.
@@ -23,22 +33,29 @@ export const adminListEligibleEditors = createServerFn({ method: "GET" })
     const { supabase } = context;
     const { data, error } = await supabase
       .from("user_roles")
-      .select("user_id, roles!inner(key, name), profiles:user_id(full_name, email)")
+      .select("user_id, roles!inner(key, name)")
       .in("roles.key", ["editor", "managing_editor", "administrator", "super_admin"]);
     if (error) throw new Error(error.message);
+    const rows = (data ?? []) as Array<{ user_id: string; roles: { key: string; name: string } | null }>;
+    const uids = Array.from(new Set(rows.map((r) => r.user_id)));
+    let profMap: Record<string, { full_name: string | null; email: string | null }> = {};
+    if (uids.length > 0) {
+      const { data: profs } = await supabase.from("profiles").select("id, full_name, email").in("id", uids);
+      profMap = Object.fromEntries((profs ?? []).map((p) => [p.id, { full_name: p.full_name, email: p.email }]));
+    }
     const seen = new Map<string, { user_id: string; full_name: string; email: string; roles: string[] }>();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (data ?? []).forEach((r: any) => {
+    rows.forEach((r) => {
       const uid = r.user_id;
-      const prev = seen.get(uid);
       const role = r.roles?.name ?? "";
+      const prof = profMap[uid];
+      const prev = seen.get(uid);
       if (prev) {
         if (role && !prev.roles.includes(role)) prev.roles.push(role);
       } else {
         seen.set(uid, {
           user_id: uid,
-          full_name: r.profiles?.full_name || r.profiles?.email || "—",
-          email: r.profiles?.email ?? "",
+          full_name: prof?.full_name || prof?.email || "—",
+          email: prof?.email ?? "",
           roles: role ? [role] : [],
         });
       }
