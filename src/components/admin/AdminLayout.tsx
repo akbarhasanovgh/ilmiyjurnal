@@ -164,7 +164,7 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
     <div className="min-h-screen flex bg-muted/40">
       <aside className="w-[260px] shrink-0 flex flex-col p-3">
         <div className="flex-1 flex flex-col rounded-3xl bg-card/70 backdrop-blur border border-border/60 shadow-sm overflow-hidden">
-          <div className="p-4 pb-3">
+          <div className="p-4 pb-2">
             <Link
               to="/"
               className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors rounded-full px-2 py-1 -ml-2 hover:bg-muted"
@@ -172,15 +172,6 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
               <ChevronLeft className="h-3.5 w-3.5" />
               Saytga qaytish
             </Link>
-            <div className="mt-3 flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Shield className="h-[18px] w-[18px] text-primary" strokeWidth={2.2} />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[15px] font-semibold font-serif tracking-tight leading-tight">Admin</p>
-                <p className="text-[11px] text-muted-foreground leading-tight">Tahririyat paneli</p>
-              </div>
-            </div>
           </div>
 
           <ScrollArea className="flex-1 px-2">
