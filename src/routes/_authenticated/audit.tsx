@@ -1,9 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
-import { createServerFn } from "@tanstack/react-start";
+import { useServerFn, createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { EditorialShell } from "@/components/editorial-shell";
+import { format } from "date-fns";
+import { Loader2, History } from "lucide-react";
+
+import { AdminLayout } from "@/components/admin/AdminLayout";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const listAuditLog = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -27,32 +39,57 @@ function Audit() {
   const q = useQuery({ queryKey: ["audit-log"], queryFn: () => list() });
 
   return (
-    <EditorialShell>
-      <div className="p-8 md:p-12 max-w-5xl">
-        <div className="mb-10">
-          <p className="label-mono">Tizim</p>
-          <h1 className="font-serif text-4xl leading-tight mt-2">Audit jurnali</h1>
-          <p className="text-sm text-ink-muted mt-2">Barcha muhim amallar shu yerda qayd etiladi. Yozuvlar o‘zgartirilmaydi.</p>
-        </div>
-        {q.isPending ? (
-          <div className="space-y-2">{[0,1,2,3,4].map(i => <div key={i} className="h-10 bg-surface-sunken animate-pulse" />)}</div>
-        ) : q.error ? (
-          <p className="text-sm text-destructive">{(q.error as Error).message}</p>
-        ) : (q.data ?? []).length === 0 ? (
-          <p className="text-sm text-ink-muted">Hali yozuvlar yo‘q.</p>
-        ) : (
-          <div className="divide-y divide-rule border-y border-rule font-mono text-xs">
-            {q.data!.map((r) => (
-              <div key={r.id} className="grid grid-cols-12 gap-3 py-2 items-baseline">
-                <div className="col-span-3 text-ink-muted">{new Date(r.created_at).toLocaleString("uz-UZ")}</div>
-                <div className="col-span-3 uppercase">{r.action}</div>
-                <div className="col-span-2 text-ink-muted">{r.resource_type}</div>
-                <div className="col-span-4 truncate text-ink-muted">{r.resource_id ?? "—"}</div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </EditorialShell>
+    <AdminLayout
+      title="Audit jurnali"
+      description="Barcha muhim amallar shu yerda qayd etiladi. Yozuvlar o‘zgartirilmaydi."
+    >
+      <Card>
+        <CardContent className="p-0">
+          {q.isPending ? (
+            <div className="flex items-center justify-center py-16">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : q.error ? (
+            <div className="p-6 text-sm text-destructive">{(q.error as Error).message}</div>
+          ) : (q.data ?? []).length === 0 ? (
+            <div className="text-center py-16">
+              <History className="h-8 w-8 mx-auto mb-3 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">Hali yozuvlar yo‘q</p>
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-44">Vaqt</TableHead>
+                  <TableHead className="w-56">Amal</TableHead>
+                  <TableHead className="w-36">Turi</TableHead>
+                  <TableHead>Resurs ID</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {q.data!.map((r) => (
+                  <TableRow key={r.id}>
+                    <TableCell className="text-xs text-muted-foreground font-mono">
+                      {format(new Date(r.created_at), "dd MMM yyyy HH:mm")}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="font-mono text-xs font-normal">
+                        {r.action}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {r.resource_type}
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground font-mono truncate">
+                      {r.resource_id ?? "—"}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+    </AdminLayout>
   );
 }
