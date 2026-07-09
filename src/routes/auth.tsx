@@ -96,7 +96,7 @@ function AuthPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-page text-ink grid md:grid-cols-2">
+    <div className="h-dvh overflow-hidden bg-page text-ink grid md:grid-cols-2">
       <aside className="hidden md:flex relative overflow-hidden border-r border-rule bg-page items-center justify-center p-12">
         <img
           src={authEnsemble}
