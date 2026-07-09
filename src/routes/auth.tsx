@@ -5,6 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import authPortrait from "@/assets/auth-portrait.png";
+import authPortrait2 from "@/assets/auth-portrait-2.png";
+import authPortrait3 from "@/assets/auth-portrait-3.png";
+import authPortrait4 from "@/assets/auth-portrait-4.png";
+import authPortrait5 from "@/assets/auth-portrait-5.png";
 
 const searchSchema = z.object({ next: z.string().optional() });
 
@@ -97,27 +101,68 @@ function AuthPage() {
 
   return (
     <div className="min-h-dvh bg-page text-ink grid md:grid-cols-2">
-      <aside className="hidden md:flex flex-col justify-between p-12 border-r border-rule">
-        <Link to="/" className="space-y-2">
+      <aside className="hidden md:flex flex-col justify-between p-12 border-r border-rule relative overflow-hidden">
+        <Link to="/" className="space-y-2 relative z-10">
           <p className="label-mono">ISSN 2010-5584</p>
           <h1 className="font-serif text-3xl leading-tight tracking-tight">O‘zbek tili va adabiyoti</h1>
         </Link>
-        <div className="max-w-md space-y-6">
-          <img
-            src={authPortrait}
-            alt="Pencil portrait"
-            className="w-56 h-auto select-none"
-            draggable={false}
-          />
+
+        <div className="max-w-md space-y-6 relative z-10">
           <p className="font-serif text-2xl leading-snug text-ink">
             «Til — millatning ruhi, adabiyot — uning ongi.»
           </p>
           <p className="text-sm text-ink-muted leading-relaxed">
-            Tahririyat tizimi orqali maqolangizni topshirasiz, taqriz jarayonini
-            kuzatasiz va nashr etilgan ishlaringizni boshqarasiz.
+            O‘zbek filologiyasi va adabiyotshunosligi an’analarini davom
+            ettiruvchi olimlar va yozuvchilar mavrosida.
           </p>
         </div>
-        <p className="label-mono">Tahririyat, 2026</p>
+
+        {/* Portrait frieze — gaze directed toward the center */}
+        <div
+          aria-hidden
+          className="pointer-events-none select-none absolute inset-x-0 bottom-0 flex items-end justify-between px-6 opacity-90"
+        >
+          {/* Leftmost: turban scholar looking right → toward center */}
+          <img
+            src={authPortrait2}
+            alt=""
+            className="w-32 lg:w-40 h-auto -mb-4 [mask-image:linear-gradient(to_bottom,black_70%,transparent)]"
+            draggable={false}
+          />
+          {/* Older man, nearly forward */}
+          <img
+            src={authPortrait5}
+            alt=""
+            className="w-28 lg:w-36 h-auto -mb-6 [mask-image:linear-gradient(to_bottom,black_70%,transparent)]"
+            draggable={false}
+          />
+          {/* Center: young scholar with round glasses, forward */}
+          <img
+            src={authPortrait}
+            alt=""
+            className="w-32 lg:w-44 h-auto -mb-2 [mask-image:linear-gradient(to_bottom,black_72%,transparent)]"
+            draggable={false}
+          />
+          {/* Qodiriy, gaze slightly left → toward center */}
+          <img
+            src={authPortrait3}
+            alt=""
+            className="w-28 lg:w-36 h-auto -mb-6 [mask-image:linear-gradient(to_bottom,black_70%,transparent)]"
+            draggable={false}
+          />
+          {/* Rightmost: brown-suit scholar looking left → toward center */}
+          <img
+            src={authPortrait4}
+            alt=""
+            className="w-32 lg:w-40 h-auto -mb-4 [mask-image:linear-gradient(to_bottom,black_70%,transparent)]"
+            draggable={false}
+          />
+        </div>
+
+        {/* Soft fade behind the mono label so it reads over the frieze */}
+        <p className="label-mono relative z-10 bg-page/80 backdrop-blur-[1px] w-fit px-1 -mx-1">
+          Tahririyat, 2026
+        </p>
       </aside>
 
       <div className="flex items-center justify-center p-6 md:p-12">
