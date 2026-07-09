@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { EditorialShell } from "@/components/editorial-shell";
+import { AuthorShell } from "@/components/author-shell";
 import { getSessionContext } from "@/lib/auth.functions";
 import { updateMyProfile } from "@/lib/admin.functions";
 
@@ -42,27 +42,67 @@ function ProfileSettings() {
   });
 
   return (
-    <EditorialShell>
-      <div className="p-8 md:p-12 max-w-2xl">
+    <AuthorShell>
+      <div className="px-10 md:px-14 py-12 max-w-2xl">
         <div className="mb-10">
-          <p className="label-mono">Sozlamalar</p>
-          <h1 className="font-serif text-4xl leading-tight mt-2">Profil</h1>
+          <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-muted-foreground">
+            Sozlamalar
+          </p>
+          <h1 className="font-serif text-[36px] leading-tight tracking-tight mt-3 text-foreground">
+            Profil
+          </h1>
+          <p className="text-[14px] text-muted-foreground mt-3 max-w-md leading-relaxed">
+            Sizning ma’lumotlaringiz maqolalarga muallif sifatida biriktiriladi.
+          </p>
         </div>
         <form onSubmit={(e) => { e.preventDefault(); m.mutate(); }} className="space-y-5">
-          <F l="To‘liq ism-sharif"><input className="input" required value={form.full_name} onChange={(e) => setForm(f => ({ ...f, full_name: e.target.value }))} /></F>
-          <F l="Ilmiy daraja"><input className="input" value={form.academic_degree} onChange={(e) => setForm(f => ({ ...f, academic_degree: e.target.value }))} placeholder="fil.f.n., dots., prof." /></F>
-          <F l="Muassasa"><input className="input" value={form.institution_text} onChange={(e) => setForm(f => ({ ...f, institution_text: e.target.value }))} /></F>
-          <F l="Bo‘lim"><input className="input" value={form.department} onChange={(e) => setForm(f => ({ ...f, department: e.target.value }))} /></F>
-          <F l="ORCID"><input className="input font-mono" value={form.orcid} onChange={(e) => setForm(f => ({ ...f, orcid: e.target.value }))} placeholder="0000-0000-0000-0000" /></F>
-          <F l="Davlat"><input className="input" value={form.country} onChange={(e) => setForm(f => ({ ...f, country: e.target.value }))} /></F>
-          <button className="btn-primary hover:bg-ink-soft disabled:opacity-50" disabled={m.isPending}>
-            {m.isPending ? "..." : "Saqlash"}
-          </button>
+          <F l="To‘liq ism-sharif">
+            <input className="input rounded-xl" required value={form.full_name}
+              onChange={(e) => setForm(f => ({ ...f, full_name: e.target.value }))} />
+          </F>
+          <F l="Ilmiy daraja">
+            <input className="input rounded-xl" value={form.academic_degree}
+              onChange={(e) => setForm(f => ({ ...f, academic_degree: e.target.value }))}
+              placeholder="fil.f.n., dots., prof." />
+          </F>
+          <F l="Muassasa">
+            <input className="input rounded-xl" value={form.institution_text}
+              onChange={(e) => setForm(f => ({ ...f, institution_text: e.target.value }))} />
+          </F>
+          <F l="Bo‘lim">
+            <input className="input rounded-xl" value={form.department}
+              onChange={(e) => setForm(f => ({ ...f, department: e.target.value }))} />
+          </F>
+          <F l="ORCID">
+            <input className="input font-mono rounded-xl" value={form.orcid}
+              onChange={(e) => setForm(f => ({ ...f, orcid: e.target.value }))}
+              placeholder="0000-0000-0000-0000" />
+          </F>
+          <F l="Davlat">
+            <input className="input rounded-xl" value={form.country}
+              onChange={(e) => setForm(f => ({ ...f, country: e.target.value }))} />
+          </F>
+          <div className="pt-2">
+            <button
+              className="inline-flex items-center gap-2 rounded-full bg-foreground text-background px-6 py-2.5 text-[13.5px] font-medium hover:opacity-90 transition-opacity active:scale-[0.97] disabled:opacity-50"
+              disabled={m.isPending}
+            >
+              {m.isPending ? "Saqlanmoqda…" : "Saqlash"}
+            </button>
+          </div>
         </form>
       </div>
-    </EditorialShell>
+    </AuthorShell>
   );
 }
+
 function F({ l, children }: { l: string; children: React.ReactNode }) {
-  return <label className="block space-y-1.5"><span className="label-mono block">{l}</span>{children}</label>;
+  return (
+    <label className="block space-y-2">
+      <span className="text-[11.5px] font-semibold tracking-[0.12em] uppercase text-muted-foreground block">
+        {l}
+      </span>
+      {children}
+    </label>
+  );
 }
