@@ -71,6 +71,12 @@ function AdminUsersPage() {
 
   const [q, setQ] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
+  const [pendingRevoke, setPendingRevoke] = useState<{
+    user_id: string;
+    role_id: string;
+    role_name: string;
+    user_label: string;
+  } | null>(null);
 
   const grantMut = useMutation({
     mutationFn: (v: { user_id: string; role_id: string }) => grant({ data: v }),
