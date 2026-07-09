@@ -26,6 +26,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 import {
   adminListUsers,
@@ -61,6 +71,12 @@ function AdminUsersPage() {
 
   const [q, setQ] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
+  const [pendingRevoke, setPendingRevoke] = useState<{
+    user_id: string;
+    role_id: string;
+    role_name: string;
+    user_label: string;
+  } | null>(null);
 
   const grantMut = useMutation({
     mutationFn: (v: { user_id: string; role_id: string }) => grant({ data: v }),
@@ -113,20 +129,20 @@ function AdminUsersPage() {
       <div className="space-y-4">
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Ism, email, muassasa bo‘yicha qidirish…"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              className="pl-10"
+              className="pl-11 h-11 rounded-2xl bg-muted/50 border-transparent focus-visible:bg-background focus-visible:border-border transition-colors text-[14.5px]"
             />
           </div>
           <Select value={roleFilter} onValueChange={setRoleFilter}>
-            <SelectTrigger className="w-52">
+            <SelectTrigger className="w-56 h-11 rounded-2xl bg-muted/50 border-transparent text-[14.5px]">
               <SelectValue placeholder="Rol bo‘yicha filtr" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-2xl">
               <SelectItem value="all">Barcha rollar</SelectItem>
               <SelectItem value="author">Muallif (standart)</SelectItem>
               {(roles.data ?? []).map((r) => (
@@ -148,7 +164,7 @@ function AdminUsersPage() {
         ) : null}
 
         {/* Table */}
-        <Card>
+        <Card className="rounded-3xl border-border/60 shadow-sm overflow-hidden">
           <CardContent className="p-0">
             {users.isPending || roles.isPending ? (
               <div className="flex items-center justify-center py-16">
@@ -220,17 +236,16 @@ function AdminUsersPage() {
                                 >
                                   {r.name}
                                   <button
-                                    onClick={() => {
-                                      if (
-                                        confirm(
-                                          `"${r.name}" rolini ${u.full_name || u.email} dan olib tashlaysizmi?`,
-                                        )
-                                      ) {
-                                        revokeMut.mutate({ user_id: u.id, role_id: r.id });
-                                      }
-                                    }}
+                                    onClick={() =>
+                                      setPendingRevoke({
+                                        user_id: u.id,
+                                        role_id: r.id,
+                                        role_name: r.name,
+                                        user_label: u.full_name || u.email || "",
+                                      })
+                                    }
                                     disabled={revokeMut.isPending}
-                                    className="rounded-sm hover:bg-background/40 transition-colors"
+                                    className="rounded-full hover:bg-background/40 transition-colors p-0.5"
                                     title="Rolni olib tashlash"
                                   >
                                     <X className="h-3 w-3" />
@@ -248,13 +263,13 @@ function AdminUsersPage() {
                             }}
                             disabled={grantMut.isPending}
                           >
-                            <SelectTrigger className="h-9">
+                            <SelectTrigger className="h-10 rounded-xl bg-muted/40 border-transparent hover:bg-muted/70 transition-colors">
                               <div className="flex items-center gap-2 text-muted-foreground">
                                 <UserPlus className="h-3.5 w-3.5" />
                                 <SelectValue placeholder="Rol qo‘shish" />
                               </div>
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="rounded-2xl">
                               {(roles.data ?? [])
                                 .filter((r) => !userRoleIds.has(r.id))
                                 .map((r) => (
@@ -289,29 +304,75 @@ function AdminUsersPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <UsersIcon className="h-5 w-5 mx-auto mb-2 text-muted-foreground" />
-              <p className="text-3xl font-bold">{totals.total}</p>
-              <p className="text-sm text-muted-foreground">Jami foydalanuvchilar</p>
+          <Card className="rounded-3xl border-border/60 shadow-sm transition-transform hover:-translate-y-0.5">
+            <CardContent className="pt-6 pb-6 text-center">
+              <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-violet-500/10 flex items-center justify-center">
+                <UsersIcon className="h-5 w-5 text-violet-500" />
+              </div>
+              <p className="text-3xl font-semibold tracking-tight">{totals.total}</p>
+              <p className="text-sm text-muted-foreground mt-1">Jami foydalanuvchilar</p>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <UserPlus className="h-5 w-5 mx-auto mb-2 text-muted-foreground" />
-              <p className="text-3xl font-bold">{totals.staff}</p>
-              <p className="text-sm text-muted-foreground">Tahririyat xodimlari</p>
+          <Card className="rounded-3xl border-border/60 shadow-sm transition-transform hover:-translate-y-0.5">
+            <CardContent className="pt-6 pb-6 text-center">
+              <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                <UserPlus className="h-5 w-5 text-emerald-500" />
+              </div>
+              <p className="text-3xl font-semibold tracking-tight">{totals.staff}</p>
+              <p className="text-sm text-muted-foreground mt-1">Tahririyat xodimlari</p>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <Shield className="h-5 w-5 mx-auto mb-2 text-primary" />
-              <p className="text-3xl font-bold">{totals.admins}</p>
-              <p className="text-sm text-muted-foreground">Administratorlar</p>
+          <Card className="rounded-3xl border-border/60 shadow-sm transition-transform hover:-translate-y-0.5">
+            <CardContent className="pt-6 pb-6 text-center">
+              <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Shield className="h-5 w-5 text-primary" />
+              </div>
+              <p className="text-3xl font-semibold tracking-tight">{totals.admins}</p>
+              <p className="text-sm text-muted-foreground mt-1">Administratorlar</p>
             </CardContent>
           </Card>
         </div>
       </div>
+
+      <AlertDialog
+        open={pendingRevoke !== null}
+        onOpenChange={(o) => !o && setPendingRevoke(null)}
+      >
+        <AlertDialogContent className="rounded-3xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl tracking-tight">
+              Rolni olib tashlash?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-[14.5px]">
+              {pendingRevoke ? (
+                <>
+                  <span className="font-medium text-foreground">"{pendingRevoke.role_name}"</span>{" "}
+                  rolini{" "}
+                  <span className="font-medium text-foreground">{pendingRevoke.user_label}</span>{" "}
+                  dan olib tashlaysizmi? Bu amalni bekor qilib bo‘lmaydi.
+                </>
+              ) : null}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-full h-11 px-6">Bekor qilish</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (pendingRevoke) {
+                  revokeMut.mutate({
+                    user_id: pendingRevoke.user_id,
+                    role_id: pendingRevoke.role_id,
+                  });
+                  setPendingRevoke(null);
+                }
+              }}
+              className="rounded-full h-11 px-6 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Olib tashlash
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminLayout>
   );
 }
