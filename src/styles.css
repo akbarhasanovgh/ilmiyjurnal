@@ -125,7 +125,7 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
-  ::selection { background-color: oklch(0.86 0.005 285); }
+  ::selection { background-color: var(--accent-oxblood); color: var(--page); }
 }
 
 /* Small utilities used across public + workspace */
