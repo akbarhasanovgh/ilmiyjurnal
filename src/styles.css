@@ -15,15 +15,17 @@
 :root {
   --radius: 0.25rem;
 
-  /* Paper palette */
-  --page:            oklch(0.985 0.002 95);      /* #fcfcfb */
-  --ink:             oklch(0.185 0.005 285);     /* #18181b */
-  --ink-soft:        oklch(0.32  0.005 285);     /* #3f3f46 */
-  --ink-muted:       oklch(0.55  0.007 285);     /* zinc-500ish */
-  --ink-faint:       oklch(0.72  0.006 285);     /* zinc-400ish */
-  --rule:            oklch(0.185 0.005 285 / 8%); /* zinc-950/5 */
-  --rule-strong:     oklch(0.185 0.005 285 / 12%);
-  --surface-sunken:  oklch(0.185 0.005 285 / 2%);
+  /* Paper palette — three-color archival system */
+  --page:            #FDFCFB;                    /* warm archival white */
+  --ink:             #1A1A1A;                    /* deep ink */
+  --ink-soft:        #3a3a3a;
+  --ink-muted:       #6b6b6b;
+  --ink-faint:       #9a9a9a;
+  --rule:            rgba(26, 26, 26, 0.10);
+  --rule-strong:     rgba(26, 26, 26, 0.18);
+  --surface-sunken:  #F7F4F0;                    /* toned paper */
+  --accent-oxblood:  #630D16;                    /* single institutional accent */
+  --accent-oxblood-strong: #7a0f1a;
 
   /* Semantic (shadcn compat) */
   --background: var(--page);
