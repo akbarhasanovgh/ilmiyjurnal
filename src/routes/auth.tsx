@@ -118,16 +118,16 @@ function AuthPage() {
 
 
 
-      <div className="flex items-center justify-center p-6 md:p-12">
-        <div className="w-full max-w-sm space-y-8">
-          <div className="space-y-2">
+      <div className="flex items-center justify-center p-6 md:p-8">
+        <div className="w-full max-w-sm space-y-5">
+          <div className="space-y-1.5">
             <p className="label-mono">{mode === "signin" ? "Kirish" : "Ro‘yxatdan o‘tish"}</p>
-            <h2 className="font-serif text-3xl leading-tight">
+            <h2 className="font-serif text-2xl leading-tight">
               {mode === "signin" ? "Hisobingizga kiring" : "Yangi hisob yarating"}
             </h2>
           </div>
 
-          <form onSubmit={submit} className="space-y-4">
+          <form onSubmit={submit} className="space-y-3">
             {mode === "signup" && (
               <Field label="To‘liq ism-sharif">
                 <input
