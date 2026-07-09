@@ -126,48 +126,47 @@ function AdminUsersPage() {
       title="Foydalanuvchilar boshqaruvi"
       description="Ro‘yxatdan o‘tgan foydalanuvchilar va ularga tayinlangan rollar."
     >
-      <div className="space-y-4">
-        {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Ism, email, muassasa bo‘yicha qidirish…"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              className="pl-11 h-11 rounded-2xl bg-muted/50 border-transparent focus-visible:bg-background focus-visible:border-border transition-colors text-[14.5px]"
-            />
+      <div className="space-y-5">
+        {/* Toolbar shell */}
+        <div className="rounded-3xl bg-muted/30 border border-border/60 p-3">
+          <div className="flex flex-col sm:flex-row gap-2.5 mb-3 px-1 pt-1">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Ism, email, muassasa bo‘yicha qidirish…"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                className="pl-11 h-11 rounded-full bg-background border-transparent shadow-sm focus-visible:border-border text-[14.5px]"
+              />
+            </div>
+            <Select value={roleFilter} onValueChange={setRoleFilter}>
+              <SelectTrigger className="w-56 h-11 rounded-full bg-background border-transparent shadow-sm text-[13.5px]">
+                <span className="text-muted-foreground mr-1">Rol:</span>
+                <SelectValue placeholder="Barchasi" />
+              </SelectTrigger>
+              <SelectContent className="rounded-2xl">
+                <SelectItem value="all">Barcha rollar</SelectItem>
+                <SelectItem value="author">Muallif (standart)</SelectItem>
+                {(roles.data ?? []).map((r) => (
+                  <SelectItem key={r.id} value={r.key}>
+                    {r.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={roleFilter} onValueChange={setRoleFilter}>
-            <SelectTrigger className="w-56 h-11 rounded-2xl bg-muted/50 border-transparent text-[14.5px]">
-              <SelectValue placeholder="Rol bo‘yicha filtr" />
-            </SelectTrigger>
-            <SelectContent className="rounded-2xl">
-              <SelectItem value="all">Barcha rollar</SelectItem>
-              <SelectItem value="author">Muallif (standart)</SelectItem>
-              {(roles.data ?? []).map((r) => (
-                <SelectItem key={r.id} value={r.key}>
-                  {r.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
 
-        {/* Error */}
-        {error ? (
-          <Card>
-            <CardContent className="py-6 text-sm text-destructive">
+          {/* Error */}
+          {error ? (
+            <div className="mb-3 rounded-2xl bg-destructive/5 border border-destructive/20 py-3 px-4 text-sm text-destructive">
               {(error as Error).message}
-            </CardContent>
-          </Card>
-        ) : null}
+            </div>
+          ) : null}
 
-        {/* Table */}
-        <Card className="rounded-3xl border-border/60 shadow-sm overflow-hidden">
-          <CardContent className="p-0">
+          {/* Table */}
+          <div className="rounded-2xl bg-background border border-border/50 overflow-hidden">
             {users.isPending || roles.isPending ? (
-              <div className="flex items-center justify-center py-16">
+              <div className="flex items-center justify-center py-20">
                 <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
               </div>
             ) : filtered.length > 0 ? (
