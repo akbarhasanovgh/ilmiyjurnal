@@ -164,7 +164,7 @@ function AdminUsersPage() {
         ) : null}
 
         {/* Table */}
-        <Card>
+        <Card className="rounded-3xl border-border/60 shadow-sm overflow-hidden">
           <CardContent className="p-0">
             {users.isPending || roles.isPending ? (
               <div className="flex items-center justify-center py-16">
