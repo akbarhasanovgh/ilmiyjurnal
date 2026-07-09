@@ -236,17 +236,16 @@ function AdminUsersPage() {
                                 >
                                   {r.name}
                                   <button
-                                    onClick={() => {
-                                      if (
-                                        confirm(
-                                          `"${r.name}" rolini ${u.full_name || u.email} dan olib tashlaysizmi?`,
-                                        )
-                                      ) {
-                                        revokeMut.mutate({ user_id: u.id, role_id: r.id });
-                                      }
-                                    }}
+                                    onClick={() =>
+                                      setPendingRevoke({
+                                        user_id: u.id,
+                                        role_id: r.id,
+                                        role_name: r.name,
+                                        user_label: u.full_name || u.email || "",
+                                      })
+                                    }
                                     disabled={revokeMut.isPending}
-                                    className="rounded-sm hover:bg-background/40 transition-colors"
+                                    className="rounded-full hover:bg-background/40 transition-colors p-0.5"
                                     title="Rolni olib tashlash"
                                   >
                                     <X className="h-3 w-3" />
