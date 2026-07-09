@@ -116,9 +116,7 @@ function AuthPage() {
         </div>
       </aside>
 
-          Tahririyat, 2026
-        </p>
-      </aside>
+
 
       <div className="flex items-center justify-center p-6 md:p-12">
         <div className="w-full max-w-sm space-y-8">
