@@ -284,12 +284,16 @@ export const getSubmission = createServerFn({ method: "GET" })
   .inputValidator((raw: unknown) => z.object({ id: z.string().uuid() }).parse(raw))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const [sub, authors, files, history, assignments] = await Promise.all([
-      supabase.from("submissions").select("*").eq("id", data.id).maybeSingle(),
-      supabase.from("submission_authors").select("*").eq("submission_id", data.id).order("sort_order"),
-      supabase.from("submission_files").select("*").eq("submission_id", data.id).order("uploaded_at", { ascending: false }),
-      supabase.from("submission_status_history").select("*").eq("submission_id", data.id).order("created_at", { ascending: false }),
-      supabase.from("submission_assignments").select("*").eq("submission_id", data.id).order("assigned_at", { ascending: false }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sb = supabase as any;
+    const [sub, authors, files, history, assignments, declarations, suggested] = await Promise.all([
+      sb.from("submissions").select("*").eq("id", data.id).maybeSingle(),
+      sb.from("submission_authors").select("*").eq("submission_id", data.id).order("sort_order"),
+      sb.from("submission_files").select("*").eq("submission_id", data.id).order("uploaded_at", { ascending: false }),
+      sb.from("submission_status_history").select("*").eq("submission_id", data.id).order("created_at", { ascending: false }),
+      sb.from("submission_assignments").select("*").eq("submission_id", data.id).order("assigned_at", { ascending: false }),
+      sb.from("submission_declarations").select("*").eq("submission_id", data.id),
+      sb.from("submission_suggested_reviewers").select("*").eq("submission_id", data.id).order("sort_order"),
     ]);
     if (sub.error) throw new Error(sub.error.message);
     if (!sub.data) throw new Error("not_found");
@@ -299,6 +303,8 @@ export const getSubmission = createServerFn({ method: "GET" })
       files: files.data ?? [],
       history: history.data ?? [],
       assignments: assignments.data ?? [],
+      declarations: declarations.data ?? [],
+      suggested_reviewers: suggested.data ?? [],
     };
   });
 
