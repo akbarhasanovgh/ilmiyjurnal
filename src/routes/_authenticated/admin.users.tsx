@@ -263,13 +263,13 @@ function AdminUsersPage() {
                             }}
                             disabled={grantMut.isPending}
                           >
-                            <SelectTrigger className="h-9">
+                            <SelectTrigger className="h-10 rounded-xl bg-muted/40 border-transparent hover:bg-muted/70 transition-colors">
                               <div className="flex items-center gap-2 text-muted-foreground">
                                 <UserPlus className="h-3.5 w-3.5" />
                                 <SelectValue placeholder="Rol qo‘shish" />
                               </div>
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="rounded-2xl">
                               {(roles.data ?? [])
                                 .filter((r) => !userRoleIds.has(r.id))
                                 .map((r) => (
