@@ -48,17 +48,17 @@
   --input: var(--rule-strong);
   --ring: var(--ink);
 
-  /* Workflow-state ramp (calm, not decorative) */
-  --state-draft:              oklch(0.72 0.006 285);
-  --state-submitted:          oklch(0.62 0.13 240);
-  --state-screening:          oklch(0.62 0.13 240);
-  --state-editor-assigned:    oklch(0.55 0.11 200);
-  --state-under-review:       oklch(0.70 0.14 75);   /* amber */
-  --state-revision-requested: oklch(0.70 0.14 75);
-  --state-revised:            oklch(0.62 0.13 155);
-  --state-accepted:           oklch(0.55 0.14 155);
-  --state-rejected:           oklch(0.55 0.19 27);
-  --state-withdrawn:          oklch(0.55 0.007 285);
+  /* Workflow-state ramp — monochrome with oxblood accent for active states */
+  --state-draft:              #9a9a9a;
+  --state-submitted:          var(--accent-oxblood);
+  --state-screening:          var(--accent-oxblood);
+  --state-editor-assigned:    #1A1A1A;
+  --state-under-review:       var(--accent-oxblood);
+  --state-revision-requested: #1A1A1A;
+  --state-revised:            #1A1A1A;
+  --state-accepted:           var(--accent-oxblood);
+  --state-rejected:           #6b6b6b;
+  --state-withdrawn:          #9a9a9a;
 }
 
 @theme inline {
