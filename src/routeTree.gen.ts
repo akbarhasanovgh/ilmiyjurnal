@@ -16,6 +16,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedSubmissionsIndexRouteImport } from './routes/_authenticated/submissions.index'
 
 const ForAuthorsRoute = ForAuthorsRouteImport.update({
   id: '/for-authors',
@@ -51,6 +52,12 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSubmissionsIndexRoute =
+  AuthenticatedSubmissionsIndexRouteImport.update({
+    id: '/submissions/',
+    path: '/submissions/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/bootstrap': typeof BootstrapRoute
   '/for-authors': typeof ForAuthorsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/submissions/': typeof AuthenticatedSubmissionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -67,6 +75,7 @@ export interface FileRoutesByTo {
   '/bootstrap': typeof BootstrapRoute
   '/for-authors': typeof ForAuthorsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/submissions': typeof AuthenticatedSubmissionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,6 +86,7 @@ export interface FileRoutesById {
   '/bootstrap': typeof BootstrapRoute
   '/for-authors': typeof ForAuthorsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/submissions/': typeof AuthenticatedSubmissionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -87,8 +97,16 @@ export interface FileRouteTypes {
     | '/bootstrap'
     | '/for-authors'
     | '/dashboard'
+    | '/submissions/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/auth' | '/bootstrap' | '/for-authors' | '/dashboard'
+  to:
+    | '/'
+    | '/about'
+    | '/auth'
+    | '/bootstrap'
+    | '/for-authors'
+    | '/dashboard'
+    | '/submissions'
   id:
     | '__root__'
     | '/'
@@ -98,6 +116,7 @@ export interface FileRouteTypes {
     | '/bootstrap'
     | '/for-authors'
     | '/_authenticated/dashboard'
+    | '/_authenticated/submissions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -160,15 +179,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/submissions/': {
+      id: '/_authenticated/submissions/'
+      path: '/submissions'
+      fullPath: '/submissions/'
+      preLoaderRoute: typeof AuthenticatedSubmissionsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedSubmissionsIndexRoute: typeof AuthenticatedSubmissionsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedSubmissionsIndexRoute: AuthenticatedSubmissionsIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
