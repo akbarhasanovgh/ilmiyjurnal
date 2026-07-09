@@ -133,3 +133,64 @@
 }
 @utility hairline { border-color: var(--rule); }
 @utility hairline-strong { border-color: var(--rule-strong); }
+
+@utility input {
+  display: block;
+  width: 100%;
+  border-radius: 2px;
+  border: 1px solid var(--rule-strong);
+  background: var(--page);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--ink);
+  transition: border-color 120ms, box-shadow 120ms;
+}
+@utility input-focus-ring {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+}
+@utility textarea {
+  display: block;
+  width: 100%;
+  border-radius: 2px;
+  border: 1px solid var(--rule-strong);
+  background: var(--page);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--ink);
+  min-height: 6rem;
+  line-height: 1.6;
+}
+@utility btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  background: var(--ink);
+  color: var(--page);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--ink);
+  transition: background-color 120ms;
+}
+@utility btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  background: var(--page);
+  color: var(--ink);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--rule-strong);
+  transition: background-color 120ms, border-color 120ms;
+}
+
+input.input:focus, textarea.textarea:focus, select.input:focus {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+}
