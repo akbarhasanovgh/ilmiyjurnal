@@ -133,9 +133,9 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
         key={item.url}
         to={item.url}
         className={cn(
-          "group relative flex items-center gap-3 rounded-2xl px-2.5 py-2 transition-all duration-200",
+          "group relative flex items-center gap-3 rounded-2xl px-2.5 py-2 mx-1 transition-all duration-200 ease-out active:scale-[0.97]",
           active
-            ? "bg-background shadow-sm ring-1 ring-border/60"
+            ? "bg-background shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_12px_-4px_rgba(0,0,0,0.08)]"
             : "hover:bg-background/60",
         )}
       >
@@ -143,7 +143,7 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
           className={cn(
             "w-9 h-9 shrink-0 rounded-xl flex items-center justify-center transition-all duration-200",
             active ? tone.active : tone.bg,
-            "group-hover:scale-105",
+            "group-hover:scale-105 group-active:scale-95",
           )}
         >
           <Icon className={cn("h-[18px] w-[18px]", tone.icon)} strokeWidth={2.2} />
@@ -164,7 +164,7 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
     <div className="min-h-screen flex bg-muted/40">
       <aside className="w-[260px] shrink-0 flex flex-col p-3">
         <div className="flex-1 flex flex-col rounded-3xl bg-card/70 backdrop-blur border border-border/60 shadow-sm overflow-hidden">
-          <div className="p-4 pb-3">
+          <div className="p-4 pb-2">
             <Link
               to="/"
               className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors rounded-full px-2 py-1 -ml-2 hover:bg-muted"
@@ -172,15 +172,6 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
               <ChevronLeft className="h-3.5 w-3.5" />
               Saytga qaytish
             </Link>
-            <div className="mt-3 flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Shield className="h-[18px] w-[18px] text-primary" strokeWidth={2.2} />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[15px] font-semibold font-serif tracking-tight leading-tight">Admin</p>
-                <p className="text-[11px] text-muted-foreground leading-tight">Tahririyat paneli</p>
-              </div>
-            </div>
           </div>
 
           <ScrollArea className="flex-1 px-2">
