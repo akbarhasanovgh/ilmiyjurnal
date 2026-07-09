@@ -16,7 +16,7 @@ export type WorkflowStateT =
   | "withdrawn";
 
 const MetaSchema = z.object({
-  title: z.string().min(1).max(500),
+  title: z.string().max(500),
   title_en: z.string().max(500).optional().nullable(),
   article_type: z.enum(["research", "review", "short_communication", "book_review", "editorial"]),
   research_field: z.string().max(200).optional().nullable(),
