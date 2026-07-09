@@ -16,7 +16,12 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedAuditRouteImport } from './routes/_authenticated/audit'
 import { Route as AuthenticatedSubmissionsIndexRouteImport } from './routes/_authenticated/submissions.index'
+import { Route as AuthenticatedSettingsProfileRouteImport } from './routes/_authenticated/settings.profile'
+import { Route as AuthenticatedEditorQueueRouteImport } from './routes/_authenticated/editor.queue'
+import { Route as AuthenticatedAdminInboxRouteImport } from './routes/_authenticated/admin.inbox'
+import { Route as AuthenticatedSubmissionsIdIndexRouteImport } from './routes/_authenticated/submissions.$id.index'
 import { Route as AuthenticatedSubmissionsIdEditRouteImport } from './routes/_authenticated/submissions.$id.edit'
 
 const ForAuthorsRoute = ForAuthorsRouteImport.update({
@@ -53,10 +58,38 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAuditRoute = AuthenticatedAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSubmissionsIndexRoute =
   AuthenticatedSubmissionsIndexRouteImport.update({
     id: '/submissions/',
     path: '/submissions/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSettingsProfileRoute =
+  AuthenticatedSettingsProfileRouteImport.update({
+    id: '/settings/profile',
+    path: '/settings/profile',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEditorQueueRoute =
+  AuthenticatedEditorQueueRouteImport.update({
+    id: '/editor/queue',
+    path: '/editor/queue',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminInboxRoute = AuthenticatedAdminInboxRouteImport.update({
+  id: '/admin/inbox',
+  path: '/admin/inbox',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSubmissionsIdIndexRoute =
+  AuthenticatedSubmissionsIdIndexRouteImport.update({
+    id: '/submissions/$id/',
+    path: '/submissions/$id/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSubmissionsIdEditRoute =
@@ -72,9 +105,14 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/bootstrap': typeof BootstrapRoute
   '/for-authors': typeof ForAuthorsRoute
+  '/audit': typeof AuthenticatedAuditRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/admin/inbox': typeof AuthenticatedAdminInboxRoute
+  '/editor/queue': typeof AuthenticatedEditorQueueRoute
+  '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/submissions/': typeof AuthenticatedSubmissionsIndexRoute
   '/submissions/$id/edit': typeof AuthenticatedSubmissionsIdEditRoute
+  '/submissions/$id/': typeof AuthenticatedSubmissionsIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -82,9 +120,14 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/bootstrap': typeof BootstrapRoute
   '/for-authors': typeof ForAuthorsRoute
+  '/audit': typeof AuthenticatedAuditRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/admin/inbox': typeof AuthenticatedAdminInboxRoute
+  '/editor/queue': typeof AuthenticatedEditorQueueRoute
+  '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/submissions': typeof AuthenticatedSubmissionsIndexRoute
   '/submissions/$id/edit': typeof AuthenticatedSubmissionsIdEditRoute
+  '/submissions/$id': typeof AuthenticatedSubmissionsIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -94,9 +137,14 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/bootstrap': typeof BootstrapRoute
   '/for-authors': typeof ForAuthorsRoute
+  '/_authenticated/audit': typeof AuthenticatedAuditRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/admin/inbox': typeof AuthenticatedAdminInboxRoute
+  '/_authenticated/editor/queue': typeof AuthenticatedEditorQueueRoute
+  '/_authenticated/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/_authenticated/submissions/': typeof AuthenticatedSubmissionsIndexRoute
   '/_authenticated/submissions/$id/edit': typeof AuthenticatedSubmissionsIdEditRoute
+  '/_authenticated/submissions/$id/': typeof AuthenticatedSubmissionsIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -106,9 +154,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bootstrap'
     | '/for-authors'
+    | '/audit'
     | '/dashboard'
+    | '/admin/inbox'
+    | '/editor/queue'
+    | '/settings/profile'
     | '/submissions/'
     | '/submissions/$id/edit'
+    | '/submissions/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -116,9 +169,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bootstrap'
     | '/for-authors'
+    | '/audit'
     | '/dashboard'
+    | '/admin/inbox'
+    | '/editor/queue'
+    | '/settings/profile'
     | '/submissions'
     | '/submissions/$id/edit'
+    | '/submissions/$id'
   id:
     | '__root__'
     | '/'
@@ -127,9 +185,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/bootstrap'
     | '/for-authors'
+    | '/_authenticated/audit'
     | '/_authenticated/dashboard'
+    | '/_authenticated/admin/inbox'
+    | '/_authenticated/editor/queue'
+    | '/_authenticated/settings/profile'
     | '/_authenticated/submissions/'
     | '/_authenticated/submissions/$id/edit'
+    | '/_authenticated/submissions/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -192,11 +255,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/audit': {
+      id: '/_authenticated/audit'
+      path: '/audit'
+      fullPath: '/audit'
+      preLoaderRoute: typeof AuthenticatedAuditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/submissions/': {
       id: '/_authenticated/submissions/'
       path: '/submissions'
       fullPath: '/submissions/'
       preLoaderRoute: typeof AuthenticatedSubmissionsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings/profile': {
+      id: '/_authenticated/settings/profile'
+      path: '/settings/profile'
+      fullPath: '/settings/profile'
+      preLoaderRoute: typeof AuthenticatedSettingsProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/editor/queue': {
+      id: '/_authenticated/editor/queue'
+      path: '/editor/queue'
+      fullPath: '/editor/queue'
+      preLoaderRoute: typeof AuthenticatedEditorQueueRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/inbox': {
+      id: '/_authenticated/admin/inbox'
+      path: '/admin/inbox'
+      fullPath: '/admin/inbox'
+      preLoaderRoute: typeof AuthenticatedAdminInboxRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/submissions/$id/': {
+      id: '/_authenticated/submissions/$id/'
+      path: '/submissions/$id'
+      fullPath: '/submissions/$id/'
+      preLoaderRoute: typeof AuthenticatedSubmissionsIdIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/submissions/$id/edit': {
@@ -210,15 +308,25 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAuditRoute: typeof AuthenticatedAuditRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedAdminInboxRoute: typeof AuthenticatedAdminInboxRoute
+  AuthenticatedEditorQueueRoute: typeof AuthenticatedEditorQueueRoute
+  AuthenticatedSettingsProfileRoute: typeof AuthenticatedSettingsProfileRoute
   AuthenticatedSubmissionsIndexRoute: typeof AuthenticatedSubmissionsIndexRoute
   AuthenticatedSubmissionsIdEditRoute: typeof AuthenticatedSubmissionsIdEditRoute
+  AuthenticatedSubmissionsIdIndexRoute: typeof AuthenticatedSubmissionsIdIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAuditRoute: AuthenticatedAuditRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedAdminInboxRoute: AuthenticatedAdminInboxRoute,
+  AuthenticatedEditorQueueRoute: AuthenticatedEditorQueueRoute,
+  AuthenticatedSettingsProfileRoute: AuthenticatedSettingsProfileRoute,
   AuthenticatedSubmissionsIndexRoute: AuthenticatedSubmissionsIndexRoute,
   AuthenticatedSubmissionsIdEditRoute: AuthenticatedSubmissionsIdEditRoute,
+  AuthenticatedSubmissionsIdIndexRoute: AuthenticatedSubmissionsIdIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
