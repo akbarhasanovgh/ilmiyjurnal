@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { EditorialShell } from "@/components/editorial-shell";
@@ -11,10 +11,22 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
   const getCtx = useServerFn(getSessionContext);
-  const { data: ctx } = useQuery({ queryKey: ["session-context"], queryFn: () => getCtx() });
+  const { data: ctx, isPending } = useQuery({ queryKey: ["session-context"], queryFn: () => getCtx() });
 
   const perms = new Set(ctx?.permissions ?? []);
-  const isEditorial = perms.has("submissions.view_all") || perms.has("submissions.view_assigned");
+  const isAdmin =
+    perms.has("submissions.view_all") ||
+    perms.has("users.view") ||
+    perms.has("audit.view") ||
+    perms.has("roles.manage");
+
+  // Admins live in the admin panel — send them there.
+  if (!isPending && isAdmin) {
+    return <Navigate to="/admin" replace />;
+  }
+
+  const isEditorial = perms.has("submissions.view_assigned");
+
 
   return (
     <EditorialShell>
