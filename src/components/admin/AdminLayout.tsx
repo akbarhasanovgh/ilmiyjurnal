@@ -133,9 +133,9 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
         key={item.url}
         to={item.url}
         className={cn(
-          "group relative flex items-center gap-3 rounded-2xl px-2.5 py-2 transition-all duration-200",
+          "group relative flex items-center gap-3 rounded-2xl px-2.5 py-2 mx-1 transition-all duration-200 ease-out active:scale-[0.97]",
           active
-            ? "bg-background shadow-sm ring-1 ring-border/60"
+            ? "bg-background shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_12px_-4px_rgba(0,0,0,0.08)]"
             : "hover:bg-background/60",
         )}
       >
@@ -143,7 +143,7 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
           className={cn(
             "w-9 h-9 shrink-0 rounded-xl flex items-center justify-center transition-all duration-200",
             active ? tone.active : tone.bg,
-            "group-hover:scale-105",
+            "group-hover:scale-105 group-active:scale-95",
           )}
         >
           <Icon className={cn("h-[18px] w-[18px]", tone.icon)} strokeWidth={2.2} />
