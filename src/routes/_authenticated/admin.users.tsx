@@ -304,29 +304,75 @@ function AdminUsersPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <UsersIcon className="h-5 w-5 mx-auto mb-2 text-muted-foreground" />
-              <p className="text-3xl font-bold">{totals.total}</p>
-              <p className="text-sm text-muted-foreground">Jami foydalanuvchilar</p>
+          <Card className="rounded-3xl border-border/60 shadow-sm transition-transform hover:-translate-y-0.5">
+            <CardContent className="pt-6 pb-6 text-center">
+              <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-violet-500/10 flex items-center justify-center">
+                <UsersIcon className="h-5 w-5 text-violet-500" />
+              </div>
+              <p className="text-3xl font-semibold tracking-tight">{totals.total}</p>
+              <p className="text-sm text-muted-foreground mt-1">Jami foydalanuvchilar</p>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <UserPlus className="h-5 w-5 mx-auto mb-2 text-muted-foreground" />
-              <p className="text-3xl font-bold">{totals.staff}</p>
-              <p className="text-sm text-muted-foreground">Tahririyat xodimlari</p>
+          <Card className="rounded-3xl border-border/60 shadow-sm transition-transform hover:-translate-y-0.5">
+            <CardContent className="pt-6 pb-6 text-center">
+              <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                <UserPlus className="h-5 w-5 text-emerald-500" />
+              </div>
+              <p className="text-3xl font-semibold tracking-tight">{totals.staff}</p>
+              <p className="text-sm text-muted-foreground mt-1">Tahririyat xodimlari</p>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="pt-6 text-center">
-              <Shield className="h-5 w-5 mx-auto mb-2 text-primary" />
-              <p className="text-3xl font-bold">{totals.admins}</p>
-              <p className="text-sm text-muted-foreground">Administratorlar</p>
+          <Card className="rounded-3xl border-border/60 shadow-sm transition-transform hover:-translate-y-0.5">
+            <CardContent className="pt-6 pb-6 text-center">
+              <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Shield className="h-5 w-5 text-primary" />
+              </div>
+              <p className="text-3xl font-semibold tracking-tight">{totals.admins}</p>
+              <p className="text-sm text-muted-foreground mt-1">Administratorlar</p>
             </CardContent>
           </Card>
         </div>
       </div>
+
+      <AlertDialog
+        open={pendingRevoke !== null}
+        onOpenChange={(o) => !o && setPendingRevoke(null)}
+      >
+        <AlertDialogContent className="rounded-3xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl tracking-tight">
+              Rolni olib tashlash?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-[14.5px]">
+              {pendingRevoke ? (
+                <>
+                  <span className="font-medium text-foreground">"{pendingRevoke.role_name}"</span>{" "}
+                  rolini{" "}
+                  <span className="font-medium text-foreground">{pendingRevoke.user_label}</span>{" "}
+                  dan olib tashlaysizmi? Bu amalni bekor qilib bo‘lmaydi.
+                </>
+              ) : null}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-full h-11 px-6">Bekor qilish</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (pendingRevoke) {
+                  revokeMut.mutate({
+                    user_id: pendingRevoke.user_id,
+                    role_id: pendingRevoke.role_id,
+                  });
+                  setPendingRevoke(null);
+                }
+              }}
+              className="rounded-full h-11 px-6 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Olib tashlash
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminLayout>
   );
 }
