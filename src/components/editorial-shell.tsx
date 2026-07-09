@@ -20,6 +20,7 @@ export function EditorialShell({ children }: { children: ReactNode }) {
   const canAdminInbox = perms.has("submissions.view_all");
   const canAssign = perms.has("submissions.assign_editor");
   const canAudit = perms.has("audit.view");
+  const canManageUsers = perms.has("users.view");
 
   async function signOut() {
     await qc.cancelQueries();
@@ -32,6 +33,7 @@ export function EditorialShell({ children }: { children: ReactNode }) {
     { to: "/dashboard", label: "Bosh panel" },
     { to: "/submissions", label: "Mening maqolalarim" },
     ...(canAdminInbox ? [{ to: "/admin/inbox", label: "Tahririyat qutisi" }] : []),
+    ...(canManageUsers ? [{ to: "/admin/users", label: "Foydalanuvchilar" }] : []),
     ...(canAssign ? [{ to: "/editor/queue", label: "Menga tayinlangan" }] : [{ to: "/editor/queue", label: "Menga tayinlangan" }]),
     { to: "/settings/profile", label: "Profil" },
     ...(canAudit ? [{ to: "/audit", label: "Audit jurnali" }] : []),
