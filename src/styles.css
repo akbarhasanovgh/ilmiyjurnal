@@ -80,6 +80,8 @@
   --color-rule:              var(--rule);
   --color-rule-strong:       var(--rule-strong);
   --color-surface-sunken:    var(--surface-sunken);
+  --color-accent-oxblood:    var(--accent-oxblood);
+  --color-accent-oxblood-strong: var(--accent-oxblood-strong);
 
   --color-background:        var(--background);
   --color-foreground:        var(--foreground);
