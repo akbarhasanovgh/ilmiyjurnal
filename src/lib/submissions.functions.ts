@@ -25,8 +25,20 @@ const MetaSchema = z.object({
   abstract_en: z.string().max(5000).optional().nullable(),
   keywords: z.array(z.string().max(80)).max(20).default([]),
   keywords_en: z.array(z.string().max(80)).max(20).default([]),
-  declarations: z.any().default({}),
+  // New stable core columns
+  terms_accepted: z.boolean().optional(),
+  article_format: z.enum(["word", "latex"]).optional().nullable(),
+  cover_letter: z.string().max(10000).optional().nullable(),
+  special_issue: z.boolean().optional().nullable(),
+  ai_section: z.string().max(200).optional().nullable(),
+  originality_confirmed: z.boolean().optional(),
 });
+
+const CREDIT_ROLES = [
+  "conceptualization","methodology","software","validation","formal_analysis",
+  "investigation","resources","data_curation","writing_original","writing_review",
+  "visualization","supervision","project_administration","funding_acquisition",
+] as const;
 
 const AuthorSchema = z.object({
   id: z.string().uuid().optional(),
@@ -37,16 +49,48 @@ const AuthorSchema = z.object({
   country: z.string().max(80).optional().nullable(),
   orcid: z.string().max(30).optional().nullable(),
   academic_degree: z.string().max(120).optional().nullable(),
+  phone: z.string().max(60).optional().nullable(),
+  institution_url: z.string().url().max(500).optional().nullable().or(z.literal("")),
+  scopus_url: z.string().url().max(500).optional().nullable().or(z.literal("")),
+  credit_roles: z.array(z.enum(CREDIT_ROLES)).default([]),
   contributor_role: z.enum(["author", "co_author", "corresponding", "translator", "editor"]).default("author"),
   is_corresponding: z.boolean().default(false),
   sort_order: z.number().int().default(0),
 });
+
+const DECLARATION_KEYS = [
+  "conflicts_of_interest","data_availability","sample_availability","ethics",
+  "informed_consent","funding","author_contributions","irb","apc_choice","ai_usage",
+] as const;
 
 // ---------- Create draft ----------
 export const createDraftSubmission = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
+    // Idempotency: reuse an untouched empty draft created within the last 60s
+    // by this user (prevents duplicates from double-clicks, remounts, refreshes).
+    const cutoff = new Date(Date.now() - 60_000).toISOString();
+    const { data: existing } = await supabase
+      .from("submissions")
+      .select("*")
+      .eq("owner_id", userId)
+      .eq("workflow_state", "draft")
+      .eq("title", "")
+      .gte("created_at", cutoff)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (existing) {
+      // Confirm it has no authors and no files — otherwise treat as a real draft
+      const [{ count: authorCount }, { count: fileCount }] = await Promise.all([
+        supabase.from("submission_authors").select("id", { count: "exact", head: true }).eq("submission_id", existing.id),
+        supabase.from("submission_files").select("id", { count: "exact", head: true }).eq("submission_id", existing.id),
+      ]);
+      if ((authorCount ?? 0) === 0 && (fileCount ?? 0) === 0) {
+        return existing;
+      }
+    }
     const { data, error } = await supabase
       .from("submissions")
       .insert({ owner_id: userId, title: "" })
@@ -93,14 +137,132 @@ export const replaceAuthors = createServerFn({ method: "POST" })
       country: a.country ?? null,
       orcid: a.orcid ?? null,
       academic_degree: a.academic_degree ?? null,
+      phone: a.phone ?? null,
+      institution_url: a.institution_url ? a.institution_url : null,
+      scopus_url: a.scopus_url ? a.scopus_url : null,
+      credit_roles: a.credit_roles ?? [],
       contributor_role: a.contributor_role,
       is_corresponding: a.is_corresponding,
       sort_order: a.sort_order ?? i,
     }));
-    const { error } = await supabase.from("submission_authors").insert(rows);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any).from("submission_authors").insert(rows);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+// ---------- Declarations (owner-only structured responses) ----------
+export const listDeclarations = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({ submission_id: z.string().uuid() }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: rows, error } = await (supabase as any)
+      .from("submission_declarations")
+      .select("*")
+      .eq("submission_id", data.submission_id);
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const upsertDeclaration = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z.object({
+      submission_id: z.string().uuid(),
+      declaration_key: z.enum(DECLARATION_KEYS),
+      response_type: z.enum(["yes_no", "choice", "text"]),
+      response_value: z.string().max(500).optional().nullable(),
+      explanation: z.string().max(5000).optional().nullable(),
+    }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sb = supabase as any;
+    const { data: before } = await sb
+      .from("submission_declarations")
+      .select("*")
+      .eq("submission_id", data.submission_id)
+      .eq("declaration_key", data.declaration_key)
+      .maybeSingle();
+    const { data: row, error } = await sb
+      .from("submission_declarations")
+      .upsert(
+        {
+          submission_id: data.submission_id,
+          declaration_key: data.declaration_key,
+          response_type: data.response_type,
+          response_value: data.response_value ?? null,
+          explanation: data.explanation ?? null,
+        },
+        { onConflict: "submission_id,declaration_key" },
+      )
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    await sb.from("audit_logs").insert({
+      actor_id: userId,
+      action: before ? "declaration.updated" : "declaration.created",
+      resource_type: "submission_declaration",
+      resource_id: row.id,
+      before: before ?? null,
+      after: row,
+    });
+    return row;
+  });
+
+// ---------- Suggested reviewers ----------
+const SuggestedReviewerSchema = z.object({
+  full_name: z.string().min(1).max(200),
+  email: z.string().email().max(200).optional().nullable().or(z.literal("")),
+  institution: z.string().max(300).optional().nullable(),
+  reason: z.string().max(1000).optional().nullable(),
+});
+
+export const listSuggestedReviewers = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({ submission_id: z.string().uuid() }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: rows, error } = await (supabase as any)
+      .from("submission_suggested_reviewers")
+      .select("*")
+      .eq("submission_id", data.submission_id)
+      .order("sort_order");
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const replaceSuggestedReviewers = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z.object({
+      submission_id: z.string().uuid(),
+      reviewers: z.array(SuggestedReviewerSchema).max(10),
+    }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sb = supabase as any;
+    await sb.from("submission_suggested_reviewers").delete().eq("submission_id", data.submission_id);
+    if (data.reviewers.length === 0) return { ok: true };
+    const rows = data.reviewers.map((r, i) => ({
+      submission_id: data.submission_id,
+      full_name: r.full_name,
+      email: r.email ? r.email : null,
+      institution: r.institution ?? null,
+      reason: r.reason ?? null,
+      sort_order: i,
+    }));
+    const { error } = await sb.from("submission_suggested_reviewers").insert(rows);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 
 // ---------- List mine ----------
 export const listMySubmissions = createServerFn({ method: "GET" })
@@ -122,12 +284,16 @@ export const getSubmission = createServerFn({ method: "GET" })
   .inputValidator((raw: unknown) => z.object({ id: z.string().uuid() }).parse(raw))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const [sub, authors, files, history, assignments] = await Promise.all([
-      supabase.from("submissions").select("*").eq("id", data.id).maybeSingle(),
-      supabase.from("submission_authors").select("*").eq("submission_id", data.id).order("sort_order"),
-      supabase.from("submission_files").select("*").eq("submission_id", data.id).order("uploaded_at", { ascending: false }),
-      supabase.from("submission_status_history").select("*").eq("submission_id", data.id).order("created_at", { ascending: false }),
-      supabase.from("submission_assignments").select("*").eq("submission_id", data.id).order("assigned_at", { ascending: false }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sb = supabase as any;
+    const [sub, authors, files, history, assignments, declarations, suggested] = await Promise.all([
+      sb.from("submissions").select("*").eq("id", data.id).maybeSingle(),
+      sb.from("submission_authors").select("*").eq("submission_id", data.id).order("sort_order"),
+      sb.from("submission_files").select("*").eq("submission_id", data.id).order("uploaded_at", { ascending: false }),
+      sb.from("submission_status_history").select("*").eq("submission_id", data.id).order("created_at", { ascending: false }),
+      sb.from("submission_assignments").select("*").eq("submission_id", data.id).order("assigned_at", { ascending: false }),
+      sb.from("submission_declarations").select("*").eq("submission_id", data.id),
+      sb.from("submission_suggested_reviewers").select("*").eq("submission_id", data.id).order("sort_order"),
     ]);
     if (sub.error) throw new Error(sub.error.message);
     if (!sub.data) throw new Error("not_found");
@@ -137,6 +303,8 @@ export const getSubmission = createServerFn({ method: "GET" })
       files: files.data ?? [],
       history: history.data ?? [],
       assignments: assignments.data ?? [],
+      declarations: declarations.data ?? [],
+      suggested_reviewers: suggested.data ?? [],
     };
   });
 

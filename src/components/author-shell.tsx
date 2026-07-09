@@ -29,7 +29,7 @@ const NAV: NavItem[] = [
   { title: "Bosh sahifa", url: "/dashboard", icon: Home, exact: true },
   { title: "Yangi maqola", url: "/submissions/new", icon: FilePlus2 },
   { title: "Mening maqolalarim", url: "/submissions", icon: FileText, exact: true },
-  { title: "Arxivni ko‘rish", url: "/arxiv", icon: BookMarked },
+  { title: "Jurnal arxivi", url: "/kutubxona", icon: BookMarked },
   { title: "Menga tayinlangan", url: "/editor/queue", icon: ClipboardList, perm: "submissions.view_assigned" },
 ];
 
