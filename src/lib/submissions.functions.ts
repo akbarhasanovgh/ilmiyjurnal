@@ -25,7 +25,7 @@ const MetaSchema = z.object({
   abstract_en: z.string().max(5000).optional().nullable(),
   keywords: z.array(z.string().max(80)).max(20).default([]),
   keywords_en: z.array(z.string().max(80)).max(20).default([]),
-  declarations: z.record(z.string(), z.unknown()).default({}),
+  declarations: z.any().default({}),
 });
 
 const AuthorSchema = z.object({
@@ -155,10 +155,11 @@ export const transitionSubmission = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const { data: result, error } = await supabase.rpc("transition_submission", {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: result, error } = await (supabase as any).rpc("transition_submission", {
       _submission_id: data.id,
       _to_state: data.to_state,
-      _reason: data.reason ?? null,
+      _reason: data.reason ?? undefined,
       _payload: {},
     });
     if (error) throw new Error(error.message);

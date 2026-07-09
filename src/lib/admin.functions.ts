@@ -59,11 +59,12 @@ export const adminAssignEditor = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const { error } = await supabase.rpc("assign_editor", {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any).rpc("assign_editor", {
       _submission_id: data.submission_id,
       _editor_id: data.editor_id,
-      _deadline: data.deadline || null,
-      _instructions: data.instructions || null,
+      _deadline: data.deadline || undefined,
+      _instructions: data.instructions || undefined,
     });
     if (error) throw new Error(error.message);
     return { ok: true };
