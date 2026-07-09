@@ -1,0 +1,272 @@
+import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { z } from "zod";
+
+// ---------- Types shared with client ----------
+export type WorkflowStateT =
+  | "draft"
+  | "submitted"
+  | "screening"
+  | "editor_assigned"
+  | "under_review"
+  | "revision_requested"
+  | "revised"
+  | "accepted"
+  | "rejected"
+  | "withdrawn";
+
+const MetaSchema = z.object({
+  title: z.string().min(1).max(500),
+  title_en: z.string().max(500).optional().nullable(),
+  article_type: z.enum(["research", "review", "short_communication", "book_review", "editorial"]),
+  research_field: z.string().max(200).optional().nullable(),
+  primary_language: z.enum(["uz", "en", "ru", "qq"]),
+  abstract: z.string().max(5000).optional().nullable(),
+  abstract_en: z.string().max(5000).optional().nullable(),
+  keywords: z.array(z.string().max(80)).max(20).default([]),
+  keywords_en: z.array(z.string().max(80)).max(20).default([]),
+  declarations: z.record(z.string(), z.unknown()).default({}),
+});
+
+const AuthorSchema = z.object({
+  id: z.string().uuid().optional(),
+  full_name: z.string().min(1).max(200),
+  email: z.string().email().optional().nullable(),
+  institution: z.string().max(300).optional().nullable(),
+  department: z.string().max(200).optional().nullable(),
+  country: z.string().max(80).optional().nullable(),
+  orcid: z.string().max(30).optional().nullable(),
+  academic_degree: z.string().max(120).optional().nullable(),
+  contributor_role: z.enum(["author", "co_author", "corresponding", "translator", "editor"]).default("author"),
+  is_corresponding: z.boolean().default(false),
+  sort_order: z.number().int().default(0),
+});
+
+// ---------- Create draft ----------
+export const createDraftSubmission = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data, error } = await supabase
+      .from("submissions")
+      .insert({ owner_id: userId, title: "" })
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return data;
+  });
+
+// ---------- Update draft metadata ----------
+export const updateDraftMetadata = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z.object({ id: z.string().uuid(), patch: MetaSchema.partial() }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: updated, error } = await supabase
+      .from("submissions")
+      .update(data.patch)
+      .eq("id", data.id)
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return updated;
+  });
+
+// ---------- Replace authors list ----------
+export const replaceAuthors = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z.object({ submission_id: z.string().uuid(), authors: z.array(AuthorSchema) }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    await supabase.from("submission_authors").delete().eq("submission_id", data.submission_id);
+    if (data.authors.length === 0) return { ok: true };
+    const rows = data.authors.map((a, i) => ({
+      submission_id: data.submission_id,
+      full_name: a.full_name,
+      email: a.email ?? null,
+      institution: a.institution ?? null,
+      department: a.department ?? null,
+      country: a.country ?? null,
+      orcid: a.orcid ?? null,
+      academic_degree: a.academic_degree ?? null,
+      contributor_role: a.contributor_role,
+      is_corresponding: a.is_corresponding,
+      sort_order: a.sort_order ?? i,
+    }));
+    const { error } = await supabase.from("submission_authors").insert(rows);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+// ---------- List mine ----------
+export const listMySubmissions = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data, error } = await supabase
+      .from("submissions")
+      .select("id, manuscript_id, title, workflow_state, article_type, primary_language, submitted_at, created_at, updated_at")
+      .eq("owner_id", userId)
+      .order("updated_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  });
+
+// ---------- Get by id (owner, assigned editor, or staff) ----------
+export const getSubmission = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({ id: z.string().uuid() }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const [sub, authors, files, history, assignments] = await Promise.all([
+      supabase.from("submissions").select("*").eq("id", data.id).maybeSingle(),
+      supabase.from("submission_authors").select("*").eq("submission_id", data.id).order("sort_order"),
+      supabase.from("submission_files").select("*").eq("submission_id", data.id).order("uploaded_at", { ascending: false }),
+      supabase.from("submission_status_history").select("*").eq("submission_id", data.id).order("created_at", { ascending: false }),
+      supabase.from("submission_assignments").select("*").eq("submission_id", data.id).order("assigned_at", { ascending: false }),
+    ]);
+    if (sub.error) throw new Error(sub.error.message);
+    if (!sub.data) throw new Error("not_found");
+    return {
+      submission: sub.data,
+      authors: authors.data ?? [],
+      files: files.data ?? [],
+      history: history.data ?? [],
+      assignments: assignments.data ?? [],
+    };
+  });
+
+// ---------- Transition ----------
+export const transitionSubmission = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z.object({
+      id: z.string().uuid(),
+      to_state: z.enum([
+        "draft","submitted","screening","editor_assigned","under_review",
+        "revision_requested","revised","accepted","rejected","withdrawn",
+      ]),
+      reason: z.string().max(2000).optional().nullable(),
+    }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: result, error } = await supabase.rpc("transition_submission", {
+      _submission_id: data.id,
+      _to_state: data.to_state,
+      _reason: data.reason ?? null,
+      _payload: {},
+    });
+    if (error) throw new Error(error.message);
+    return result;
+  });
+
+// ---------- File upload: generate signed upload URL ----------
+export const requestFileUploadUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z.object({
+      submission_id: z.string().uuid(),
+      filename: z.string().min(1).max(255),
+    }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    // Verify caller owns the submission and it's in an uploadable state
+    const { data: sub, error: subErr } = await supabase
+      .from("submissions")
+      .select("id, owner_id, workflow_state")
+      .eq("id", data.submission_id)
+      .maybeSingle();
+    if (subErr) throw new Error(subErr.message);
+    if (!sub) throw new Error("not_found");
+    if (sub.owner_id !== userId) throw new Error("permission_denied");
+    if (!["draft", "submitted", "revision_requested"].includes(sub.workflow_state)) {
+      throw new Error("submission_not_uploadable");
+    }
+    const safe = data.filename.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const path = `${sub.id}/${Date.now()}_${safe}`;
+    // Create a signed upload URL (client will PUT to it)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: signed, error: sErr } = await (supabase.storage.from("manuscripts") as any).createSignedUploadUrl(path);
+    if (sErr) throw new Error(sErr.message);
+    return { path, token: signed.token, signedUrl: signed.signedUrl as string };
+  });
+
+// ---------- Record uploaded file ----------
+export const recordUploadedFile = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z.object({
+      submission_id: z.string().uuid(),
+      storage_path: z.string().min(1),
+      filename: z.string().min(1).max(255),
+      mime: z.string().max(200).optional(),
+      size_bytes: z.number().int().nonnegative(),
+      kind: z.enum(["manuscript","anonymous_manuscript","cover_letter","figure","table","supplementary","data","other"]).default("manuscript"),
+    }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: file, error } = await supabase
+      .from("submission_files")
+      .insert({
+        submission_id: data.submission_id,
+        storage_path: data.storage_path,
+        filename: data.filename,
+        mime: data.mime,
+        size_bytes: data.size_bytes,
+        kind: data.kind,
+        uploaded_by: userId,
+      })
+      .select("*")
+      .single();
+    if (error) throw new Error(error.message);
+    return file;
+  });
+
+// ---------- Remove file (draft only) ----------
+export const removeFile = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({ file_id: z.string().uuid() }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: file, error: fErr } = await supabase
+      .from("submission_files")
+      .select("*, submissions!inner(owner_id, workflow_state)")
+      .eq("id", data.file_id)
+      .maybeSingle();
+    if (fErr) throw new Error(fErr.message);
+    if (!file) throw new Error("not_found");
+    // RLS on delete already enforces draft + owner
+    await supabase.storage.from("manuscripts").remove([file.storage_path]);
+    const { error } = await supabase.from("submission_files").delete().eq("id", data.file_id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+// ---------- Signed download URL ----------
+export const getFileDownloadUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({ file_id: z.string().uuid() }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    // RLS on the file row enforces authorization to see it. If the row is
+    // visible, we can create a signed URL bound to storage RLS (same policies).
+    const { data: file, error: fErr } = await supabase
+      .from("submission_files")
+      .select("storage_path, filename")
+      .eq("id", data.file_id)
+      .maybeSingle();
+    if (fErr) throw new Error(fErr.message);
+    if (!file) throw new Error("not_found");
+    const { data: signed, error } = await supabase.storage
+      .from("manuscripts")
+      .createSignedUrl(file.storage_path, 60 * 10, { download: file.filename });
+    if (error) throw new Error(error.message);
+    return { url: signed.signedUrl, filename: file.filename };
+  });
