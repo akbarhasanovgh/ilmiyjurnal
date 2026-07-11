@@ -271,66 +271,102 @@ function EditSubmission() {
         </aside>
 
         {/* Content column */}
-        <div className="col-span-12 md:col-span-9 px-8 md:px-14 py-12 space-y-16 max-w-3xl">
-          <Section stepRef={(el) => { sectionRefs.current.terms = el; }} step={STEPS[0]}>
-            <TermsSection sub={submission} onSaved={refresh} onDone={() => markCompleteAndAdvance("terms")} />
-          </Section>
+        <div className="col-span-12 md:col-span-9 px-8 md:px-14 py-12 max-w-3xl">
+          <StepNav activeStep={activeStep} onBack={(k) => scrollToStep(k)} />
 
-          <Section stepRef={(el) => { sectionRefs.current.manuscript = el; }} step={STEPS[1]}>
-            <ManuscriptSection
-              sub={submission}
-              files={q.data.files}
-              onSaved={refresh}
-              onDone={() => markCompleteAndAdvance("manuscript")}
-            />
-          </Section>
+          <div hidden={activeStep !== "terms"}>
+            <Section step={STEPS[0]}>
+              <TermsSection sub={submission} onSaved={refresh} onDone={() => markCompleteAndAdvance("terms")} />
+            </Section>
+          </div>
 
-          <Section stepRef={(el) => { sectionRefs.current.authors = el; }} step={STEPS[2]}>
-            <AuthorsSection
-              subId={id}
-              authors={q.data.authors}
-              onSaved={refresh}
-              onDone={() => markCompleteAndAdvance("authors")}
-            />
-          </Section>
+          <div hidden={activeStep !== "manuscript"}>
+            <Section step={STEPS[1]}>
+              <ManuscriptSection
+                sub={submission}
+                files={q.data.files}
+                onSaved={refresh}
+                onDone={() => markCompleteAndAdvance("manuscript")}
+              />
+            </Section>
+          </div>
 
-          <Section stepRef={(el) => { sectionRefs.current.details = el; }} step={STEPS[3]}>
-            <DetailsSection sub={submission} onSaved={refresh} onDone={() => markCompleteAndAdvance("details")} />
-          </Section>
+          <div hidden={activeStep !== "authors"}>
+            <Section step={STEPS[2]}>
+              <AuthorsSection
+                subId={id}
+                authors={q.data.authors}
+                onSaved={refresh}
+                onDone={() => markCompleteAndAdvance("authors")}
+              />
+            </Section>
+          </div>
 
-          <Section stepRef={(el) => { sectionRefs.current.declarations = el; }} step={STEPS[4]}>
-            <DeclarationsSection
-              subId={id}
-              sub={submission}
-              declarations={q.data.declarations}
-              onSaved={refresh}
-              onDone={() => markCompleteAndAdvance("declarations")}
-            />
-          </Section>
+          <div hidden={activeStep !== "details"}>
+            <Section step={STEPS[3]}>
+              <DetailsSection sub={submission} onSaved={refresh} onDone={() => markCompleteAndAdvance("details")} />
+            </Section>
+          </div>
 
-          <Section stepRef={(el) => { sectionRefs.current.supporting = el; }} step={STEPS[5]}>
-            <SupportingSection
-              subId={id}
-              files={q.data.files}
-              onSaved={refresh}
-              onDone={() => markCompleteAndAdvance("supporting")}
-            />
-          </Section>
+          <div hidden={activeStep !== "declarations"}>
+            <Section step={STEPS[4]}>
+              <DeclarationsSection
+                subId={id}
+                sub={submission}
+                declarations={q.data.declarations}
+                onSaved={refresh}
+                onDone={() => markCompleteAndAdvance("declarations")}
+              />
+            </Section>
+          </div>
 
-          <Section stepRef={(el) => { sectionRefs.current.reviewers = el; }} step={STEPS[6]}>
-            <ReviewersSection
-              subId={id}
-              reviewers={q.data.suggested_reviewers}
-              submission={submission}
-              files={q.data.files}
-              authors={q.data.authors}
-              onSaved={refresh}
-              onSubmitted={() => navigate({ to: "/submissions/$id", params: { id } })}
-            />
-          </Section>
+          <div hidden={activeStep !== "supporting"}>
+            <Section step={STEPS[5]}>
+              <SupportingSection
+                subId={id}
+                files={q.data.files}
+                onSaved={refresh}
+                onDone={() => markCompleteAndAdvance("supporting")}
+              />
+            </Section>
+          </div>
+
+          <div hidden={activeStep !== "reviewers"}>
+            <Section step={STEPS[6]}>
+              <ReviewersSection
+                subId={id}
+                reviewers={q.data.suggested_reviewers}
+                submission={submission}
+                files={q.data.files}
+                authors={q.data.authors}
+                onSaved={refresh}
+                onSubmitted={() => navigate({ to: "/submissions/$id", params: { id } })}
+              />
+            </Section>
+          </div>
         </div>
       </div>
     </AuthorShell>
+  );
+}
+
+function StepNav({ activeStep, onBack }: { activeStep: StepKey; onBack: (k: StepKey) => void }) {
+  const idx = STEPS.findIndex((s) => s.key === activeStep);
+  const prev = idx > 0 ? STEPS[idx - 1] : null;
+  return (
+    <div className="flex items-center justify-between mb-8">
+      <button
+        type="button"
+        onClick={() => prev && onBack(prev.key)}
+        disabled={!prev}
+        className="inline-flex items-center gap-2 text-[13px] text-muted-foreground hover:text-foreground transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+      >
+        ← {prev ? `Orqaga: ${prev.title}` : "Orqaga"}
+      </button>
+      <p className="text-[11px] font-mono tracking-widest text-muted-foreground">
+        {idx + 1} / {STEPS.length}
+      </p>
+    </div>
   );
 }
 
