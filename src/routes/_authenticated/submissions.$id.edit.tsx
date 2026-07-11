@@ -159,15 +159,9 @@ function EditSubmission() {
   const q = useQuery({ queryKey: ["submission", id], queryFn: () => getSub({ data: { id } }) });
   const [activeStep, setActiveStep] = useState<StepKey>("terms");
   const [completed, setCompleted] = useState<Set<StepKey>>(new Set());
-  const sectionRefs = useRef<Record<StepKey, HTMLDivElement | null>>({
-    terms: null, manuscript: null, authors: null, details: null,
-    declarations: null, supporting: null, reviewers: null,
-  });
-
   const scrollToStep = useCallback((key: StepKey) => {
     setActiveStep(key);
-    const el = sectionRefs.current[key];
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   const markCompleteAndAdvance = useCallback((key: StepKey) => {
