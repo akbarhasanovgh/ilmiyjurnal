@@ -370,15 +370,13 @@ function StepNav({ activeStep, onBack }: { activeStep: StepKey; onBack: (k: Step
 
 function Section({
   step,
-  stepRef,
   children,
 }: {
   step: (typeof STEPS)[number];
-  stepRef: (el: HTMLDivElement | null) => void;
   children: React.ReactNode;
 }) {
   return (
-    <div ref={stepRef} className="scroll-mt-8">
+    <div className="scroll-mt-8">
       <div className="mb-6">
         <p className="text-[11px] font-mono tracking-widest text-muted-foreground">
           {String(step.num).padStart(2, "0")}
