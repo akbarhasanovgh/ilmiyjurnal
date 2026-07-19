@@ -36,7 +36,7 @@ export const CURRENT_ISSUE: ArchiveIssue = {
   papers: [
     {
       manuscriptId: "OTA-2026-0042",
-      field: "Tilshunoslik",
+      field: "Filologiya",
       title: "O‘zbek tilida zamon kategoriyasining zamonaviy talqinlari",
       authors: "Akmal Karimov · Dilnoza Rasulova",
       affiliation:
@@ -48,7 +48,7 @@ export const CURRENT_ISSUE: ArchiveIssue = {
     },
     {
       manuscriptId: "OTA-2026-0041",
-      field: "Adabiyotshunoslik",
+      field: "Filologiya",
       title:
         "Alisher Navoiy g‘azallarida ramziy obrazlar tizimi: matnshunoslik yondashuvi",
       authors: "Dilnoza Rasulova",
@@ -60,7 +60,7 @@ export const CURRENT_ISSUE: ArchiveIssue = {
     },
     {
       manuscriptId: "OTA-2026-0043",
-      field: "Tarjimashunoslik",
+      field: "Filologiya",
       title: "Cho‘lpon she’riyatining ingliz tiliga tarjimasi: uslubiy masalalar",
       authors: "Sherzod Nazarov",
       affiliation: "O‘zbekiston jahon tillari universiteti",
@@ -80,7 +80,7 @@ const ISSUE_70_2: ArchiveIssue = {
   papers: [
     {
       manuscriptId: "OTA-2026-0038",
-      field: "Matnshunoslik",
+      field: "Filologiya",
       title:
         "XIX asr Buxoro qo‘lyozmalarida imlo tizimi: tanqidiy nashr masalalari",
       authors: "Bahodir Ergashev",
@@ -93,7 +93,7 @@ const ISSUE_70_2: ArchiveIssue = {
     },
     {
       manuscriptId: "OTA-2026-0035",
-      field: "Folklorshunoslik",
+      field: "Filologiya",
       title: "Qoraqalpoq xalq dostonlaridagi ovozli formulalar: qiyosiy tahlil",
       authors: "Nodira Yusupova · Rustam Sattorov",
       affiliation: "Qoraqalpoq davlat universiteti",
@@ -104,7 +104,7 @@ const ISSUE_70_2: ArchiveIssue = {
     },
     {
       manuscriptId: "OTA-2026-0033",
-      field: "Dialektologiya",
+      field: "Filologiya",
       title: "Farg‘ona vodiysi shevalarida unlilar tizimining evolyutsiyasi",
       authors: "Rustam Sattorov",
       affiliation: "Farg‘ona davlat universiteti",
@@ -124,7 +124,7 @@ const ISSUE_70_1: ArchiveIssue = {
   papers: [
     {
       manuscriptId: "OTA-2026-0012",
-      field: "Adabiyotshunoslik",
+      field: "Filologiya",
       title: "Abdulla Qodiriy nasrida tarixiy roman poetikasi",
       authors: "Gulnora Toshmatova",
       affiliation: "Toshkent davlat universiteti",
@@ -132,7 +132,7 @@ const ISSUE_70_1: ArchiveIssue = {
     },
     {
       manuscriptId: "OTA-2026-0009",
-      field: "Tilshunoslik",
+      field: "Filologiya",
       title: "O‘zbek tilida sintaktik konstruksiyalarning korpus tahlili",
       authors: "Akmal Karimov",
       affiliation: "O‘zbek tili va adabiyoti universiteti",
@@ -149,14 +149,14 @@ const ISSUE_69_4: ArchiveIssue = {
   papers: [
     {
       manuscriptId: "OTA-2025-0141",
-      field: "Matnshunoslik",
+      field: "Filologiya",
       title: "«Boburnoma» qo‘lyozmalarining qiyosiy tavsifi",
       authors: "Bahodir Ergashev",
       pages: "5–32",
     },
     {
       manuscriptId: "OTA-2025-0137",
-      field: "Adabiyotshunoslik",
+      field: "Filologiya",
       title: "Zamonaviy o‘zbek she’riyatida shakl izlanishlari",
       authors: "Dilnoza Rasulova",
       pages: "33–54",
@@ -172,7 +172,7 @@ const ISSUE_69_3: ArchiveIssue = {
   papers: [
     {
       manuscriptId: "OTA-2025-0108",
-      field: "Tilshunoslik",
+      field: "Filologiya",
       title: "Turkiy tillar oilasida o‘zbek tilining tipologik o‘rni",
       authors: "Akmal Karimov · Sherzod Nazarov",
       pages: "5–30",

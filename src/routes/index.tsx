@@ -33,7 +33,7 @@ type PaperPreview = {
 // heading so nothing is presented as a real DOI'd article.
 const PREVIEW_PAPERS: PaperPreview[] = [
   {
-    field: "Tilshunoslik",
+    field: "Filologiya",
     title: "O‘zbek tilida zamon kategoriyasining zamonaviy talqinlari",
     authors: "Akmal Karimov · Dilnoza Rasulova",
     affiliation:
@@ -46,7 +46,7 @@ const PREVIEW_PAPERS: PaperPreview[] = [
     manuscriptId: "OTA-2026-0042",
   },
   {
-    field: "Adabiyotshunoslik",
+    field: "Filologiya",
     title:
       "Alisher Navoiy g‘azallarida ramziy obrazlar tizimi: matnshunoslik yondashuvi",
     authors: "Dilnoza Rasulova",
@@ -59,7 +59,7 @@ const PREVIEW_PAPERS: PaperPreview[] = [
     manuscriptId: "OTA-2026-0041",
   },
   {
-    field: "Matnshunoslik",
+    field: "Filologiya",
     title:
       "XIX asr Buxoro qo‘lyozmalarida imlo tizimi: tanqidiy nashr masalalari",
     authors: "Bahodir Ergashev",
@@ -73,7 +73,7 @@ const PREVIEW_PAPERS: PaperPreview[] = [
     manuscriptId: "OTA-2026-0038",
   },
   {
-    field: "Folklorshunoslik",
+    field: "Filologiya",
     title:
       "Qoraqalpoq xalq dostonlaridagi ovozli formulalar: qiyosiy tahlil",
     authors: "Nodira Yusupova · Rustam Sattorov",
