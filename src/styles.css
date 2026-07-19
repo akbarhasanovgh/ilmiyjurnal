@@ -65,17 +65,21 @@
 }
 
 @theme inline {
-  --font-sans:    'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-serif:   'Lora', ui-serif, Georgia, serif;
-  --font-display: 'Playfair Display', 'Lora', ui-serif, Georgia, serif;
+  /* One typographic voice — plain academic sans, no editorial display serif */
+  --font-sans:    'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif:   'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
-  --radius-sm: calc(var(--radius) - 2px);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) + 2px);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 12px);
+  --radius-3xl: calc(var(--radius) + 20px);
 
   --color-page:              var(--page);
+  --color-page-elevated:     var(--page-elevated);
   --color-ink:               var(--ink);
   --color-ink-soft:          var(--ink-soft);
   --color-ink-muted:         var(--ink-muted);
@@ -83,8 +87,10 @@
   --color-rule:              var(--rule);
   --color-rule-strong:       var(--rule-strong);
   --color-surface-sunken:    var(--surface-sunken);
+  --color-surface-tint:      var(--surface-tint);
   --color-accent-oxblood:    var(--accent-oxblood);
   --color-accent-oxblood-strong: var(--accent-oxblood-strong);
+  --color-accent-oxblood-soft:   var(--accent-oxblood-soft);
 
   --color-background:        var(--background);
   --color-foreground:        var(--foreground);
