@@ -102,7 +102,7 @@ export function AuthorShell({ children }: AuthorShellProps) {
 
   const sidebarBody = (
     <div className="flex-1 flex flex-col rounded-3xl bg-card/70 backdrop-blur border border-border/60 shadow-sm overflow-hidden">
-      <Link to="/" className="p-5 pb-4 block border-b border-border/60 hover:bg-muted/40 transition-colors" onClick={() => setMobileOpen(false)}>
+      <Link to="/" className="p-5 pb-4 flex items-center justify-center border-b border-border/60 hover:bg-muted/40 transition-colors" onClick={() => setMobileOpen(false)}>
         <img
           src="/__l5e/assets-v1/356b6480-4396-48e4-871a-8d9040583695/logo.png"
           alt="Filologiya va Pedagogika"
