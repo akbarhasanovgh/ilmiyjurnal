@@ -12,57 +12,63 @@ const NAV = [
 export function PublicShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-dvh bg-page text-ink flex flex-col">
-      {/* Top bar — floating pill-nav feel */}
-      <header className="pt-5 px-4 md:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-4 rounded-full bg-[color:var(--page-elevated)] border border-rule px-5 py-2.5 shadow-[0_1px_0_rgba(23,20,18,0.04)]">
-            <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-              <span
-                aria-hidden
-                className="grid place-items-center w-8 h-8 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[13px] font-bold tracking-tight"
-              >
-                O
-              </span>
-              <span className="text-[13px] font-semibold tracking-tight text-ink group-hover:text-[color:var(--accent-oxblood)] transition-colors">
-                O‘zbek tili va adabiyoti
-              </span>
-            </Link>
-
-            <nav className="hidden md:flex items-center gap-1 ml-4">
-              {NAV.map((n) => (
-                <Link
-                  key={n.to}
-                  to={n.to}
-                  activeOptions={n.exact ? { exact: true } : undefined}
-                  className="px-3 py-1.5 rounded-full text-[13px] text-ink-soft hover:text-ink hover:bg-[color:var(--surface-sunken)] transition-colors"
-                  activeProps={{
-                    className:
-                      "px-3 py-1.5 rounded-full text-[13px] font-medium bg-[color:var(--surface-sunken)] text-ink",
-                  }}
-                >
-                  {n.label}
-                </Link>
-              ))}
-            </nav>
-
-            <div className="ml-auto flex items-center gap-2">
-              <Link
-                to="/auth"
-                className="hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-ink-soft hover:text-ink hover:bg-[color:var(--surface-sunken)] transition-colors"
-              >
+      {/* Editorial masthead — two-tier */}
+      <header className="sticky top-0 z-40 bg-page/85 backdrop-blur-md border-b border-rule">
+        {/* Utility strip */}
+        <div className="border-b border-rule/70">
+          <div className="max-w-6xl mx-auto px-4 md:px-8 h-8 flex items-center justify-between text-[10.5px] font-mono tracking-[0.18em] uppercase text-ink-faint">
+            <span>ISSN 2010-5584 · Peer-reviewed</span>
+            <div className="flex items-center gap-5">
+              <span className="hidden sm:inline">Toshkent · 2026</span>
+              <Link to="/auth" className="hover:text-ink transition-colors">
                 Kirish
-              </Link>
-              <Link
-                to="/auth"
-                search={{ next: "/submissions/new" } as never}
-                className="inline-flex items-center rounded-full bg-[color:var(--accent-oxblood)] hover:bg-[color:var(--accent-oxblood-strong)] text-page px-4 py-1.5 text-[13px] font-semibold transition-colors"
-              >
-                Maqola yuborish
               </Link>
             </div>
           </div>
         </div>
+
+        {/* Main row */}
+        <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center gap-8">
+          <Link to="/" className="flex items-baseline gap-3 shrink-0 group">
+            <span className="text-[17px] font-semibold tracking-tight leading-none">
+              O‘zbek tili
+              <span className="text-ink-muted"> va adabiyoti</span>
+            </span>
+            <span className="hidden lg:inline text-[10px] font-mono tracking-[0.2em] uppercase text-ink-faint">
+              Ilmiy jurnal
+            </span>
+          </Link>
+
+          <nav className="hidden md:flex items-center gap-1 mx-auto">
+            {NAV.map((n) => (
+              <Link
+                key={n.to}
+                to={n.to}
+                activeOptions={n.exact ? { exact: true } : undefined}
+                className="relative px-3 py-2 text-[13.5px] text-ink-soft hover:text-ink transition-colors"
+                activeProps={{
+                  className:
+                    "relative px-3 py-2 text-[13.5px] font-medium text-ink after:content-[''] after:absolute after:left-3 after:right-3 after:-bottom-[13px] after:h-[2px] after:bg-[color:var(--accent-oxblood)]",
+                }}
+              >
+                {n.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="ml-auto flex items-center gap-2">
+            <Link
+              to="/auth"
+              search={{ next: "/submissions/new" } as never}
+              className="group inline-flex items-center gap-2 rounded-full bg-ink hover:bg-[color:var(--accent-oxblood)] text-page px-4 py-2 text-[13px] font-medium tracking-tight transition-colors"
+            >
+              Maqola yuborish
+              <span aria-hidden className="translate-x-0 group-hover:translate-x-0.5 transition-transform">→</span>
+            </Link>
+          </div>
+        </div>
       </header>
+
 
       <main className="flex-1">{children}</main>
 
