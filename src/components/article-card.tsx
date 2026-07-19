@@ -28,7 +28,7 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
     <article className="border-b border-rule py-10 first:pt-0">
       {/* Kind + ID */}
       <div className="flex items-center gap-3 mb-6">
-        <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)]/10 text-[color:var(--accent-oxblood)] text-[10px] font-bold uppercase tracking-[0.2em]">
+        <span className="inline-flex items-center px-3 py-1 rounded-md bg-[color:var(--accent-oxblood)] text-white text-[10px] font-bold uppercase tracking-[0.2em]">
           {article.kind ?? "Maqola"}
         </span>
         <span className="text-xs font-mono text-ink-faint tracking-wider">
@@ -53,8 +53,8 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
 
       {/* DOI */}
       {article.doi && (
-        <div className="inline-flex items-center gap-2 bg-surface-sunken rounded-lg px-3.5 py-2 mb-6">
-          <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-ink-muted">
+        <div className="inline-flex items-center gap-2 bg-[color:var(--accent-oxblood)]/8 rounded-md px-3.5 py-2 mb-6 border border-[color:var(--accent-oxblood)]/15">
+          <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[color:var(--accent-oxblood)]">
             DOI:
           </span>
           {article.doiUrl ? (
