@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { PublicShell } from "@/components/public-shell";
+import { ArticleCard } from "@/components/article-card";
 import { findIssue, type ArchiveIssue } from "@/lib/archive-preview";
 
 export const Route = createFileRoute("/arxiv/$jild/$son")({
