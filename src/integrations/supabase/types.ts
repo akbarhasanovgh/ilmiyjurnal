@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      article_views: {
+        Row: {
+          manuscript_id: string
+          updated_at: string
+          view_count: number
+        }
+        Insert: {
+          manuscript_id: string
+          updated_at?: string
+          view_count?: number
+        }
+        Update: {
+          manuscript_id?: string
+          updated_at?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -748,6 +766,10 @@ export type Database = {
       has_role: {
         Args: { _role_key: string; _user_id: string }
         Returns: boolean
+      }
+      increment_article_view: {
+        Args: { _manuscript_id: string }
+        Returns: number
       }
       is_assigned_editor: {
         Args: { _submission_id: string; _user_id: string }
