@@ -208,135 +208,175 @@ function EditSubmission() {
 
   const refresh = () => qc.invalidateQueries({ queryKey: ["submission", id] });
 
+  const currentIdx = STEPS.findIndex((s) => s.key === activeStep);
+  const progressPct = Math.round(((completed.size) / STEPS.length) * 100);
+
   return (
     <AuthorShell>
-      <div className="grid grid-cols-12 gap-0 min-h-full">
-        {/* Step rail */}
-        <aside className="col-span-12 md:col-span-3 border-b md:border-b-0 md:border-r border-border/60">
-          <div className="sticky top-0 px-8 py-10">
-            <p className="text-[10.5px] font-mono tracking-widest text-muted-foreground">
-              {submission.manuscript_id}
-            </p>
-            <h1 className="font-serif text-[22px] leading-tight tracking-tight mt-2 text-foreground">
-              {submission.title || <span className="italic text-muted-foreground">Sarlavhasiz qoralama</span>}
-            </h1>
-            <ol className="mt-8 space-y-1">
-              {STEPS.map((s) => {
-                const done = completed.has(s.key);
-                const active = activeStep === s.key;
-                return (
-                  <li key={s.key}>
-                    <button
-                      type="button"
-                      onClick={() => scrollToStep(s.key)}
-                      className={`w-full text-left group flex items-start gap-3 py-2.5 px-2 -mx-2 rounded-lg transition-colors ${
-                        active ? "bg-muted/60" : "hover:bg-muted/40"
-                      }`}
-                    >
-                      <span
-                        className={`shrink-0 mt-0.5 w-6 h-6 rounded-full border flex items-center justify-center text-[11px] font-mono ${
-                          done
-                            ? "bg-foreground text-background border-foreground"
-                            : active
-                              ? "border-foreground text-foreground"
-                              : "border-border text-muted-foreground"
+      <div className="px-6 md:px-10 py-8 md:py-10 space-y-6">
+        {/* Hero */}
+        <section className="rounded-3xl bg-[var(--surface-sunken)] border border-border/60 px-8 md:px-10 py-8 md:py-10">
+          <nav className="flex items-center gap-2 text-[12px] text-muted-foreground">
+            <Link to="/submissions" className="hover:text-foreground transition-colors">Mening maqolalarim</Link>
+            <span>/</span>
+            <span className="text-foreground">Yangi topshiriq</span>
+          </nav>
+          <div className="mt-4 flex flex-wrap items-end justify-between gap-6">
+            <div className="min-w-0">
+              <p className="text-[10.5px] font-mono tracking-[0.18em] uppercase text-[var(--accent-oxblood)]">
+                {submission.manuscript_id}
+              </p>
+              <h1 className="mt-2 text-[28px] md:text-[32px] leading-tight tracking-tight text-foreground font-medium">
+                {submission.title || <span className="italic text-muted-foreground">Sarlavhasiz qoralama</span>}
+              </h1>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="inline-flex items-center rounded-full bg-[var(--accent-oxblood)] text-[var(--primary-foreground)] px-3.5 py-1.5 text-[11px] font-medium tracking-[0.14em] uppercase">
+                Bosqich {currentIdx + 1} / {STEPS.length}
+              </span>
+              <span className="text-[12px] text-muted-foreground">
+                {completed.size} bajarildi
+              </span>
+            </div>
+          </div>
+          {/* Progress bar */}
+          <div className="mt-6 h-1.5 rounded-full bg-background/70 overflow-hidden">
+            <div
+              className="h-full bg-[var(--accent-oxblood)] transition-all duration-500 ease-out"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+        </section>
+
+        <div className="grid grid-cols-12 gap-6">
+          {/* Step rail */}
+          <aside className="col-span-12 md:col-span-4 lg:col-span-3">
+            <div className="sticky top-6 rounded-3xl bg-background border border-border/60 p-4 md:p-5 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
+              <p className="text-[10.5px] font-mono tracking-[0.18em] uppercase text-muted-foreground px-2 mb-3">
+                Bosqichlar
+              </p>
+              <ol className="space-y-1">
+                {STEPS.map((s) => {
+                  const done = completed.has(s.key);
+                  const active = activeStep === s.key;
+                  return (
+                    <li key={s.key}>
+                      <button
+                        type="button"
+                        onClick={() => scrollToStep(s.key)}
+                        className={`w-full text-left flex items-start gap-3 py-2.5 px-3 rounded-2xl transition-all active:scale-[0.98] ${
+                          active
+                            ? "bg-[var(--accent-oxblood-soft)]"
+                            : "hover:bg-[var(--surface-sunken)]"
                         }`}
                       >
-                        {done ? <Check className="h-3 w-3" strokeWidth={2.5} /> : s.num}
-                      </span>
-                      <span className="min-w-0">
                         <span
-                          className={`block font-serif text-[14.5px] leading-tight ${
-                            active ? "text-foreground" : "text-foreground/85"
+                          className={`shrink-0 mt-0.5 w-7 h-7 rounded-full flex items-center justify-center text-[11.5px] font-medium transition-colors ${
+                            done
+                              ? "bg-[var(--accent-oxblood)] text-[var(--primary-foreground)]"
+                              : active
+                                ? "bg-background border-2 border-[var(--accent-oxblood)] text-[var(--accent-oxblood)]"
+                                : "bg-[var(--surface-sunken)] text-muted-foreground"
                           }`}
                         >
-                          {s.title}
+                          {done ? <Check className="h-3.5 w-3.5" strokeWidth={2.5} /> : s.num}
                         </span>
-                        <span className="block text-[11.5px] text-muted-foreground mt-0.5">
-                          {s.hint}
+                        <span className="min-w-0 pt-0.5">
+                          <span
+                            className={`block text-[13.5px] leading-tight font-medium ${
+                              active ? "text-[var(--accent-oxblood)]" : "text-foreground"
+                            }`}
+                          >
+                            {s.title}
+                          </span>
+                          <span className="block text-[11.5px] text-muted-foreground mt-1 leading-snug">
+                            {s.hint}
+                          </span>
                         </span>
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
-        </aside>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
+          </aside>
 
-        {/* Content column */}
-        <div className="col-span-12 md:col-span-9 px-8 md:px-14 py-12 max-w-3xl">
-          <StepNav activeStep={activeStep} onBack={(k) => scrollToStep(k)} />
+          {/* Content column */}
+          <div className="col-span-12 md:col-span-8 lg:col-span-9">
+            <div className="rounded-3xl bg-background border border-border/60 px-8 md:px-12 py-10 md:py-12">
+              <StepNav activeStep={activeStep} onBack={(k) => scrollToStep(k)} />
 
-          <div hidden={activeStep !== "terms"}>
-            <Section step={STEPS[0]}>
-              <TermsSection sub={submission} onSaved={refresh} onDone={() => markCompleteAndAdvance("terms")} />
-            </Section>
-          </div>
+              <div hidden={activeStep !== "terms"}>
+                <Section step={STEPS[0]}>
+                  <TermsSection sub={submission} onSaved={refresh} onDone={() => markCompleteAndAdvance("terms")} />
+                </Section>
+              </div>
 
-          <div hidden={activeStep !== "manuscript"}>
-            <Section step={STEPS[1]}>
-              <ManuscriptSection
-                sub={submission}
-                files={q.data.files}
-                onSaved={refresh}
-                onDone={() => markCompleteAndAdvance("manuscript")}
-              />
-            </Section>
-          </div>
+              <div hidden={activeStep !== "manuscript"}>
+                <Section step={STEPS[1]}>
+                  <ManuscriptSection
+                    sub={submission}
+                    files={q.data.files}
+                    onSaved={refresh}
+                    onDone={() => markCompleteAndAdvance("manuscript")}
+                  />
+                </Section>
+              </div>
 
-          <div hidden={activeStep !== "authors"}>
-            <Section step={STEPS[2]}>
-              <AuthorsSection
-                subId={id}
-                authors={q.data.authors}
-                onSaved={refresh}
-                onDone={() => markCompleteAndAdvance("authors")}
-              />
-            </Section>
-          </div>
+              <div hidden={activeStep !== "authors"}>
+                <Section step={STEPS[2]}>
+                  <AuthorsSection
+                    subId={id}
+                    authors={q.data.authors}
+                    onSaved={refresh}
+                    onDone={() => markCompleteAndAdvance("authors")}
+                  />
+                </Section>
+              </div>
 
-          <div hidden={activeStep !== "details"}>
-            <Section step={STEPS[3]}>
-              <DetailsSection sub={submission} onSaved={refresh} onDone={() => markCompleteAndAdvance("details")} />
-            </Section>
-          </div>
+              <div hidden={activeStep !== "details"}>
+                <Section step={STEPS[3]}>
+                  <DetailsSection sub={submission} onSaved={refresh} onDone={() => markCompleteAndAdvance("details")} />
+                </Section>
+              </div>
 
-          <div hidden={activeStep !== "declarations"}>
-            <Section step={STEPS[4]}>
-              <DeclarationsSection
-                subId={id}
-                sub={submission}
-                declarations={q.data.declarations}
-                onSaved={refresh}
-                onDone={() => markCompleteAndAdvance("declarations")}
-              />
-            </Section>
-          </div>
+              <div hidden={activeStep !== "declarations"}>
+                <Section step={STEPS[4]}>
+                  <DeclarationsSection
+                    subId={id}
+                    sub={submission}
+                    declarations={q.data.declarations}
+                    onSaved={refresh}
+                    onDone={() => markCompleteAndAdvance("declarations")}
+                  />
+                </Section>
+              </div>
 
-          <div hidden={activeStep !== "supporting"}>
-            <Section step={STEPS[5]}>
-              <SupportingSection
-                subId={id}
-                files={q.data.files}
-                onSaved={refresh}
-                onDone={() => markCompleteAndAdvance("supporting")}
-              />
-            </Section>
-          </div>
+              <div hidden={activeStep !== "supporting"}>
+                <Section step={STEPS[5]}>
+                  <SupportingSection
+                    subId={id}
+                    files={q.data.files}
+                    onSaved={refresh}
+                    onDone={() => markCompleteAndAdvance("supporting")}
+                  />
+                </Section>
+              </div>
 
-          <div hidden={activeStep !== "reviewers"}>
-            <Section step={STEPS[6]}>
-              <ReviewersSection
-                subId={id}
-                reviewers={q.data.suggested_reviewers}
-                submission={submission}
-                files={q.data.files}
-                authors={q.data.authors}
-                onSaved={refresh}
-                onSubmitted={() => navigate({ to: "/submissions/$id", params: { id } })}
-              />
-            </Section>
+              <div hidden={activeStep !== "reviewers"}>
+                <Section step={STEPS[6]}>
+                  <ReviewersSection
+                    subId={id}
+                    reviewers={q.data.suggested_reviewers}
+                    submission={submission}
+                    files={q.data.files}
+                    authors={q.data.authors}
+                    onSaved={refresh}
+                    onSubmitted={() => navigate({ to: "/submissions/$id", params: { id } })}
+                  />
+                </Section>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -353,11 +393,11 @@ function StepNav({ activeStep, onBack }: { activeStep: StepKey; onBack: (k: Step
         type="button"
         onClick={() => prev && onBack(prev.key)}
         disabled={!prev}
-        className="inline-flex items-center gap-2 text-[13px] text-muted-foreground hover:text-foreground transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] text-muted-foreground hover:text-foreground hover:bg-[var(--surface-sunken)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent"
       >
-        ← {prev ? `Orqaga: ${prev.title}` : "Orqaga"}
+        ← {prev ? prev.title : "Orqaga"}
       </button>
-      <p className="text-[11px] font-mono tracking-widest text-muted-foreground">
+      <p className="text-[11px] font-mono tracking-[0.18em] uppercase text-muted-foreground">
         {idx + 1} / {STEPS.length}
       </p>
     </div>
@@ -377,13 +417,14 @@ function Section({
 }) {
   return (
     <div className="scroll-mt-8">
-      <div className="mb-6">
-        <p className="text-[11px] font-mono tracking-widest text-muted-foreground">
-          {String(step.num).padStart(2, "0")}
-        </p>
-        <h2 className="font-serif text-[26px] leading-tight tracking-tight text-foreground mt-1">
+      <div className="mb-8">
+        <span className="inline-flex items-center rounded-full bg-[var(--accent-oxblood-soft)] text-[var(--accent-oxblood)] px-3 py-1 text-[10.5px] font-mono tracking-[0.18em] uppercase">
+          Bosqich {String(step.num).padStart(2, "0")}
+        </span>
+        <h2 className="mt-3 text-[26px] md:text-[28px] leading-tight tracking-tight text-foreground font-medium">
           {step.title}
         </h2>
+        <p className="mt-1.5 text-[13.5px] text-muted-foreground">{step.hint}</p>
       </div>
       {children}
     </div>
@@ -402,14 +443,14 @@ function ContinueButton({
   label?: string;
 }) {
   return (
-    <div className="pt-6 border-t border-border/60">
+    <div className="pt-6 mt-6 border-t border-border/60">
       <button
         type="button"
         onClick={onClick}
         disabled={disabled || loading}
-        className="inline-flex items-center gap-2 rounded-full bg-foreground text-background px-6 py-3 text-[13.5px] font-medium hover:opacity-90 transition-opacity active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+        className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-oxblood)] text-[var(--primary-foreground)] px-6 py-3 text-[13.5px] font-medium hover:bg-[var(--accent-oxblood-strong)] transition-colors active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
       >
-        {loading ? "..." : label}
+        {loading ? "..." : label} <span aria-hidden>→</span>
       </button>
     </div>
   );
