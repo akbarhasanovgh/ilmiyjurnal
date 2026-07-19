@@ -15,17 +15,17 @@
 :root {
   --radius: 1rem;
 
-  /* Paper palette — warm cream archival system */
-  --page:            #f7f3ec;                    /* warm cream — main surface */
-  --page-elevated:   #fbf8f2;                    /* card face, sits above page */
-  --ink:             #171412;                    /* warm near-black */
-  --ink-soft:        #2f2a26;
-  --ink-muted:       #6a6259;
-  --ink-faint:       #a39a8e;
-  --rule:            rgba(23, 20, 18, 0.09);
-  --rule-strong:     rgba(23, 20, 18, 0.16);
-  --surface-sunken:  #ede6d8;                    /* toned paper — chips, filters, breadcrumbs */
-  --surface-tint:    #f0eadb;                    /* between page and sunken */
+  /* Paper palette — clean white archival system */
+  --page:            #ffffff;                    /* pure white — main surface */
+  --page-elevated:   #ffffff;                    /* card face, sits above page */
+  --ink:             #141414;                    /* near-black */
+  --ink-soft:        #2a2a2a;
+  --ink-muted:       #6b6b6b;
+  --ink-faint:       #a0a0a0;
+  --rule:            rgba(20, 20, 20, 0.08);
+  --rule-strong:     rgba(20, 20, 20, 0.14);
+  --surface-sunken:  #f4f4f3;                    /* neutral grey — chips, filters */
+  --surface-tint:    #f8f8f7;                    /* between page and sunken */
   --accent-oxblood:  #8b1e2b;                    /* oxblood — primary accent */
   --accent-oxblood-strong: #6d1621;
   --accent-oxblood-soft:   rgba(139, 30, 43, 0.08);
