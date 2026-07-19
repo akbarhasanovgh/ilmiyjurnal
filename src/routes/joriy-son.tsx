@@ -22,43 +22,52 @@ function CurrentIssuePage() {
   const issue = CURRENT_ISSUE;
   return (
     <PublicShell>
-      <div className="max-w-6xl mx-auto px-6 md:px-10 py-12">
-        <div className="border-b border-ink pb-5 mb-10 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="label-mono mb-2 text-[color:var(--accent-oxblood)]">
-              Joriy son · {issue.month} {issue.year}
-            </p>
-            <h1
-              className="font-medium leading-tight"
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(2rem, 4vw, 2.75rem)",
-              }}
-            >
-              {issue.volume}-jild · {issue.number}-son
-            </h1>
-            <p className="mt-3 text-sm text-ink-soft max-w-[64ch]">
-              Ushbu sondagi maqolalar tahririyat tomonidan tayyorlangan va
-              ikki tomonlama anonim taqrizdan o‘tgan.
-            </p>
-          </div>
-          <div className="flex items-end gap-8">
-            <div className="text-right">
-              <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">
-                Maqolalar
+      <div className="max-w-6xl mx-auto px-4 md:px-8 pt-8 pb-16">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-[12.5px] text-ink-muted mb-6">
+          <Link to="/" className="hover:text-ink transition-colors">Bosh sahifa</Link>
+          <span className="text-ink-faint">›</span>
+          <span className="text-ink">Joriy son</span>
+        </nav>
+
+        {/* Issue hero */}
+        <div className="rounded-3xl bg-[color:var(--surface-sunken)] p-8 md:p-10 mb-10">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+                Joriy son
+              </span>
+              <h1
+                className="font-semibold leading-tight tracking-tight text-ink"
+                style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)" }}
+              >
+                {issue.volume}-jild · {issue.number}-son
+              </h1>
+              <p className="mt-2 text-[14px] text-ink-muted">
+                {issue.month} {issue.year}
               </p>
-              <p className="text-2xl font-mono">{issue.papers.length}</p>
+              <p className="mt-4 text-[14px] text-ink-soft max-w-[64ch] leading-relaxed">
+                Ushbu sondagi maqolalar tahririyat tomonidan tayyorlangan va
+                ikki tomonlama anonim taqrizdan o‘tgan.
+              </p>
             </div>
-            <Link
-              to="/arxiv"
-              className="text-[11px] font-bold uppercase tracking-[0.2em] border-b border-ink pb-0.5 hover:text-[color:var(--accent-oxblood)] hover:border-[color:var(--accent-oxblood)] transition-colors"
-            >
-              Arxiv
-            </Link>
+            <div className="flex items-center gap-6">
+              <div className="text-right">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Maqolalar</p>
+                <p className="text-3xl font-semibold tabular-nums text-ink mt-1">{issue.papers.length}</p>
+              </div>
+              <Link
+                to="/arxiv"
+                className="inline-flex items-center rounded-full border border-rule-strong bg-[color:var(--page-elevated)] px-4 py-2 text-[13px] font-semibold text-ink hover:bg-[color:var(--page)] transition-colors"
+              >
+                Arxiv →
+              </Link>
+            </div>
           </div>
         </div>
 
-        <div className="border-y border-rule">
+        {/* Article list */}
+        <div className="space-y-6">
           {issue.papers.map((p, idx) => (
             <ArticleCard
               key={p.manuscriptId}
@@ -76,11 +85,6 @@ function CurrentIssuePage() {
             />
           ))}
         </div>
-
-
-        <p className="mt-8 text-[10px] uppercase tracking-[0.22em] text-ink-faint">
-          Tahririy ko‘rinish
-        </p>
       </div>
     </PublicShell>
   );
