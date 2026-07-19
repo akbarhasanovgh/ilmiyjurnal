@@ -147,6 +147,7 @@ function PaperPage() {
               href={issue.pdfUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleDownloadClick}
               className="inline-flex items-center gap-2 rounded-full bg-[color:var(--accent-oxblood)] text-page px-4 py-2 text-[13px] font-semibold hover:opacity-90 transition-opacity"
             >
               <Download size={15} strokeWidth={2} />
@@ -157,6 +158,12 @@ function PaperPage() {
             <Eye size={15} className="text-[color:var(--accent-oxblood)]" strokeWidth={1.75} />
             <span className="text-ink-muted tabular-nums">
               {viewCount.toLocaleString("uz-UZ")} ko‘rish
+            </span>
+          </div>
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--surface-sunken)] px-3 py-1.5 text-[12.5px]">
+            <Download size={15} className="text-[color:var(--accent-oxblood)]" strokeWidth={1.75} />
+            <span className="text-ink-muted tabular-nums">
+              {downloadCount.toLocaleString("uz-UZ")} yuklama
             </span>
           </div>
         </div>
