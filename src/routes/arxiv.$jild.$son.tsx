@@ -2,7 +2,6 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { PublicShell } from "@/components/public-shell";
 import { ArticleCard } from "@/components/article-card";
 import { findIssue, type ArchiveIssue } from "@/lib/archive-preview";
-import { getArticleThumb } from "@/lib/article-thumbs";
 import { getArticleStatsMap } from "@/lib/article-views";
 import { useQuery } from "@tanstack/react-query";
 
@@ -137,7 +136,7 @@ function IssuePage() {
                 downloads: statsMap?.get(p.manuscriptId)?.download_count ?? 0,
                 abstract: p.excerpt,
                 slug: p.manuscriptId,
-                coverUrl: getArticleThumb(p.manuscriptId) ?? issue.coverUrl,
+                coverUrl: issue.coverUrl,
                 issueLabel: `${issue.volume}-jild · ${issue.number}-son`,
               }}
             />

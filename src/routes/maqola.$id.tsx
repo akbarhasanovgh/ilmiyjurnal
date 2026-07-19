@@ -5,7 +5,6 @@ import { Eye, Download, ArrowLeft } from "lucide-react";
 import { PublicShell } from "@/components/public-shell";
 import { findPaper, type ArchivePaper, type ArchiveIssue } from "@/lib/archive-preview";
 import { incrementArticleView, incrementArticleDownload, getArticleStats } from "@/lib/article-views";
-import { getArticleThumb } from "@/lib/article-thumbs";
 
 export const Route = createFileRoute("/maqola/$id")({
   loader: ({ params }) => {
@@ -173,39 +172,6 @@ function PaperPage() {
           </div>
         </div>
 
-        {/* Journal cover preview */}
-        {issue.coverUrl && (
-          (() => {
-            const href = issue.pdfUrl;
-            const Wrapper = href ? "a" : "div";
-            return (
-              <section className="mb-10">
-                <p className="text-[10.5px] font-bold uppercase tracking-[0.22em] mb-4 text-ink-muted">
-                  Jurnal soni
-                </p>
-                <Wrapper
-                  {...(href
-                    ? {
-                        href,
-                        target: "_blank",
-                        rel: "noopener noreferrer",
-                        onClick: handleDownloadClick,
-                        "aria-label": "Jurnal PDFini ochish",
-                      }
-                    : {})}
-                  className="block w-[240px] md:w-[280px] aspect-[210/297] overflow-hidden rounded-2xl border border-rule bg-[color:var(--page-elevated)] shadow-[0_10px_32px_rgba(23,20,18,0.14)] hover:shadow-[0_16px_44px_rgba(23,20,18,0.22)] transition-shadow"
-                >
-                  <img
-                    src={issue.coverUrl}
-                    alt={`Jild ${issue.volume}, № ${issue.number} — muqova`}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                  />
-                </Wrapper>
-              </section>
-            );
-          })()
-        )}
 
 
         <section className="mb-10">

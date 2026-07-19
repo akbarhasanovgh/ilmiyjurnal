@@ -4,7 +4,6 @@ import { PublicShell } from "@/components/public-shell";
 import { ArticleCard } from "@/components/article-card";
 import { CURRENT_ISSUE } from "@/lib/archive-preview";
 import { getTopViewedArticles, getArticleStatsMap } from "@/lib/article-views";
-import { getArticleThumb } from "@/lib/article-thumbs";
 import coverAsset from "@/assets/issue-13-32-cover.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
@@ -147,7 +146,7 @@ function Home() {
                     downloads: previewStats?.get(p.manuscriptId)?.download_count ?? 0,
                     abstract: p.excerpt ?? "",
                     slug: p.manuscriptId,
-                    coverUrl: getArticleThumb(p.manuscriptId),
+                    coverUrl: coverAsset.url,
                     issueLabel: `${issue.volume}-jild · ${issue.number}-son`,
                   }}
                 />
