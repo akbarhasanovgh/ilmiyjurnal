@@ -757,7 +757,7 @@ function AuthorsSection({ subId, authors, onSaved, onDone }: { subId: string; au
               </button>
             )}
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Ism-sharif *">
               <input className="wz-input" value={r.full_name} onChange={(e) => setRow(i, { full_name: e.target.value })} />
             </Field>
@@ -803,7 +803,7 @@ function AuthorsSection({ subId, authors, onSaved, onDone }: { subId: string; au
             <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-foreground mb-2">
               Hissa (CRediT)
             </p>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
               {CREDIT_ROLES.map((c) => (
                 <label key={c.value} className="flex items-center gap-2 text-[13px] cursor-pointer">
                   <input
@@ -907,7 +907,7 @@ function DetailsSection({ sub, onSaved, onDone }: { sub: any; onSaved: () => voi
       <Field label="Abstract (English)">
         <textarea className="wz-textarea min-h-[8rem]" value={abstractEn} onChange={(e) => setAbstractEn(e.target.value)} />
       </Field>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Field label="Kalit so‘zlar (vergul bilan)">
           <input className="wz-input" value={kw} onChange={(e) => setKw(e.target.value)} />
         </Field>
@@ -1285,7 +1285,7 @@ function ReviewersSection({
               O‘chirish
             </button>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Field label="Ism-sharif">
               <input className="wz-input" value={r.full_name} onChange={(e) => setRows((rs) => rs.map((x, idx) => idx === i ? { ...x, full_name: e.target.value } : x))} />
             </Field>

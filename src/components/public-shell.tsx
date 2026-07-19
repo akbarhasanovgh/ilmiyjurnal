@@ -37,7 +37,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1 mx-auto">
+          <nav className="hidden lg:flex items-center gap-1 mx-auto">
             {NAV.map((n) => (
               <Link
                 key={n.to}
@@ -58,7 +58,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <Link
               to="/auth"
-              className="hidden sm:inline-flex px-3 py-2 text-[13px] text-ink-soft hover:text-ink transition-colors"
+              className="hidden lg:inline-flex px-3 py-2 text-[13px] text-ink-soft hover:text-ink transition-colors"
             >
               Kirish
             </Link>
@@ -78,7 +78,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
               <SheetTrigger asChild>
                 <button
                   type="button"
-                  className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-full bg-surface-sunken text-ink hover:bg-surface-tint transition-colors"
+                  className="lg:hidden inline-flex items-center justify-center h-9 w-9 rounded-full bg-surface-sunken text-ink hover:bg-surface-tint transition-colors"
                   aria-label="Menyuni ochish"
                 >
                   <Menu className="h-[18px] w-[18px]" />

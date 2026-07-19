@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useState } from "react";
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -10,9 +11,11 @@ import {
   ClipboardList,
   LogOut,
   Settings,
+  Menu,
   type LucideIcon,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { getSessionContext } from "@/lib/auth.functions";
@@ -95,55 +98,82 @@ export function AuthorShell({ children }: AuthorShellProps) {
   const initial = (displayName || "?").trim().charAt(0).toUpperCase();
   const roleLabel = ctx?.roles?.length ? ctx.roles.map((r) => r.name).join(" · ") : "Muallif";
 
-  return (
-    <div className="min-h-screen flex bg-muted/40">
-      <aside className="w-[260px] shrink-0 flex flex-col p-3 sticky top-0 h-screen">
-        <div className="flex-1 flex flex-col rounded-3xl bg-card/70 backdrop-blur border border-border/60 shadow-sm overflow-hidden">
-          <Link to="/" className="p-5 pb-4 block border-b border-border/60 hover:bg-muted/40 transition-colors">
-            <p className="text-[10.5px] font-semibold tracking-[0.14em] uppercase text-muted-foreground">
-              O‘T va A
-            </p>
-            <p className="font-serif text-[17px] leading-tight mt-1 text-foreground">Tahririyat</p>
-          </Link>
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-          <ScrollArea className="flex-1 px-2">
-            <nav className="py-3 space-y-0.5">
-              {NAV.filter((n) => !n.perm || perms.has(n.perm)).map(renderItem)}
-            </nav>
-          </ScrollArea>
+  const sidebarBody = (
+    <div className="flex-1 flex flex-col rounded-3xl bg-card/70 backdrop-blur border border-border/60 shadow-sm overflow-hidden">
+      <Link to="/" className="p-5 pb-4 block border-b border-border/60 hover:bg-muted/40 transition-colors" onClick={() => setMobileOpen(false)}>
+        <p className="text-[10.5px] font-semibold tracking-[0.14em] uppercase text-muted-foreground">
+          O‘T va A
+        </p>
+        <p className="font-serif text-[17px] leading-tight mt-1 text-foreground">Tahririyat</p>
+      </Link>
 
-          <div className="p-2 border-t border-border/60">
-            <div className="flex items-center gap-2">
-              <Link
-                to="/settings/profile"
-                className="flex items-center gap-2.5 flex-1 min-w-0 px-2 py-2 rounded-2xl hover:bg-background/60 transition-colors group"
-              >
-                <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-[13px] font-semibold text-foreground shrink-0 border border-border/60">
-                  {initial}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[13px] font-medium truncate leading-tight text-foreground">
-                    {displayName || "Foydalanuvchi"}
-                  </p>
-                  <p className="text-[11px] text-muted-foreground truncate leading-tight mt-0.5">
-                    {roleLabel}
-                  </p>
-                </div>
-                <Settings className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-              </Link>
-              <button
-                onClick={signOut}
-                aria-label="Chiqish"
-                className="w-9 h-9 rounded-2xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-background/60 transition-colors active:scale-[0.94]"
-              >
-                <LogOut className="h-4 w-4" />
-              </button>
+      <ScrollArea className="flex-1 px-2">
+        <nav className="py-3 space-y-0.5" onClick={() => setMobileOpen(false)}>
+          {NAV.filter((n) => !n.perm || perms.has(n.perm)).map(renderItem)}
+        </nav>
+      </ScrollArea>
+
+      <div className="p-2 border-t border-border/60">
+        <div className="flex items-center gap-2">
+          <Link
+            to="/settings/profile"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-2.5 flex-1 min-w-0 px-2 py-2 rounded-2xl hover:bg-background/60 transition-colors group"
+          >
+            <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-[13px] font-semibold text-foreground shrink-0 border border-border/60">
+              {initial}
             </div>
-          </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[13px] font-medium truncate leading-tight text-foreground">
+                {displayName || "Foydalanuvchi"}
+              </p>
+              <p className="text-[11px] text-muted-foreground truncate leading-tight mt-0.5">
+                {roleLabel}
+              </p>
+            </div>
+            <Settings className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+          </Link>
+          <button
+            onClick={signOut}
+            aria-label="Chiqish"
+            className="w-9 h-9 rounded-2xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-background/60 transition-colors active:scale-[0.94]"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
         </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen lg:flex bg-muted/40">
+      {/* Mobile top bar */}
+      <div className="lg:hidden sticky top-0 z-30 flex items-center gap-3 px-4 h-14 bg-card/85 backdrop-blur border-b border-border/60">
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetTrigger asChild>
+            <button
+              aria-label="Menyu"
+              className="inline-flex items-center justify-center h-9 w-9 rounded-xl bg-muted text-foreground hover:bg-background transition-colors"
+            >
+              <Menu className="h-[18px] w-[18px]" />
+            </button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-[min(86vw,300px)] p-3 bg-muted/40 border-r border-border/60">
+            <SheetTitle className="sr-only">Menyu</SheetTitle>
+            <SheetClose className="sr-only">Yopish</SheetClose>
+            <div className="flex flex-col h-full">{sidebarBody}</div>
+          </SheetContent>
+        </Sheet>
+        <p className="font-serif text-[16px] tracking-tight text-foreground">Tahririyat</p>
+      </div>
+
+      <aside className="hidden lg:flex w-[260px] shrink-0 flex-col p-3 sticky top-0 h-screen">
+        {sidebarBody}
       </aside>
 
-      <main className="flex-1 min-w-0 py-3 pr-3">
+      <main className="flex-1 min-w-0 p-3 lg:py-3 lg:pr-3 lg:pl-0">
         <div className="rounded-3xl bg-card border border-border/60 shadow-sm min-h-[calc(100vh-1.5rem)] overflow-hidden animate-fade-in">
           {children}
         </div>
