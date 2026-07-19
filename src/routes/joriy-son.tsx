@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PublicShell } from "@/components/public-shell";
+import { ArticleCard } from "@/components/article-card";
 import { CURRENT_ISSUE } from "@/lib/archive-preview";
 
 export const Route = createFileRoute("/joriy-son")({
