@@ -53,8 +53,8 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
 
       {/* DOI */}
       {article.doi && (
-        <div className="inline-flex items-center gap-2 bg-surface-sunken rounded-lg px-3.5 py-2 mb-6">
-          <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-ink-muted">
+        <div className="inline-flex items-center gap-2 bg-[color:var(--accent-oxblood)]/8 rounded-md px-3.5 py-2 mb-6 border border-[color:var(--accent-oxblood)]/15">
+          <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[color:var(--accent-oxblood)]">
             DOI:
           </span>
           {article.doiUrl ? (
