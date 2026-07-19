@@ -58,7 +58,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <Link
               to="/auth"
-              className="hidden sm:inline-flex px-3 py-2 text-[13px] text-ink-soft hover:text-ink transition-colors"
+              className="hidden lg:inline-flex px-3 py-2 text-[13px] text-ink-soft hover:text-ink transition-colors"
             >
               Kirish
             </Link>
