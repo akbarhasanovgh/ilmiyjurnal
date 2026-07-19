@@ -112,6 +112,8 @@ function CurrentIssuePage() {
                 downloads: 0,
                 abstract: p.excerpt,
                 slug: p.manuscriptId,
+                coverUrl: coverAsset.url,
+                issueLabel: `${issue.volume}·${issue.number}`,
               }}
             />
           ))}
