@@ -231,13 +231,16 @@ function Home() {
                 <span className="text-[10px] text-ink-faint">Maqolalar</span>
               </div>
               <ul>
-                {FIELDS.map(([name, count]) => (
+                {FIELDS.map(([name, shifr, count]) => (
                   <li
                     key={name}
-                    className="flex items-baseline justify-between py-2 border-b border-rule group cursor-pointer"
+                    className="flex items-baseline justify-between py-2 border-b border-rule group cursor-pointer gap-3"
                   >
                     <span className="text-sm group-hover:text-[color:var(--accent-oxblood)] transition-colors">
                       {name}
+                    </span>
+                    <span className="text-[10px] font-mono text-ink-faint tracking-wider ml-auto mr-3">
+                      {shifr}
                     </span>
                     <span className="text-[11px] font-mono text-ink-faint tracking-wider">
                       {count}
