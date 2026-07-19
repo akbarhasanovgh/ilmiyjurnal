@@ -2,6 +2,9 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { PublicShell } from "@/components/public-shell";
 import { ArticleCard } from "@/components/article-card";
 import { findIssue, type ArchiveIssue } from "@/lib/archive-preview";
+import { getArticleThumb } from "@/lib/article-thumbs";
+import { getArticleStatsMap } from "@/lib/article-views";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/arxiv/$jild/$son")({
   loader: ({ params }) => {
@@ -67,6 +70,12 @@ function IssueNotFound() {
 
 function IssuePage() {
   const { issue } = Route.useLoaderData() as { issue: ArchiveIssue };
+  const ids = issue.papers.map((p) => p.manuscriptId);
+  const { data: statsMap } = useQuery({
+    queryKey: ["article-stats-map", "arxiv", issue.volume, issue.number],
+    queryFn: () => getArticleStatsMap(ids),
+    staleTime: 60_000,
+  });
   return (
     <PublicShell>
       <div className="max-w-6xl mx-auto px-4 md:px-8 pt-8 pb-16">
@@ -124,10 +133,12 @@ function IssuePage() {
                 authors: p.authors,
                 doi: "",
                 doiUrl: "",
-                views: 20 + idx * 5,
-                downloads: 0,
+                views: statsMap?.get(p.manuscriptId)?.view_count ?? 0,
+                downloads: statsMap?.get(p.manuscriptId)?.download_count ?? 0,
                 abstract: p.excerpt,
                 slug: p.manuscriptId,
+                coverUrl: getArticleThumb(p.manuscriptId) ?? issue.coverUrl,
+                issueLabel: `${issue.volume}-jild · ${issue.number}-son`,
               }}
             />
           ))}
