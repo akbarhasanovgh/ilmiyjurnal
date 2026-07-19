@@ -127,9 +127,11 @@ function IssuePage() {
                 views: 20 + idx * 5,
                 downloads: 0,
                 abstract: p.excerpt,
+                slug: p.manuscriptId,
               }}
             />
           ))}
+
         </div>
       </div>
     </PublicShell>
