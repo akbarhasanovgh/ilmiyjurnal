@@ -23,6 +23,12 @@ export const Route = createFileRoute("/joriy-son")({
 
 function CurrentIssuePage() {
   const issue = CURRENT_ISSUE;
+  const ids = issue.papers.map((p) => p.manuscriptId);
+  const { data: statsMap } = useQuery({
+    queryKey: ["article-stats-map", "joriy-son"],
+    queryFn: () => getArticleStatsMap(ids),
+    staleTime: 60_000,
+  });
   return (
     <PublicShell>
       <div className="max-w-6xl mx-auto px-4 md:px-8 pt-8 pb-16">
