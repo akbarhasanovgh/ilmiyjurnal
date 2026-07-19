@@ -9,6 +9,8 @@ import issue1130PdfAsset from "@/assets/issue-11-30-2026.pdf.asset.json";
 import issue1130CoverAsset from "@/assets/issue-11-30-cover.jpg.asset.json";
 import issue1029PdfAsset from "@/assets/issue-10-29-2026.pdf.asset.json";
 import issue1029CoverAsset from "@/assets/issue-10-29-cover.jpg.asset.json";
+import issue928PdfAsset from "@/assets/issue-9-28-2026.pdf.asset.json";
+import issue928CoverAsset from "@/assets/issue-9-28-cover.jpg.asset.json";
 
 export type ArchivePaper = {
   manuscriptId: string;
