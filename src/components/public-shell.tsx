@@ -1,5 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetClose,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 const NAV = [
   { to: "/", label: "Bosh sahifa", exact: true as const },
@@ -10,45 +19,35 @@ const NAV = [
 ];
 
 export function PublicShell({ children }: { children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="min-h-dvh bg-page text-ink flex flex-col">
-      {/* Editorial masthead — two-tier */}
-      <header className="sticky top-0 z-40 bg-page/85 backdrop-blur-md border-b border-rule">
-        {/* Utility strip */}
-        <div className="border-b border-rule/70">
-          <div className="max-w-6xl mx-auto px-4 md:px-8 h-8 flex items-center justify-between text-[10.5px] font-mono tracking-[0.18em] uppercase text-ink-faint">
-            <span>ISSN 2010-5584 · Peer-reviewed</span>
-            <div className="flex items-center gap-5">
-              <span className="hidden sm:inline">Toshkent · 2026</span>
-              <Link to="/auth" className="hover:text-ink transition-colors">
-                Kirish
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Main row */}
-        <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center gap-8">
-          <Link to="/" className="flex items-baseline gap-3 shrink-0 group">
-            <span className="text-[17px] font-semibold tracking-tight leading-none">
+      {/* Editorial masthead */}
+      <header className="sticky top-0 z-40 bg-page/90 backdrop-blur-md border-b border-rule">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 h-16 flex items-center gap-4 lg:gap-8">
+          {/* Wordmark */}
+          <Link to="/" className="flex items-baseline gap-2 shrink-0 group">
+            <span className="text-[15px] sm:text-[17px] font-semibold tracking-tight leading-none">
               O‘zbek tili
               <span className="text-ink-muted"> va adabiyoti</span>
             </span>
-            <span className="hidden lg:inline text-[10px] font-mono tracking-[0.2em] uppercase text-ink-faint">
+            <span className="hidden xl:inline text-[10px] font-mono tracking-[0.2em] uppercase text-ink-faint">
               Ilmiy jurnal
             </span>
           </Link>
 
+          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1 mx-auto">
             {NAV.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
                 activeOptions={n.exact ? { exact: true } : undefined}
-                className="relative px-3 py-2 text-[13.5px] text-ink-soft hover:text-ink transition-colors"
+                className="relative px-3 py-2 text-[13px] lg:text-[13.5px] text-ink-soft hover:text-ink transition-colors"
                 activeProps={{
                   className:
-                    "relative px-3 py-2 text-[13.5px] font-medium text-ink after:content-[''] after:absolute after:left-3 after:right-3 after:-bottom-[13px] after:h-[2px] after:bg-[color:var(--accent-oxblood)]",
+                    "relative px-3 py-2 text-[13px] lg:text-[13.5px] font-medium text-ink after:content-[''] after:absolute after:left-3 after:right-3 after:-bottom-[13px] after:h-[2px] after:bg-[color:var(--accent-oxblood)]",
                 }}
               >
                 {n.label}
@@ -56,19 +55,99 @@ export function PublicShell({ children }: { children: ReactNode }) {
             ))}
           </nav>
 
-          <div className="ml-auto flex items-center gap-2">
+          {/* Actions */}
+          <div className="ml-auto flex items-center gap-2 sm:gap-3">
+            <Link
+              to="/auth"
+              className="hidden sm:inline-flex px-3 py-2 text-[13px] text-ink-soft hover:text-ink transition-colors"
+            >
+              Kirish
+            </Link>
+
             <Link
               to="/auth"
               search={{ next: "/submissions/new" } as never}
-              className="group inline-flex items-center gap-2 rounded-full bg-ink hover:bg-[color:var(--accent-oxblood)] text-page px-4 py-2 text-[13px] font-medium tracking-tight transition-colors"
+              className="group inline-flex items-center gap-2 rounded-full bg-[color:var(--accent-oxblood)] hover:bg-[color:var(--accent-oxblood-strong)] text-page px-3 sm:px-4 py-2 text-[12.5px] sm:text-[13px] font-medium tracking-tight transition-colors active:scale-[0.97]"
             >
-              Maqola yuborish
+              <span className="hidden sm:inline">Maqola yuborish</span>
+              <span className="sm:hidden">Yuborish</span>
               <span aria-hidden className="translate-x-0 group-hover:translate-x-0.5 transition-transform">→</span>
             </Link>
+
+            {/* Mobile menu */}
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <button
+                  type="button"
+                  className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-full bg-surface-sunken text-ink hover:bg-surface-tint transition-colors"
+                  aria-label="Menyuni ochish"
+                >
+                  <Menu className="h-[18px] w-[18px]" />
+                </button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[min(88vw,320px)] bg-page border-l border-rule p-0">
+                <SheetTitle className="sr-only">Asosiy menyu</SheetTitle>
+                <div className="flex flex-col h-full">
+                  <div className="flex items-center justify-between px-5 h-16 border-b border-rule">
+                    <span className="text-[15px] font-semibold tracking-tight">Menyu</span>
+                    <SheetClose asChild>
+                      <button
+                        type="button"
+                        className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-surface-sunken text-ink hover:bg-surface-tint transition-colors"
+                        aria-label="Yopish"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </SheetClose>
+                  </div>
+
+                  <nav className="flex-1 overflow-auto py-4 px-3">
+                    <ul className="space-y-1">
+                      {NAV.map((n) => (
+                        <li key={n.to}>
+                          <SheetClose asChild>
+                            <Link
+                              to={n.to}
+                              activeOptions={n.exact ? { exact: true } : undefined}
+                              className="flex items-center rounded-xl px-4 py-3 text-[14px] text-ink-soft hover:bg-surface-tint hover:text-ink transition-colors"
+                              activeProps={{
+                                className:
+                                  "flex items-center rounded-xl px-4 py-3 text-[14px] font-medium bg-accent-oxblood-soft text-[color:var(--accent-oxblood)]",
+                              }}
+                            >
+                              {n.label}
+                            </Link>
+                          </SheetClose>
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
+
+                  <div className="p-4 border-t border-rule space-y-2">
+                    <SheetClose asChild>
+                      <Link
+                        to="/auth"
+                        className="flex items-center justify-center w-full rounded-xl px-4 py-3 text-[14px] font-medium text-ink bg-surface-sunken hover:bg-surface-tint transition-colors"
+                      >
+                        Kirish
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link
+                        to="/auth"
+                        search={{ next: "/submissions/new" } as never}
+                        className="flex items-center justify-center w-full rounded-xl px-4 py-3 text-[14px] font-medium text-page bg-[color:var(--accent-oxblood)] hover:bg-[color:var(--accent-oxblood-strong)] transition-colors"
+                      >
+                        Maqola yuborish
+                      </Link>
+                    </SheetClose>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
-
 
       <main className="flex-1">{children}</main>
 
