@@ -101,7 +101,11 @@ function PaperPage() {
         <nav className="flex items-center gap-2 text-[12.5px] text-ink-muted mb-8 flex-wrap">
           <Link to="/" className="hover:text-ink transition-colors">Bosh sahifa</Link>
           <span className="text-ink-faint">›</span>
-          <Link to="/joriy-son" className="hover:text-ink transition-colors">
+          <Link
+            to="/arxiv/$jild/$son"
+            params={{ jild: String(issue.volume), son: String(issue.number) }}
+            className="hover:text-ink transition-colors"
+          >
             {issue.volume}-jild · {issue.number}-son
           </Link>
           <span className="text-ink-faint">›</span>
