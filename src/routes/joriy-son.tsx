@@ -121,7 +121,7 @@ function CurrentIssuePage() {
                 downloads: statsMap?.get(p.manuscriptId)?.download_count ?? 0,
                 abstract: p.excerpt,
                 slug: p.manuscriptId,
-                coverUrl: getArticleThumb(p.manuscriptId) ?? coverAsset.url,
+                coverUrl: coverAsset.url,
                 issueLabel: `${issue.volume}·${issue.number}`,
               }}
             />

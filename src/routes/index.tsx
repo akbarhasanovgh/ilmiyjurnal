@@ -147,7 +147,7 @@ function Home() {
                     downloads: previewStats?.get(p.manuscriptId)?.download_count ?? 0,
                     abstract: p.excerpt ?? "",
                     slug: p.manuscriptId,
-                    coverUrl: getArticleThumb(p.manuscriptId),
+                    coverUrl: coverAsset.url,
                     issueLabel: `${issue.volume}-jild · ${issue.number}-son`,
                   }}
                 />
