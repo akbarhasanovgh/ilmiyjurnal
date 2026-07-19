@@ -118,27 +118,8 @@ function Home() {
           </div>
         </div>
 
-        {/* Search */}
-        <div className="rounded-full bg-[color:var(--page-elevated)] border border-rule flex items-stretch overflow-hidden mb-12 shadow-[0_1px_0_rgba(23,20,18,0.03)]">
-          <label
-            htmlFor="q"
-            className="hidden md:flex items-center pl-6 pr-3 text-[10px] uppercase tracking-[0.22em] font-bold text-ink-faint"
-          >
-            Qidiruv
-          </label>
-          <input
-            id="q"
-            type="search"
-            placeholder="Maqola, muallif, kalit so‘z yoki mavzu bo‘yicha qidiring"
-            className="flex-1 bg-transparent px-4 md:px-2 py-4 text-[14px] placeholder:text-ink-faint focus:outline-none"
-          />
-          <button
-            type="button"
-            className="bg-[color:var(--accent-oxblood)] text-page px-6 md:px-8 text-[12px] font-semibold hover:opacity-90 transition-opacity"
-          >
-            Qidirish
-          </button>
-        </div>
+
+
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* LATEST */}
