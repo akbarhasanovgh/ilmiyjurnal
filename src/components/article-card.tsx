@@ -148,19 +148,20 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
 
         {article.coverUrl && (
           <aside className="hidden md:flex flex-col items-center gap-2">
-            <Link
-              to={article.slug ? "/maqola/$id" : "/joriy-son"}
-              params={article.slug ? { id: article.slug } : undefined as never}
-              className="block w-[140px] aspect-[210/297] overflow-hidden rounded-xl border border-rule bg-[color:var(--surface-sunken)] shadow-[0_2px_8px_rgba(23,20,18,0.08)] hover:shadow-[0_6px_18px_rgba(23,20,18,0.12)] transition-shadow"
-              aria-label="Jurnal muqovasi"
-            >
-              <img
-                src={article.coverUrl}
-                alt="Jurnal muqovasi"
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
-            </Link>
+            {article.slug ? (
+              <Link
+                to="/maqola/$id"
+                params={{ id: article.slug }}
+                className="block w-[140px] aspect-[210/297] overflow-hidden rounded-xl border border-rule bg-[color:var(--surface-sunken)] shadow-[0_2px_8px_rgba(23,20,18,0.08)] hover:shadow-[0_6px_18px_rgba(23,20,18,0.12)] transition-shadow"
+                aria-label="Jurnal muqovasi"
+              >
+                <img src={article.coverUrl} alt="Jurnal muqovasi" loading="lazy" className="h-full w-full object-cover" />
+              </Link>
+            ) : (
+              <div className="block w-[140px] aspect-[210/297] overflow-hidden rounded-xl border border-rule bg-[color:var(--surface-sunken)] shadow-[0_2px_8px_rgba(23,20,18,0.08)]">
+                <img src={article.coverUrl} alt="Jurnal muqovasi" loading="lazy" className="h-full w-full object-cover" />
+              </div>
+            )}
             {article.issueLabel && (
               <p className="text-[10px] uppercase tracking-[0.18em] text-ink-faint text-center">
                 {article.issueLabel}
