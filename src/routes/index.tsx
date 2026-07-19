@@ -127,6 +127,8 @@ function Home() {
                     downloads: 12 + i * 3,
                     abstract: p.excerpt ?? "",
                     slug: p.manuscriptId,
+                    coverUrl: coverAsset.url,
+                    issueLabel: `${issue.volume}-jild · ${issue.number}-son`,
                   }}
                 />
               ))}
