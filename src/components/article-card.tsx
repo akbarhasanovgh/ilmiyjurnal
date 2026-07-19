@@ -14,6 +14,10 @@ export type ArticleCardData = {
   kind?: string;
   /** manuscriptId for linking to /maqola/$slug */
   slug?: string;
+  /** Optional issue cover thumbnail URL (first page of journal PDF) */
+  coverUrl?: string;
+  /** Optional issue label rendered under the cover, e.g. "13-jild · 32-son" */
+  issueLabel?: string;
 };
 
 /**
