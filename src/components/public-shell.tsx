@@ -155,14 +155,13 @@ export function PublicShell({ children }: { children: ReactNode }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div className="space-y-3">
               <div className="flex items-center gap-2.5">
-                <span
-                  aria-hidden
-                  className="grid place-items-center w-8 h-8 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[13px] font-bold"
-                >
-                  O
-                </span>
+                <img
+                  src={logoAsset.url}
+                  alt="Til va adabiyot ta'limi"
+                  className="h-8 w-auto object-contain"
+                />
                 <p className="text-[15px] font-semibold tracking-tight">
-                  O‘zbek tili va adabiyoti
+                  Til va adabiyot ta'limi
                 </p>
               </div>
               <p className="text-[13px] text-ink-muted leading-relaxed max-w-[42ch]">
