@@ -570,3 +570,16 @@ export function findIssue(volume: number, number: number): ArchiveIssue | null {
   }
   return null;
 }
+
+export function findPaper(
+  manuscriptId: string,
+): { paper: ArchivePaper; issue: ArchiveIssue } | null {
+  for (const v of ARCHIVE_VOLUMES) {
+    for (const issue of v.issues) {
+      const paper = issue.papers.find((p) => p.manuscriptId === manuscriptId);
+      if (paper) return { paper, issue };
+    }
+  }
+  return null;
+}
+
