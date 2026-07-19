@@ -14,6 +14,10 @@ export type ArticleCardData = {
   kind?: string;
   /** manuscriptId for linking to /maqola/$slug */
   slug?: string;
+  /** Optional issue cover thumbnail URL (first page of journal PDF) */
+  coverUrl?: string;
+  /** Optional issue label rendered under the cover, e.g. "13-jild · 32-son" */
+  issueLabel?: string;
 };
 
 /**
@@ -31,6 +35,8 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
 
   return (
     <article className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-8 md:p-10 shadow-[0_1px_0_rgba(23,20,18,0.03)]">
+      <div className={article.coverUrl ? "grid gap-8 md:grid-cols-[1fr_140px] md:items-start" : ""}>
+        <div className="min-w-0">
       {/* Kind + ID */}
       <div className="flex items-center gap-3 mb-5">
         <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em]">
@@ -138,6 +144,32 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
           </Link>
         </div>
       )}
+        </div>
+
+        {article.coverUrl && (
+          <aside className="hidden md:flex flex-col items-center gap-2">
+            {article.slug ? (
+              <Link
+                to="/maqola/$id"
+                params={{ id: article.slug }}
+                className="block w-[140px] aspect-[210/297] overflow-hidden rounded-xl border border-rule bg-[color:var(--surface-sunken)] shadow-[0_2px_8px_rgba(23,20,18,0.08)] hover:shadow-[0_6px_18px_rgba(23,20,18,0.12)] transition-shadow"
+                aria-label="Jurnal muqovasi"
+              >
+                <img src={article.coverUrl} alt="Jurnal muqovasi" loading="lazy" className="h-full w-full object-cover" />
+              </Link>
+            ) : (
+              <div className="block w-[140px] aspect-[210/297] overflow-hidden rounded-xl border border-rule bg-[color:var(--surface-sunken)] shadow-[0_2px_8px_rgba(23,20,18,0.08)]">
+                <img src={article.coverUrl} alt="Jurnal muqovasi" loading="lazy" className="h-full w-full object-cover" />
+              </div>
+            )}
+            {article.issueLabel && (
+              <p className="text-[10px] uppercase tracking-[0.18em] text-ink-faint text-center">
+                {article.issueLabel}
+              </p>
+            )}
+          </aside>
+        )}
+      </div>
     </article>
   );
 }
