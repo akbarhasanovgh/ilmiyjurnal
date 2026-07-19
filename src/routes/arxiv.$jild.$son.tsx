@@ -133,10 +133,12 @@ function IssuePage() {
                 authors: p.authors,
                 doi: "",
                 doiUrl: "",
-                views: 20 + idx * 5,
-                downloads: 0,
+                views: statsMap?.get(p.manuscriptId)?.view_count ?? 0,
+                downloads: statsMap?.get(p.manuscriptId)?.download_count ?? 0,
                 abstract: p.excerpt,
                 slug: p.manuscriptId,
+                coverUrl: getArticleThumb(p.manuscriptId) ?? issue.coverUrl,
+                issueLabel: `${issue.volume}-jild · ${issue.number}-son`,
               }}
             />
           ))}
