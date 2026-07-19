@@ -167,7 +167,11 @@ export function AuthorShell({ children }: AuthorShellProps) {
             <div className="flex flex-col h-full">{sidebarBody}</div>
           </SheetContent>
         </Sheet>
-        <p className="font-serif text-[16px] tracking-tight text-foreground">Tahririyat</p>
+        <img
+          src="/__l5e/assets-v1/356b6480-4396-48e4-871a-8d9040583695/logo.png"
+          alt="Filologiya va Pedagogika"
+          className="h-8 w-auto object-contain"
+        />
       </div>
 
       <aside className="hidden lg:flex w-[260px] shrink-0 flex-col p-3 sticky top-0 h-screen">
