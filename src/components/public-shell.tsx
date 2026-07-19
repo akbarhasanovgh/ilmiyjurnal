@@ -27,15 +27,13 @@ export function PublicShell({ children }: { children: ReactNode }) {
       {/* Editorial masthead */}
       <header className="sticky top-0 z-40 bg-page/90 backdrop-blur-md border-b border-rule">
         <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 h-16 flex items-center gap-4 lg:gap-8">
-          {/* Wordmark */}
-          <Link to="/" className="flex items-baseline gap-2 shrink-0 group">
-            <span className="text-[15px] sm:text-[17px] font-semibold tracking-tight leading-none">
-              O‘zbek tili
-              <span className="text-ink-muted"> va adabiyoti</span>
-            </span>
-            <span className="hidden xl:inline text-[10px] font-mono tracking-[0.2em] uppercase text-ink-faint">
-              Ilmiy jurnal
-            </span>
+          {/* Brand logo */}
+          <Link to="/" className="flex items-center shrink-0 group">
+            <img
+              src={logoAsset.url}
+              alt="Til va adabiyot ta'limi"
+              className="h-8 sm:h-9 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop nav */}
