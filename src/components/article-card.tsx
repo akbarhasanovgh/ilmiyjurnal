@@ -50,8 +50,19 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
           letterSpacing: "-0.01em",
         }}
       >
-        {article.title}
+        {slug ? (
+          <Link
+            to="/maqola/$id"
+            params={{ id: slug }}
+            className="hover:text-[color:var(--accent-oxblood)] transition-colors"
+          >
+            {article.title}
+          </Link>
+        ) : (
+          article.title
+        )}
       </h2>
+
 
       {/* Author */}
       <p className="text-[13.5px] text-ink-soft mb-5">{article.authors}</p>
