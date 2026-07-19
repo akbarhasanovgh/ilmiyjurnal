@@ -37,7 +37,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1 mx-auto">
+          <nav className="hidden lg:flex items-center gap-1 mx-auto">
             {NAV.map((n) => (
               <Link
                 key={n.to}
