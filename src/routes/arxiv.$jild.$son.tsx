@@ -70,6 +70,12 @@ function IssueNotFound() {
 
 function IssuePage() {
   const { issue } = Route.useLoaderData() as { issue: ArchiveIssue };
+  const ids = issue.papers.map((p) => p.manuscriptId);
+  const { data: statsMap } = useQuery({
+    queryKey: ["article-stats-map", "arxiv", issue.volume, issue.number],
+    queryFn: () => getArticleStatsMap(ids),
+    staleTime: 60_000,
+  });
   return (
     <PublicShell>
       <div className="max-w-6xl mx-auto px-4 md:px-8 pt-8 pb-16">
