@@ -2,6 +2,9 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { PublicShell } from "@/components/public-shell";
 import { ArticleCard } from "@/components/article-card";
 import { findIssue, type ArchiveIssue } from "@/lib/archive-preview";
+import { getArticleThumb } from "@/lib/article-thumbs";
+import { getArticleStatsMap } from "@/lib/article-views";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/arxiv/$jild/$son")({
   loader: ({ params }) => {
