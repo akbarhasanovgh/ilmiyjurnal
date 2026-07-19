@@ -35,6 +35,8 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
 
   return (
     <article className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-8 md:p-10 shadow-[0_1px_0_rgba(23,20,18,0.03)]">
+      <div className={article.coverUrl ? "grid gap-8 md:grid-cols-[1fr_140px] md:items-start" : ""}>
+        <div className="min-w-0">
       {/* Kind + ID */}
       <div className="flex items-center gap-3 mb-5">
         <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em]">
