@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Eye, Download, ArrowLeft } from "lucide-react";
 import { PublicShell } from "@/components/public-shell";
 import { findPaper, type ArchivePaper, type ArchiveIssue } from "@/lib/archive-preview";
-import { incrementArticleView, getArticleViewCount } from "@/lib/article-views";
+import { incrementArticleView, incrementArticleDownload, getArticleStats } from "@/lib/article-views";
 
 export const Route = createFileRoute("/maqola/$id")({
   loader: ({ params }) => {
@@ -72,21 +72,27 @@ function PaperPage() {
 
   const shifr = paper.field === "Filologiya" ? "10.00.00" : "13.00.00";
 
-  const { data: viewCount = 0, refetch: refetchViews } = useQuery({
-    queryKey: ["article-views", paper.manuscriptId],
-    queryFn: () => getArticleViewCount(paper.manuscriptId),
+  const { data: stats, refetch: refetchStats } = useQuery({
+    queryKey: ["article-stats", paper.manuscriptId],
+    queryFn: () => getArticleStats(paper.manuscriptId),
     staleTime: 30_000,
   });
+  const viewCount = stats?.view_count ?? 0;
+  const downloadCount = stats?.download_count ?? 0;
 
   useEffect(() => {
     let cancelled = false;
     incrementArticleView(paper.manuscriptId).then(() => {
-      if (!cancelled) refetchViews();
+      if (!cancelled) refetchStats();
     });
     return () => {
       cancelled = true;
     };
-  }, [paper.manuscriptId, refetchViews]);
+  }, [paper.manuscriptId, refetchStats]);
+
+  const handleDownloadClick = () => {
+    incrementArticleDownload(paper.manuscriptId).then(() => refetchStats());
+  };
 
   return (
     <PublicShell>
@@ -141,6 +147,7 @@ function PaperPage() {
               href={issue.pdfUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleDownloadClick}
               className="inline-flex items-center gap-2 rounded-full bg-[color:var(--accent-oxblood)] text-page px-4 py-2 text-[13px] font-semibold hover:opacity-90 transition-opacity"
             >
               <Download size={15} strokeWidth={2} />
@@ -151,6 +158,12 @@ function PaperPage() {
             <Eye size={15} className="text-[color:var(--accent-oxblood)]" strokeWidth={1.75} />
             <span className="text-ink-muted tabular-nums">
               {viewCount.toLocaleString("uz-UZ")} ko‘rish
+            </span>
+          </div>
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--surface-sunken)] px-3 py-1.5 text-[12.5px]">
+            <Download size={15} className="text-[color:var(--accent-oxblood)]" strokeWidth={1.75} />
+            <span className="text-ink-muted tabular-nums">
+              {downloadCount.toLocaleString("uz-UZ")} yuklama
             </span>
           </div>
         </div>

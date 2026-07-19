@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { PublicShell } from "@/components/public-shell";
 import { ArticleCard } from "@/components/article-card";
 import { CURRENT_ISSUE } from "@/lib/archive-preview";
-import { getTopViewedArticles } from "@/lib/article-views";
+import { getTopViewedArticles, getArticleStatsMap } from "@/lib/article-views";
 import coverAsset from "@/assets/issue-13-32-cover.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
@@ -28,11 +28,17 @@ const FIELDS: [string, string, number][] = [
 function Home() {
   const issue = CURRENT_ISSUE;
   const previewPapers = issue.papers.slice(0, 3);
+  const previewIds = previewPapers.map((p) => p.manuscriptId);
 
   const papersById = new Map(issue.papers.map((p) => [p.manuscriptId, p]));
   const { data: topViews = [] } = useQuery({
     queryKey: ["top-viewed", 5],
     queryFn: () => getTopViewedArticles(5),
+    staleTime: 60_000,
+  });
+  const { data: previewStats } = useQuery({
+    queryKey: ["article-stats-map", previewIds],
+    queryFn: () => getArticleStatsMap(previewIds),
     staleTime: 60_000,
   });
   const mostViewed = topViews
@@ -136,8 +142,8 @@ function Home() {
                     authors: `${p.authors} · ${issue.volume}-jild · ${issue.number}-son`,
                     doi: "",
                     doiUrl: "",
-                    views: 40 + i * 9,
-                    downloads: 12 + i * 3,
+                    views: previewStats?.get(p.manuscriptId)?.view_count ?? 0,
+                    downloads: previewStats?.get(p.manuscriptId)?.download_count ?? 0,
                     abstract: p.excerpt ?? "",
                     slug: p.manuscriptId,
                     coverUrl: coverAsset.url,

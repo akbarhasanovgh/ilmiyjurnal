@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { PublicShell } from "@/components/public-shell";
 import { ArticleCard } from "@/components/article-card";
 import { CURRENT_ISSUE } from "@/lib/archive-preview";
+import { getArticleStatsMap } from "@/lib/article-views";
 import coverAsset from "@/assets/issue-13-32-cover.jpg.asset.json";
 
 export const Route = createFileRoute("/joriy-son")({
@@ -21,6 +23,12 @@ export const Route = createFileRoute("/joriy-son")({
 
 function CurrentIssuePage() {
   const issue = CURRENT_ISSUE;
+  const ids = issue.papers.map((p) => p.manuscriptId);
+  const { data: statsMap } = useQuery({
+    queryKey: ["article-stats-map", "joriy-son"],
+    queryFn: () => getArticleStatsMap(ids),
+    staleTime: 60_000,
+  });
   return (
     <PublicShell>
       <div className="max-w-6xl mx-auto px-4 md:px-8 pt-8 pb-16">
@@ -108,8 +116,8 @@ function CurrentIssuePage() {
                 authors: p.authors,
                 doi: "",
                 doiUrl: "",
-                views: 40 + idx * 7,
-                downloads: 0,
+                views: statsMap?.get(p.manuscriptId)?.view_count ?? 0,
+                downloads: statsMap?.get(p.manuscriptId)?.download_count ?? 0,
                 abstract: p.excerpt,
                 slug: p.manuscriptId,
                 coverUrl: coverAsset.url,
