@@ -891,7 +891,7 @@ function DetailsSection({ sub, onSaved, onDone }: { sub: any; onSaved: () => voi
           </select>
         </Field>
         <Field label="Yo‘nalish">
-          <input className="wz-input" placeholder="Tilshunoslik, Adabiyotshunoslik..." value={field} onChange={(e) => setField(e.target.value)} />
+          <input className="wz-input" placeholder="Pedagogika yoki Filologiya" value={field} onChange={(e) => setField(e.target.value)} />
         </Field>
         <Field label="Bo‘lim (AI/tematik)">
           <input className="wz-input" placeholder="Ixtiyoriy" value={aiSection} onChange={(e) => setAiSection(e.target.value)} />
