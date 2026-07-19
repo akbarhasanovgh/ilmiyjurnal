@@ -113,9 +113,11 @@ function Home() {
                     views: 40 + i * 9,
                     downloads: 12 + i * 3,
                     abstract: p.excerpt ?? "",
+                    slug: p.manuscriptId,
                   }}
                 />
               ))}
+
             </div>
           </section>
 

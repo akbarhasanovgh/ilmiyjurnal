@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Eye, Download } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export type ArticleCardData = {
   id: string | number;
@@ -11,6 +12,8 @@ export type ArticleCardData = {
   downloads?: number;
   abstract?: string;
   kind?: string;
+  /** manuscriptId for linking to /maqola/$slug */
+  slug?: string;
 };
 
 /**
@@ -23,6 +26,8 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
   const abstract = article.abstract ?? "";
   const isLong = abstract.length > 320;
   const shown = expanded || !isLong ? abstract : abstract.slice(0, 320).trimEnd();
+  const slug = article.slug;
+
 
   return (
     <article className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-8 md:p-10 shadow-[0_1px_0_rgba(23,20,18,0.03)]">
@@ -45,8 +50,19 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
           letterSpacing: "-0.01em",
         }}
       >
-        {article.title}
+        {slug ? (
+          <Link
+            to="/maqola/$id"
+            params={{ id: slug }}
+            className="hover:text-[color:var(--accent-oxblood)] transition-colors"
+          >
+            {article.title}
+          </Link>
+        ) : (
+          article.title
+        )}
       </h2>
+
 
       {/* Author */}
       <p className="text-[13.5px] text-ink-soft mb-5">{article.authors}</p>
@@ -109,6 +125,20 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
           )}
         </div>
       )}
+
+      {slug && (
+        <div className="mt-6 pt-6 border-t border-rule">
+          <Link
+            to="/maqola/$id"
+            params={{ id: slug }}
+            className="inline-flex items-center gap-2 rounded-full bg-[color:var(--accent-oxblood)] text-page px-4 py-2 text-[12.5px] font-semibold hover:opacity-90 transition-opacity"
+          >
+            Maqolani ochish
+            <span aria-hidden>→</span>
+          </Link>
+        </div>
+      )}
     </article>
   );
 }
+

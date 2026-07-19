@@ -17,6 +17,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ArxivIndexRouteImport } from './routes/arxiv.index'
+import { Route as MaqolaIdRouteImport } from './routes/maqola.$id'
 import { Route as AuthenticatedKutubxonaRouteImport } from './routes/_authenticated/kutubxona'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAuditRouteImport } from './routes/_authenticated/audit'
@@ -73,6 +74,11 @@ const IndexRoute = IndexRouteImport.update({
 const ArxivIndexRoute = ArxivIndexRouteImport.update({
   id: '/arxiv/',
   path: '/arxiv/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaqolaIdRoute = MaqolaIdRouteImport.update({
+  id: '/maqola/$id',
+  path: '/maqola/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedKutubxonaRoute = AuthenticatedKutubxonaRouteImport.update({
@@ -185,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/audit': typeof AuthenticatedAuditRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/kutubxona': typeof AuthenticatedKutubxonaRoute
+  '/maqola/$id': typeof MaqolaIdRoute
   '/arxiv/': typeof ArxivIndexRoute
   '/admin/dois': typeof AuthenticatedAdminDoisRoute
   '/admin/inbox': typeof AuthenticatedAdminInboxRoute
@@ -212,6 +219,7 @@ export interface FileRoutesByTo {
   '/audit': typeof AuthenticatedAuditRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/kutubxona': typeof AuthenticatedKutubxonaRoute
+  '/maqola/$id': typeof MaqolaIdRoute
   '/arxiv': typeof ArxivIndexRoute
   '/admin/dois': typeof AuthenticatedAdminDoisRoute
   '/admin/inbox': typeof AuthenticatedAdminInboxRoute
@@ -241,6 +249,7 @@ export interface FileRoutesById {
   '/_authenticated/audit': typeof AuthenticatedAuditRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/kutubxona': typeof AuthenticatedKutubxonaRoute
+  '/maqola/$id': typeof MaqolaIdRoute
   '/arxiv/': typeof ArxivIndexRoute
   '/_authenticated/admin/dois': typeof AuthenticatedAdminDoisRoute
   '/_authenticated/admin/inbox': typeof AuthenticatedAdminInboxRoute
@@ -270,6 +279,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/dashboard'
     | '/kutubxona'
+    | '/maqola/$id'
     | '/arxiv/'
     | '/admin/dois'
     | '/admin/inbox'
@@ -297,6 +307,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/dashboard'
     | '/kutubxona'
+    | '/maqola/$id'
     | '/arxiv'
     | '/admin/dois'
     | '/admin/inbox'
@@ -325,6 +336,7 @@ export interface FileRouteTypes {
     | '/_authenticated/audit'
     | '/_authenticated/dashboard'
     | '/_authenticated/kutubxona'
+    | '/maqola/$id'
     | '/arxiv/'
     | '/_authenticated/admin/dois'
     | '/_authenticated/admin/inbox'
@@ -351,6 +363,7 @@ export interface RootRouteChildren {
   BootstrapRoute: typeof BootstrapRoute
   ForAuthorsRoute: typeof ForAuthorsRoute
   JoriySonRoute: typeof JoriySonRoute
+  MaqolaIdRoute: typeof MaqolaIdRoute
   ArxivIndexRoute: typeof ArxivIndexRoute
   ArxivJildSonRoute: typeof ArxivJildSonRoute
 }
@@ -411,6 +424,13 @@ declare module '@tanstack/react-router' {
       path: '/arxiv'
       fullPath: '/arxiv/'
       preLoaderRoute: typeof ArxivIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/maqola/$id': {
+      id: '/maqola/$id'
+      path: '/maqola/$id'
+      fullPath: '/maqola/$id'
+      preLoaderRoute: typeof MaqolaIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/kutubxona': {
@@ -593,19 +613,10 @@ const rootRouteChildren: RootRouteChildren = {
   BootstrapRoute: BootstrapRoute,
   ForAuthorsRoute: ForAuthorsRoute,
   JoriySonRoute: JoriySonRoute,
+  MaqolaIdRoute: MaqolaIdRoute,
   ArxivIndexRoute: ArxivIndexRoute,
   ArxivJildSonRoute: ArxivJildSonRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
