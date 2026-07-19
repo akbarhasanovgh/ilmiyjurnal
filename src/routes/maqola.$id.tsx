@@ -197,7 +197,7 @@ function PaperPage() {
                 >
                   <img
                     src={issue.coverUrl}
-                    alt={`${issue.title} — muqova`}
+                    alt={`Jild ${issue.volume}, № ${issue.number} — muqova`}
                     className="h-full w-full object-cover"
                     loading="lazy"
                   />
