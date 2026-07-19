@@ -189,8 +189,8 @@
   font-weight: 600;
   border: 1px solid var(--accent-oxblood);
   transition: background-color 150ms, transform 150ms;
+  &:hover { background: var(--accent-oxblood-strong); }
 }
-@utility btn-primary:hover { background: var(--accent-oxblood-strong); }
 @utility btn-secondary {
   display: inline-flex;
   align-items: center;
