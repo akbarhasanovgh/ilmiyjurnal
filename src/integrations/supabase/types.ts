@@ -16,16 +16,19 @@ export type Database = {
     Tables: {
       article_views: {
         Row: {
+          download_count: number
           manuscript_id: string
           updated_at: string
           view_count: number
         }
         Insert: {
+          download_count?: number
           manuscript_id: string
           updated_at?: string
           view_count?: number
         }
         Update: {
+          download_count?: number
           manuscript_id?: string
           updated_at?: string
           view_count?: number
@@ -766,6 +769,10 @@ export type Database = {
       has_role: {
         Args: { _role_key: string; _user_id: string }
         Returns: boolean
+      }
+      increment_article_download: {
+        Args: { _manuscript_id: string }
+        Returns: number
       }
       increment_article_view: {
         Args: { _manuscript_id: string }
