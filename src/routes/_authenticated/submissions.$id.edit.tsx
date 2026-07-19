@@ -893,8 +893,9 @@ function DetailsSection({ sub, onSaved, onDone }: { sub: any; onSaved: () => voi
         <Field label="Yo‘nalish">
           <select className="wz-input" value={field} onChange={(e) => setField(e.target.value)}>
             <option value="">Tanlang…</option>
-            <option value="Pedagogika">Pedagogika</option>
-            <option value="Filologiya">Filologiya</option>
+            <option value="Filologiya">10.00.00 — Filologiya</option>
+            <option value="Pedagogika">13.00.00 — Pedagogika</option>
+
           </select>
 
         </Field>
