@@ -33,7 +33,7 @@ function CurrentIssuePage() {
 
         {/* Issue hero */}
         <div className="rounded-3xl bg-[color:var(--surface-sunken)] p-8 md:p-10 mb-10">
-          <div className="flex flex-wrap items-end justify-between gap-6">
+          <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
             <div>
               <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
                 Joriy son
@@ -53,31 +53,46 @@ function CurrentIssuePage() {
                 tayyorlangan va ikki tomonlama anonim taqrizdan o‘tgan.
                 Nashr sanasi: {issue.publishedAt ? new Date(issue.publishedAt).toLocaleDateString("uz-UZ") : "15.07.2026"}.
               </p>
-            </div>
-            <div className="flex items-center gap-6">
-              <div className="text-right">
-                <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Maqolalar</p>
-                <p className="text-3xl font-semibold tabular-nums text-ink mt-1">{issue.papers.length}</p>
-              </div>
-              <div className="flex flex-col gap-2">
-                <Link
-                  to="/arxiv"
-                  className="inline-flex items-center justify-center rounded-full border border-rule-strong bg-[color:var(--page-elevated)] px-4 py-2 text-[13px] font-semibold text-ink hover:bg-[color:var(--page)] transition-colors"
-                >
-                  Arxiv →
-                </Link>
-                {issue.pdfUrl && (
-                  <a
-                    href={issue.pdfUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center rounded-full bg-[color:var(--accent-oxblood)] text-page px-4 py-2 text-[13px] font-semibold hover:opacity-90 transition-opacity"
+              <div className="mt-6 flex flex-wrap items-center gap-6">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Maqolalar</p>
+                  <p className="text-3xl font-semibold tabular-nums text-ink mt-1">{issue.papers.length}</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    to="/arxiv"
+                    className="inline-flex items-center justify-center rounded-full border border-rule-strong bg-[color:var(--page-elevated)] px-4 py-2 text-[13px] font-semibold text-ink hover:bg-[color:var(--page)] transition-colors"
                   >
-                    PDFni yuklab olish
-                  </a>
-                )}
+                    Arxiv →
+                  </Link>
+                  {issue.pdfUrl && (
+                    <a
+                      href={issue.pdfUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center rounded-full bg-[color:var(--accent-oxblood)] text-page px-4 py-2 text-[13px] font-semibold hover:opacity-90 transition-opacity"
+                    >
+                      PDFni yuklab olish
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
+            {issue.pdfUrl ? (
+              <a
+                href={issue.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-[200px] md:w-[220px] aspect-[210/297] overflow-hidden rounded-2xl border border-rule bg-[color:var(--page-elevated)] shadow-[0_10px_32px_rgba(23,20,18,0.14)] hover:shadow-[0_16px_44px_rgba(23,20,18,0.2)] transition-shadow justify-self-center md:justify-self-end"
+                aria-label="Jurnal PDF muqovasi"
+              >
+                <img src={coverAsset.url} alt="Jurnal muqovasi" className="h-full w-full object-cover" />
+              </a>
+            ) : (
+              <div className="block w-[200px] md:w-[220px] aspect-[210/297] overflow-hidden rounded-2xl border border-rule bg-[color:var(--page-elevated)] shadow-[0_10px_32px_rgba(23,20,18,0.14)] justify-self-center md:justify-self-end">
+                <img src={coverAsset.url} alt="Jurnal muqovasi" className="h-full w-full object-cover" />
+              </div>
+            )}
           </div>
         </div>
 
