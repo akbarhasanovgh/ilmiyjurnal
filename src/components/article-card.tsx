@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Eye, Download } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export type ArticleCardData = {
   id: string | number;
@@ -11,6 +12,8 @@ export type ArticleCardData = {
   downloads?: number;
   abstract?: string;
   kind?: string;
+  /** manuscriptId for linking to /maqola/$slug */
+  slug?: string;
 };
 
 /**
@@ -23,6 +26,8 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
   const abstract = article.abstract ?? "";
   const isLong = abstract.length > 320;
   const shown = expanded || !isLong ? abstract : abstract.slice(0, 320).trimEnd();
+  const slug = article.slug;
+
 
   return (
     <article className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-8 md:p-10 shadow-[0_1px_0_rgba(23,20,18,0.03)]">
