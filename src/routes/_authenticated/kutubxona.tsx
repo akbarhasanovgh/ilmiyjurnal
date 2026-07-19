@@ -71,7 +71,7 @@ function Kutubxona() {
       <div className="max-w-6xl mx-auto px-6 md:px-10 py-10">
         {/* Hero */}
         <div className="rounded-3xl bg-[color:var(--surface-sunken)] p-8 md:p-10 mb-8">
-          <div className="flex flex-wrap items-end justify-between gap-6">
+          <div className="flex flex-col items-center text-center gap-6">
             <div className="max-w-[42rem]">
               <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
                 Jurnal arxivi
@@ -82,13 +82,13 @@ function Kutubxona() {
               >
                 Maqolalar
               </h1>
-              <p className="mt-3 text-[14px] text-ink-soft leading-relaxed max-w-[60ch]">
+              <p className="mt-3 text-[14px] text-ink-soft leading-relaxed max-w-[60ch] mx-auto">
                 Nashr etilgan sonlardagi maqolalar ro‘yxati. Yo‘nalish yoki son
                 bo‘yicha filtrlang.
               </p>
             </div>
             <div className="flex items-center gap-8">
-              <div className="text-right">
+              <div className="text-center">
                 <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Maqolalar</p>
                 <p className="text-3xl font-semibold text-ink mt-1 tabular-nums">{filtered.length}</p>
               </div>
