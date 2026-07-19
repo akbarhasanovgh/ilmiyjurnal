@@ -78,7 +78,7 @@ export function PublicShell({ children }: { children: ReactNode }) {
               <SheetTrigger asChild>
                 <button
                   type="button"
-                  className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-full bg-surface-sunken text-ink hover:bg-surface-tint transition-colors"
+                  className="lg:hidden inline-flex items-center justify-center h-9 w-9 rounded-full bg-surface-sunken text-ink hover:bg-surface-tint transition-colors"
                   aria-label="Menyuni ochish"
                 >
                   <Menu className="h-[18px] w-[18px]" />
