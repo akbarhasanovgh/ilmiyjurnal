@@ -26,9 +26,10 @@
   --rule-strong:     rgba(20, 20, 20, 0.14);
   --surface-sunken:  #f4f4f3;                    /* neutral grey — chips, filters */
   --surface-tint:    #f8f8f7;                    /* between page and sunken */
-  --accent-oxblood:  #8b1e2b;                    /* oxblood — primary accent */
-  --accent-oxblood-strong: #6d1621;
-  --accent-oxblood-soft:   rgba(139, 30, 43, 0.08);
+  --accent-oxblood:  #3684A0;                    /* brand blue — primary accent */
+  --accent-oxblood-strong: #2A6A82;
+  --accent-oxblood-soft:   rgba(54, 132, 160, 0.08);
+
 
   /* Semantic (shadcn compat) */
   --background: var(--page);
