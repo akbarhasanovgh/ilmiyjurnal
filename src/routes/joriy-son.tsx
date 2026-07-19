@@ -4,7 +4,6 @@ import { PublicShell } from "@/components/public-shell";
 import { ArticleCard } from "@/components/article-card";
 import { CURRENT_ISSUE } from "@/lib/archive-preview";
 import { getArticleStatsMap } from "@/lib/article-views";
-import coverAsset from "@/assets/issue-13-32-cover.jpg.asset.json";
 
 export const Route = createFileRoute("/joriy-son")({
   head: () => ({
@@ -23,6 +22,7 @@ export const Route = createFileRoute("/joriy-son")({
 
 function CurrentIssuePage() {
   const issue = CURRENT_ISSUE;
+  const issueCoverUrl = issue.coverUrl;
   const ids = issue.papers.map((p) => p.manuscriptId);
   const { data: statsMap } = useQuery({
     queryKey: ["article-stats-map", "joriy-son"],
@@ -86,7 +86,7 @@ function CurrentIssuePage() {
                 </div>
               </div>
             </div>
-            {issue.pdfUrl ? (
+            {issueCoverUrl && issue.pdfUrl ? (
               <a
                 href={issue.pdfUrl}
                 target="_blank"
@@ -94,13 +94,13 @@ function CurrentIssuePage() {
                 className="block w-[200px] md:w-[220px] aspect-[210/297] overflow-hidden rounded-2xl border border-rule bg-[color:var(--page-elevated)] shadow-[0_10px_32px_rgba(23,20,18,0.14)] hover:shadow-[0_16px_44px_rgba(23,20,18,0.2)] transition-shadow justify-self-center md:justify-self-end"
                 aria-label="Jurnal PDF muqovasi"
               >
-                <img src={coverAsset.url} alt="Jurnal muqovasi" className="h-full w-full object-cover" />
+                <img src={issueCoverUrl} alt="Jurnal muqovasi" className="h-full w-full object-cover" />
               </a>
-            ) : (
+            ) : issueCoverUrl ? (
               <div className="block w-[200px] md:w-[220px] aspect-[210/297] overflow-hidden rounded-2xl border border-rule bg-[color:var(--page-elevated)] shadow-[0_10px_32px_rgba(23,20,18,0.14)] justify-self-center md:justify-self-end">
-                <img src={coverAsset.url} alt="Jurnal muqovasi" className="h-full w-full object-cover" />
+                <img src={issueCoverUrl} alt="Jurnal muqovasi" className="h-full w-full object-cover" />
               </div>
-            )}
+            ) : null}
           </div>
         </div>
 
@@ -120,7 +120,7 @@ function CurrentIssuePage() {
                 downloads: statsMap?.get(p.manuscriptId)?.download_count ?? 0,
                 abstract: p.excerpt,
                 slug: p.manuscriptId,
-                coverUrl: coverAsset.url,
+                coverUrl: issueCoverUrl,
                 issueLabel: `${issue.volume}·${issue.number}`,
               }}
             />
