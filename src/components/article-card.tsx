@@ -125,6 +125,20 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
           )}
         </div>
       )}
+
+      {slug && (
+        <div className="mt-6 pt-6 border-t border-rule">
+          <Link
+            to="/maqola/$id"
+            params={{ id: slug }}
+            className="inline-flex items-center gap-2 rounded-full bg-[color:var(--accent-oxblood)] text-page px-4 py-2 text-[12.5px] font-semibold hover:opacity-90 transition-opacity"
+          >
+            Maqolani ochish
+            <span aria-hidden>→</span>
+          </Link>
+        </div>
+      )}
     </article>
   );
 }
+
