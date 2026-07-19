@@ -227,11 +227,12 @@ function PaperPage() {
 
         {/* Back link */}
         <Link
-          to="/joriy-son"
+          to="/arxiv/$jild/$son"
+          params={{ jild: String(issue.volume), son: String(issue.number) }}
           className="inline-flex items-center gap-2 text-[13px] font-semibold text-ink-muted hover:text-[color:var(--accent-oxblood)] transition-colors"
         >
           <ArrowLeft size={15} />
-          Joriy sondagi barcha maqolalar
+          {issue.volume}-jild · {issue.number}-son dagi barcha maqolalar
         </Link>
       </article>
     </PublicShell>
