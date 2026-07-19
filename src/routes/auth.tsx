@@ -136,9 +136,7 @@ function AuthPage() {
           <div className="w-full max-w-md">
             {/* Header */}
             <div className="mb-8 space-y-3">
-              <span className="inline-flex items-center gap-2 rounded-full bg-surface-sunken px-3 py-1 text-[11px] font-medium tracking-wide uppercase text-ink-muted">
-                {isSignup ? "Ro‘yxatdan o‘tish" : "Kirish"}
-              </span>
+
               <h1 className="text-3xl md:text-4xl font-semibold leading-[1.1] tracking-tight">
                 {isSignup ? "Yangi hisob\nyarating." : "Xush kelibsiz.\nHisobingizga kiring."}
               </h1>
