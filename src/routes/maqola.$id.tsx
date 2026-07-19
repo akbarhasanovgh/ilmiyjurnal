@@ -72,21 +72,27 @@ function PaperPage() {
 
   const shifr = paper.field === "Filologiya" ? "10.00.00" : "13.00.00";
 
-  const { data: viewCount = 0, refetch: refetchViews } = useQuery({
-    queryKey: ["article-views", paper.manuscriptId],
-    queryFn: () => getArticleViewCount(paper.manuscriptId),
+  const { data: stats, refetch: refetchStats } = useQuery({
+    queryKey: ["article-stats", paper.manuscriptId],
+    queryFn: () => getArticleStats(paper.manuscriptId),
     staleTime: 30_000,
   });
+  const viewCount = stats?.view_count ?? 0;
+  const downloadCount = stats?.download_count ?? 0;
 
   useEffect(() => {
     let cancelled = false;
     incrementArticleView(paper.manuscriptId).then(() => {
-      if (!cancelled) refetchViews();
+      if (!cancelled) refetchStats();
     });
     return () => {
       cancelled = true;
     };
-  }, [paper.manuscriptId, refetchViews]);
+  }, [paper.manuscriptId, refetchStats]);
+
+  const handleDownloadClick = () => {
+    incrementArticleDownload(paper.manuscriptId).then(() => refetchStats());
+  };
 
   return (
     <PublicShell>
