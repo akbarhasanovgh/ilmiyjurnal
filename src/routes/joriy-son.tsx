@@ -58,65 +58,25 @@ function CurrentIssuePage() {
           </div>
         </div>
 
-        <ol className="border-y border-rule">
+        <div className="border-y border-rule">
           {issue.papers.map((p, idx) => (
-            <li
+            <ArticleCard
               key={p.manuscriptId}
-              className={
-                "py-8 " +
-                (idx !== issue.papers.length - 1 ? "border-b border-rule" : "")
-              }
-            >
-              <div className="flex flex-wrap items-center gap-3 mb-3">
-                <span className="text-[10px] font-mono text-ink-faint tracking-wider">
-                  {String(idx + 1).padStart(2, "0")}
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-[color:var(--accent-oxblood)] border border-[color:var(--accent-oxblood)]/25 px-2 py-0.5">
-                  {p.field}
-                </span>
-                <span className="text-[11px] font-mono text-ink-faint tracking-wider">
-                  {p.manuscriptId}
-                </span>
-                <span className="text-[10px] uppercase tracking-[0.2em] text-ink-faint ml-auto">
-                  bet {p.pages}
-                </span>
-              </div>
-
-              <h2
-                className="text-[1.4rem] md:text-[1.6rem] leading-[1.2] font-medium mb-2 text-balance"
-                style={{ fontFamily: "var(--font-serif)" }}
-              >
-                {p.title}
-              </h2>
-
-              <p className="text-sm mb-1">
-                <span className="font-medium">{p.authors}</span>
-              </p>
-              {p.affiliation && (
-                <p className="text-xs text-ink-muted mb-3 leading-relaxed">
-                  {p.affiliation}
-                </p>
-              )}
-              {p.excerpt && (
-                <p className="text-sm text-ink-soft leading-relaxed max-w-[68ch] mb-3">
-                  {p.excerpt}
-                </p>
-              )}
-              {p.keywords && p.keywords.length > 0 && (
-                <div className="flex flex-wrap gap-x-3 gap-y-1">
-                  {p.keywords.map((k, i) => (
-                    <span key={k} className="text-[11px] text-ink-muted">
-                      {k}
-                      {i < p.keywords!.length - 1 && (
-                        <span className="text-ink-faint ml-3">·</span>
-                      )}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </li>
+              article={{
+                id: 150 + idx,
+                kind: "Maqola",
+                title: p.title,
+                authors: p.authors,
+                doi: "https://www.google.com/",
+                doiUrl: "https://www.google.com/",
+                views: 40 + idx * 7,
+                downloads: 0,
+                abstract: p.excerpt,
+              }}
+            />
           ))}
-        </ol>
+        </div>
+
 
         <p className="mt-8 text-[10px] uppercase tracking-[0.22em] text-ink-faint">
           Tahririy ko‘rinish
