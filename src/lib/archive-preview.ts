@@ -24,6 +24,7 @@ export type ArchiveIssue = {
   month: string; // Uzbek month
   publishedAt?: string;
   pdfUrl?: string;
+  coverUrl?: string;
   papers: ArchivePaper[];
 };
 
