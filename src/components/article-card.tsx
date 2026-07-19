@@ -10,13 +10,13 @@ export type ArticleCardData = {
   views?: number;
   downloads?: number;
   abstract?: string;
-  kind?: string; // e.g. "MAQOLA"
+  kind?: string;
 };
 
 /**
- * Public-facing article preview card.
- * Matches the reference layout: kind pill + ID, big title,
- * author, DOI link, views/downloads, abstract with "Batafsil" toggle.
+ * Public-facing article card.
+ * Warm cream surface, oxblood MAQOLA pill, blush DOI chip,
+ * generous rounding to match the system DNA.
  */
 export function ArticleCard({ article }: { article: ArticleCardData }) {
   const [expanded, setExpanded] = useState(false);
@@ -25,10 +25,10 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
   const shown = expanded || !isLong ? abstract : abstract.slice(0, 320).trimEnd();
 
   return (
-    <article className="border-b border-rule py-10 first:pt-0">
+    <article className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-8 md:p-10 shadow-[0_1px_0_rgba(23,20,18,0.03)]">
       {/* Kind + ID */}
-      <div className="flex items-center gap-3 mb-6">
-        <span className="inline-flex items-center px-3 py-1 rounded-md bg-[color:var(--accent-oxblood)] text-white text-[10px] font-bold uppercase tracking-[0.2em]">
+      <div className="flex items-center gap-3 mb-5">
+        <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em]">
           {article.kind ?? "Maqola"}
         </span>
         <span className="text-xs font-mono text-ink-faint tracking-wider">
@@ -38,70 +38,73 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
 
       {/* Title */}
       <h2
-        className="font-bold uppercase leading-[1.15] text-balance mb-4"
+        className="font-semibold leading-[1.2] text-balance mb-3 text-ink"
         style={{
           fontFamily: "var(--font-sans)",
-          fontSize: "clamp(1.25rem, 2.2vw, 1.75rem)",
-          letterSpacing: "-0.005em",
+          fontSize: "clamp(1.15rem, 1.9vw, 1.5rem)",
+          letterSpacing: "-0.01em",
         }}
       >
         {article.title}
       </h2>
 
       {/* Author */}
-      <p className="text-sm font-medium mb-5">{article.authors}</p>
+      <p className="text-[13.5px] text-ink-soft mb-5">{article.authors}</p>
 
       {/* DOI */}
       {article.doi && (
-        <div className="inline-flex items-center gap-2 bg-[color:var(--accent-oxblood)]/8 rounded-md px-3.5 py-2 mb-6 border border-[color:var(--accent-oxblood)]/15">
-          <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[color:var(--accent-oxblood)]">
-            DOI:
+        <div className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 mb-6 bg-[color:var(--accent-oxblood-soft)] border border-[color:var(--accent-oxblood)]/15">
+          <span className="text-[10.5px] font-bold uppercase tracking-[0.18em] text-[color:var(--accent-oxblood)]">
+            DOI
           </span>
           {article.doiUrl ? (
             <a
               href={article.doiUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-blue-600 hover:underline break-all"
+              className="text-[13px] text-[color:var(--accent-oxblood-strong)] hover:underline break-all"
             >
               {article.doi}
             </a>
           ) : (
-            <span className="text-sm text-blue-600 break-all">{article.doi}</span>
+            <span className="text-[13px] text-[color:var(--accent-oxblood-strong)] break-all">
+              {article.doi}
+            </span>
           )}
         </div>
       )}
 
       {/* Metrics */}
-      <div className="flex items-center gap-6 mb-6 pb-6 border-b border-rule">
-        <div className="flex items-center gap-2 text-sm">
-          <Eye size={16} className="text-[color:var(--accent-oxblood)]" strokeWidth={1.75} />
+      <div className="flex items-center gap-5 mb-6 pb-6 border-b border-rule">
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--surface-sunken)] px-3 py-1.5 text-[12.5px]">
+          <Eye size={15} className="text-[color:var(--accent-oxblood)]" strokeWidth={1.75} />
           <span className="font-semibold">{article.views ?? 0}</span>
-          <span className="text-ink-muted">(Ko‘rishlar)</span>
+          <span className="text-ink-muted">Ko‘rishlar</span>
         </div>
-        <div className="flex items-center gap-2 text-sm">
-          <Download size={16} className="text-[color:var(--accent-oxblood)]" strokeWidth={1.75} />
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--surface-sunken)] px-3 py-1.5 text-[12.5px]">
+          <Download size={15} className="text-[color:var(--accent-oxblood)]" strokeWidth={1.75} />
           <span className="font-semibold">{article.downloads ?? 0}</span>
-          <span className="text-ink-muted">(Yuklab olishlar)</span>
+          <span className="text-ink-muted">Yuklamalar</span>
         </div>
       </div>
 
       {/* Abstract */}
       {abstract && (
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3 border-b border-ink pb-1 inline-block">
+          <p className="text-[10.5px] font-bold uppercase tracking-[0.22em] mb-3 text-ink-muted">
             Abstract
           </p>
-          <p className="text-sm leading-relaxed text-ink-soft max-w-[75ch]">
+          <p className="text-[13.5px] leading-relaxed text-ink-soft max-w-[75ch]">
             {shown}
             {isLong && !expanded && <span className="text-ink-faint"> …</span>}
           </p>
           {isLong && (
             <button
               onClick={() => setExpanded((v) => !v)}
-              className="mt-3 text-sm font-semibold text-[color:var(--accent-oxblood)] hover:text-[color:var(--accent-oxblood-strong)] transition-colors"
+              className="mt-3 inline-flex items-center gap-1 text-[13px] font-semibold text-[color:var(--accent-oxblood)] hover:text-[color:var(--accent-oxblood-strong)] transition-colors"
             >
               {expanded ? "Yopish" : "Batafsil"}
+              <span aria-hidden>→</span>
             </button>
           )}
         </div>
