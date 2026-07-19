@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { PublicShell } from "@/components/public-shell";
 import { ArticleCard } from "@/components/article-card";
 import { CURRENT_ISSUE } from "@/lib/archive-preview";
+import { getTopViewedArticles } from "@/lib/article-views";
 import coverAsset from "@/assets/issue-13-32-cover.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
@@ -26,6 +28,17 @@ const FIELDS: [string, string, number][] = [
 function Home() {
   const issue = CURRENT_ISSUE;
   const previewPapers = issue.papers.slice(0, 3);
+
+  const papersById = new Map(issue.papers.map((p) => [p.manuscriptId, p]));
+  const { data: topViews = [] } = useQuery({
+    queryKey: ["top-viewed", 5],
+    queryFn: () => getTopViewedArticles(5),
+    staleTime: 60_000,
+  });
+  const mostViewed = topViews
+    .map((row) => ({ paper: papersById.get(row.manuscript_id), views: row.view_count }))
+    .filter((r): r is { paper: NonNullable<typeof r.paper>; views: number } => Boolean(r.paper));
+
 
   return (
     <PublicShell>
@@ -191,19 +204,18 @@ function Home() {
                   Ko‘rishlar
                 </span>
               </div>
-              <ol className="space-y-1">
-                {[...issue.papers]
-                  .map((p, i) => ({
-                    p,
-                    views: 420 - i * 7 + ((p.title.length * 13) % 90),
-                  }))
-                  .sort((a, b) => b.views - a.views)
-                  .slice(0, 5)
-                  .map(({ p, views }, idx) => (
-                    <li key={p.manuscriptId}>
+              {mostViewed.length === 0 ? (
+                <p className="text-[13px] text-ink-muted leading-relaxed px-1">
+                  Statistika hali to‘planmoqda. Maqolalar ochilgan sari eng
+                  ko‘p o‘qilganlari shu yerda paydo bo‘ladi.
+                </p>
+              ) : (
+                <ol className="space-y-1">
+                  {mostViewed.map(({ paper, views }, idx) => (
+                    <li key={paper.manuscriptId}>
                       <Link
                         to="/maqola/$id"
-                        params={{ id: p.manuscriptId }}
+                        params={{ id: paper.manuscriptId }}
                         className="flex items-start gap-3 rounded-2xl px-3 py-2.5 hover:bg-[color:var(--surface-sunken)] transition-colors"
                       >
                         <span className="text-[11px] font-mono text-ink-faint tabular-nums mt-0.5 w-4 shrink-0">
@@ -211,16 +223,17 @@ function Home() {
                         </span>
                         <div className="min-w-0 flex-1">
                           <p className="text-[13px] font-medium text-ink leading-snug line-clamp-2">
-                            {p.title}
+                            {paper.title}
                           </p>
                           <p className="text-[10px] font-mono text-ink-faint tracking-wider mt-1 tabular-nums">
-                            {views} ko‘rish
+                            {views.toLocaleString("uz-UZ")} ko‘rish
                           </p>
                         </div>
                       </Link>
                     </li>
                   ))}
-              </ol>
+                </ol>
+              )}
             </div>
           </aside>
         </div>

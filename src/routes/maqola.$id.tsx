@@ -1,7 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Eye, Download, ArrowLeft } from "lucide-react";
 import { PublicShell } from "@/components/public-shell";
 import { findPaper, type ArchivePaper, type ArchiveIssue } from "@/lib/archive-preview";
+import { incrementArticleView, getArticleViewCount } from "@/lib/article-views";
 
 export const Route = createFileRoute("/maqola/$id")({
   loader: ({ params }) => {
@@ -69,6 +72,22 @@ function PaperPage() {
 
   const shifr = paper.field === "Filologiya" ? "10.00.00" : "13.00.00";
 
+  const { data: viewCount = 0, refetch: refetchViews } = useQuery({
+    queryKey: ["article-views", paper.manuscriptId],
+    queryFn: () => getArticleViewCount(paper.manuscriptId),
+    staleTime: 30_000,
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    incrementArticleView(paper.manuscriptId).then(() => {
+      if (!cancelled) refetchViews();
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [paper.manuscriptId, refetchViews]);
+
   return (
     <PublicShell>
       <article className="max-w-3xl mx-auto px-4 md:px-8 pt-8 pb-20">
@@ -130,7 +149,9 @@ function PaperPage() {
           )}
           <div className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--surface-sunken)] px-3 py-1.5 text-[12.5px]">
             <Eye size={15} className="text-[color:var(--accent-oxblood)]" strokeWidth={1.75} />
-            <span className="text-ink-muted">Ochilgan</span>
+            <span className="text-ink-muted tabular-nums">
+              {viewCount.toLocaleString("uz-UZ")} ko‘rish
+            </span>
           </div>
         </div>
 
