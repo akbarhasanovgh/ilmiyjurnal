@@ -29,6 +29,17 @@ function Home() {
   const issue = CURRENT_ISSUE;
   const previewPapers = issue.papers.slice(0, 3);
 
+  const papersById = new Map(issue.papers.map((p) => [p.manuscriptId, p]));
+  const { data: topViews = [] } = useQuery({
+    queryKey: ["top-viewed", 5],
+    queryFn: () => getTopViewedArticles(5),
+    staleTime: 60_000,
+  });
+  const mostViewed = topViews
+    .map((row) => ({ paper: papersById.get(row.manuscript_id), views: row.view_count }))
+    .filter((r): r is { paper: NonNullable<typeof r.paper>; views: number } => Boolean(r.paper));
+
+
   return (
     <PublicShell>
       <div className="max-w-6xl mx-auto px-4 md:px-8 pt-8 pb-16">
