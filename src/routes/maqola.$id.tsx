@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Eye, Download, ArrowLeft } from "lucide-react";
 import { PublicShell } from "@/components/public-shell";
 import { findPaper, type ArchivePaper, type ArchiveIssue } from "@/lib/archive-preview";
-import { incrementArticleView, getArticleViewCount } from "@/lib/article-views";
+import { incrementArticleView, incrementArticleDownload, getArticleStats } from "@/lib/article-views";
 
 export const Route = createFileRoute("/maqola/$id")({
   loader: ({ params }) => {
