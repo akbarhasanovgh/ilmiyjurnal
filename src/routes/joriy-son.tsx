@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { PublicShell } from "@/components/public-shell";
 import { ArticleCard } from "@/components/article-card";
 import { CURRENT_ISSUE } from "@/lib/archive-preview";
+import { getArticleStatsMap } from "@/lib/article-views";
 import coverAsset from "@/assets/issue-13-32-cover.jpg.asset.json";
 
 export const Route = createFileRoute("/joriy-son")({
