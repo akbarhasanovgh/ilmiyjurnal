@@ -28,7 +28,7 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
     <article className="border-b border-rule py-10 first:pt-0">
       {/* Kind + ID */}
       <div className="flex items-center gap-3 mb-6">
-        <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)]/10 text-[color:var(--accent-oxblood)] text-[10px] font-bold uppercase tracking-[0.2em]">
+        <span className="inline-flex items-center px-3 py-1 rounded-md bg-[color:var(--accent-oxblood)] text-white text-[10px] font-bold uppercase tracking-[0.2em]">
           {article.kind ?? "Maqola"}
         </span>
         <span className="text-xs font-mono text-ink-faint tracking-wider">
