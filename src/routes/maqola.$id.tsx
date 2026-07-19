@@ -72,6 +72,22 @@ function PaperPage() {
 
   const shifr = paper.field === "Filologiya" ? "10.00.00" : "13.00.00";
 
+  const { data: viewCount = 0, refetch: refetchViews } = useQuery({
+    queryKey: ["article-views", paper.manuscriptId],
+    queryFn: () => getArticleViewCount(paper.manuscriptId),
+    staleTime: 30_000,
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    incrementArticleView(paper.manuscriptId).then(() => {
+      if (!cancelled) refetchViews();
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [paper.manuscriptId, refetchViews]);
+
   return (
     <PublicShell>
       <article className="max-w-3xl mx-auto px-4 md:px-8 pt-8 pb-20">
