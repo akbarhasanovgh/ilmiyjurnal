@@ -70,17 +70,29 @@ function Home() {
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-8">
-              <div className="text-right">
-                <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Joriy son</p>
-                <p className="text-2xl font-semibold text-ink mt-1">{issue.volume} · {issue.number}</p>
-                <p className="text-[12px] text-ink-muted mt-0.5">{issue.month} {issue.year}</p>
+            <div className="flex items-end gap-8">
+              <div className="flex flex-col gap-3 text-right">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Joriy son</p>
+                  <p className="text-2xl font-semibold text-ink mt-1">{issue.volume} · {issue.number}</p>
+                  <p className="text-[12px] text-ink-muted mt-0.5">{issue.month} {issue.year}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Maqolalar</p>
+                  <p className="text-2xl font-semibold text-ink mt-1 tabular-nums">{issue.papers.length}</p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Maqolalar</p>
-                <p className="text-2xl font-semibold text-ink mt-1 tabular-nums">{issue.papers.length}</p>
-                <p className="text-[12px] text-ink-muted mt-0.5">ta</p>
-              </div>
+              <Link
+                to="/joriy-son"
+                className="block w-[168px] md:w-[184px] aspect-[210/297] overflow-hidden rounded-2xl border border-rule bg-[color:var(--page-elevated)] shadow-[0_8px_28px_rgba(23,20,18,0.12)] hover:shadow-[0_14px_36px_rgba(23,20,18,0.18)] transition-shadow"
+                aria-label="Joriy son muqovasi"
+              >
+                <img
+                  src={coverAsset.url}
+                  alt={`${issue.volume}-jild · ${issue.number}-son muqovasi`}
+                  className="h-full w-full object-cover"
+                />
+              </Link>
             </div>
           </div>
         </div>
