@@ -1,6 +1,11 @@
 import { Send } from "lucide-react";
+import { useRouterState } from "@tanstack/react-router";
 
 export function TelegramFab() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const hideOn = pathname.startsWith("/admin") || pathname.startsWith("/submissions");
+  if (hideOn) return null;
+
   return (
     <a
       href="https://t.me/FilologiyaPedagogikaBot"
