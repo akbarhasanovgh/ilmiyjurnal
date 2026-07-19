@@ -28,11 +28,17 @@ const FIELDS: [string, string, number][] = [
 function Home() {
   const issue = CURRENT_ISSUE;
   const previewPapers = issue.papers.slice(0, 3);
+  const previewIds = previewPapers.map((p) => p.manuscriptId);
 
   const papersById = new Map(issue.papers.map((p) => [p.manuscriptId, p]));
   const { data: topViews = [] } = useQuery({
     queryKey: ["top-viewed", 5],
     queryFn: () => getTopViewedArticles(5),
+    staleTime: 60_000,
+  });
+  const { data: previewStats } = useQuery({
+    queryKey: ["article-stats-map", previewIds],
+    queryFn: () => getArticleStatsMap(previewIds),
     staleTime: 60_000,
   });
   const mostViewed = topViews
