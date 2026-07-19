@@ -142,6 +142,10 @@ function RootComponent() {
         event !== "USER_UPDATED"
       )
         return;
+      if (event === "SIGNED_OUT") {
+        queryClient.clear();
+        return;
+      }
       queryClient.invalidateQueries();
     });
     return () => data.subscription.unsubscribe();
