@@ -49,9 +49,10 @@ function ArchiveIndex() {
                 Nashr etilgan jildlar
               </h1>
               <p className="mt-4 text-[14px] text-ink-soft leading-relaxed max-w-[64ch]">
-                Jurnal 1958-yildan buyon chop etilib kelinmoqda. Har bir jild
-                yil davomida chiqarilgan sonlarni birlashtiradi. Jildni tanlab,
-                undagi sonlar va maqolalar ro‘yxatini ochishingiz mumkin.
+                “Filologiya va Pedagogika” jurnalining raqamli arxivi. Har bir
+                jild yil davomida chiqarilgan sonlarni birlashtiradi. Jildni
+                tanlab, undagi sonlar va maqolalar ro‘yxatini ochishingiz
+                mumkin.
               </p>
             </div>
             <div className="flex items-center gap-8">
@@ -76,6 +77,7 @@ function ArchiveIndex() {
             </div>
           </div>
         </div>
+
 
         {/* Volume list */}
         <ul className="space-y-4">

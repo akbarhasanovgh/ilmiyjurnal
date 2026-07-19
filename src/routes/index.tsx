@@ -1,92 +1,54 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PublicShell } from "@/components/public-shell";
 import { ArticleCard } from "@/components/article-card";
+import { CURRENT_ISSUE } from "@/lib/archive-preview";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "O‘zbek tili va adabiyoti — Ilmiy-nazariy jurnal" },
+      { title: "Filologiya va Pedagogika — Ilmiy-metodik elektron jurnal" },
       {
         name: "description",
         content:
-          "O‘zbek tili, adabiyoti va filologiyasi bo‘yicha ilmiy tadqiqotlar arxivi. Maqolalar, sonlar, mualliflar. ISSN 2010-5584.",
+          "“Filologiya va Pedagogika” ilmiy-metodik elektron jurnali. O‘zbekiston Respublikasi Maktabgacha va maktab ta’limi vazirligi “Til va adabiyot ta’limi” davlat muassasasi muassisligida nashr etiladi. e-ISSN 3060-4885.",
       },
     ],
   }),
   component: Home,
 });
 
-type PaperPreview = {
-  field: string;
-  title: string;
-  authors: string;
-  excerpt: string;
-  date: string;
-  issue: string;
-  manuscriptId: string;
-};
-
-const PREVIEW_PAPERS: PaperPreview[] = [
-  {
-    field: "Filologiya",
-    title: "O‘zbek tilida zamon kategoriyasining zamonaviy talqinlari",
-    authors: "Akmal Karimov · Dilnoza Rasulova",
-    excerpt:
-      "Ushbu maqolada o‘zbek tili grammatikasidagi zamon kategoriyasining an’anaviy va zamonaviy tilshunoslikdagi talqinlari qiyosiy tahlil qilinadi. Fe’l zamonlarining nutqiy vaziyatga bog‘liqligi masalasi struktural va kognitiv yondashuvlar asosida yoritilgan.",
-    date: "9 iyul 2026",
-    issue: "70-jild · 3-son",
-    manuscriptId: "OTA-2026-0042",
-  },
-  {
-    field: "Filologiya",
-    title:
-      "Alisher Navoiy g‘azallarida ramziy obrazlar tizimi: matnshunoslik yondashuvi",
-    authors: "Dilnoza Rasulova",
-    excerpt:
-      "Maqolada Alisher Navoiyning «Xazoyin ul-maoniy» devonidagi g‘azallarda takrorlanuvchi ramziy obrazlarning matnlararo aloqalari va sharh an’anasidagi o‘rni tahlil qilinadi.",
-    date: "3 iyul 2026",
-    issue: "70-jild · 3-son",
-    manuscriptId: "OTA-2026-0041",
-  },
-  {
-    field: "Pedagogika",
-    title:
-      "XIX asr Buxoro qo‘lyozmalarida imlo tizimi: tanqidiy nashr masalalari",
-    authors: "Bahodir Ergashev",
-    excerpt:
-      "Buxoro madrasalarida ko‘chirilgan qo‘lyozmalardagi imlo o‘zgarishlari va ularning tanqidiy nashr amaliyotidagi aks etishi tahlil qilinadi. Muallif matnlararo qiyoslash uslubini taklif etadi.",
-    date: "27 iyun 2026",
-    issue: "70-jild · 2-son",
-    manuscriptId: "OTA-2026-0038",
-  },
-];
-
-const FIELDS: [string, string, string][] = [
-  ["Filologiya", "10.00.00", "2286"],
-  ["Pedagogika", "13.00.00", "1010"],
+const FIELDS: [string, string, number][] = [
+  ["Filologiya", "10.00.00", CURRENT_ISSUE.papers.filter((p) => p.field === "Filologiya").length],
+  ["Pedagogika", "13.00.00", CURRENT_ISSUE.papers.filter((p) => p.field === "Pedagogika").length],
 ];
 
 function Home() {
+  const issue = CURRENT_ISSUE;
+  const previewPapers = issue.papers.slice(0, 3);
+
   return (
     <PublicShell>
       <div className="max-w-6xl mx-auto px-4 md:px-8 pt-8 pb-16">
         {/* Hero */}
         <div className="rounded-3xl bg-[color:var(--surface-sunken)] p-8 md:p-12 mb-10">
           <div className="flex flex-wrap items-end justify-between gap-8">
-            <div className="max-w-[42rem]">
+            <div className="max-w-[44rem]">
               <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em] mb-5">
-                Ilmiy-nazariy jurnal
+                Ilmiy-metodik elektron jurnal
               </span>
               <h1
                 className="font-semibold leading-[1.1] tracking-tight text-ink"
                 style={{ fontSize: "clamp(2rem, 4.2vw, 3rem)" }}
               >
-                O‘zbek tili va adabiyoti
+                Filologiya va Pedagogika
               </h1>
-              <p className="mt-4 text-[15px] text-ink-soft leading-relaxed max-w-[58ch]">
-                Filologiya va pedagogika sohalarida ikki tomonlama anonim
-                taqrizdan o‘tgan ilmiy tadqiqotlar. 1958-yildan buyon nashr
-                etiladi. ISSN 2010-5584.
+              <p className="mt-4 text-[15px] text-ink-soft leading-relaxed max-w-[60ch]">
+                O‘zbekiston Respublikasi Maktabgacha va maktab ta’limi vazirligi
+                “Til va adabiyot ta’limi” davlat muassasasi muassisligida
+                nashr etiladi. OAK 2024-yil 30-noyabrdagi 364/5-qarori bilan
+                10.00.00 — Filologiya va 13.00.00 — Pedagogika fanlari bo‘yicha
+                dissertatsiyalar asosiy natijalarini chop etish tavsiya etilgan
+                milliy ilmiy nashr. e-ISSN 3060-4885.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link
@@ -95,41 +57,42 @@ function Home() {
                 >
                   Joriy sonni ochish
                 </Link>
-                <Link
-                  to="/for-authors"
-                  className="inline-flex items-center rounded-full border border-rule-strong bg-[color:var(--page-elevated)] px-5 py-2.5 text-[13px] font-semibold text-ink hover:bg-[color:var(--page)] transition-colors"
-                >
-                  Mualliflar uchun
-                </Link>
+                {issue.pdfUrl && (
+                  <a
+                    href={issue.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center rounded-full border border-rule-strong bg-[color:var(--page-elevated)] px-5 py-2.5 text-[13px] font-semibold text-ink hover:bg-[color:var(--page)] transition-colors"
+                  >
+                    PDFni yuklab olish
+                  </a>
+                )}
               </div>
             </div>
             <div className="flex items-center gap-8">
               <div className="text-right">
                 <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Joriy son</p>
-                <p className="text-2xl font-semibold text-ink mt-1">70 · 3</p>
-                <p className="text-[12px] text-ink-muted mt-0.5">Iyul 2026</p>
+                <p className="text-2xl font-semibold text-ink mt-1">{issue.volume} · {issue.number}</p>
+                <p className="text-[12px] text-ink-muted mt-0.5">{issue.month} {issue.year}</p>
               </div>
               <div className="text-right">
-                <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Arxiv</p>
-                <p className="text-2xl font-semibold text-ink mt-1 tabular-nums">3 296</p>
-                <p className="text-[12px] text-ink-muted mt-0.5">maqola</p>
+                <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Maqolalar</p>
+                <p className="text-2xl font-semibold text-ink mt-1 tabular-nums">{issue.papers.length}</p>
+                <p className="text-[12px] text-ink-muted mt-0.5">ta</p>
               </div>
             </div>
           </div>
         </div>
-
-
-
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* LATEST */}
           <section className="lg:col-span-8">
             <div className="flex items-baseline justify-between mb-6">
               <h2 className="text-[11px] font-bold uppercase tracking-[0.22em] text-ink">
-                So‘nggi tadqiqotlar
+                Joriy sondan
               </h2>
               <Link
-                to="/arxiv"
+                to="/joriy-son"
                 className="text-[11px] uppercase tracking-[0.2em] font-semibold text-ink-muted hover:text-[color:var(--accent-oxblood)] transition-colors"
               >
                 Barchasi →
@@ -137,19 +100,19 @@ function Home() {
             </div>
 
             <div className="space-y-6">
-              {PREVIEW_PAPERS.map((p, i) => (
+              {previewPapers.map((p, i) => (
                 <ArticleCard
                   key={p.manuscriptId}
                   article={{
                     id: p.manuscriptId,
                     kind: p.field,
                     title: p.title,
-                    authors: `${p.authors} · ${p.issue} · ${p.date}`,
-                    doi: "https://www.google.com/",
-                    doiUrl: "https://www.google.com/",
+                    authors: `${p.authors} · ${issue.volume}-jild · ${issue.number}-son`,
+                    doi: "",
+                    doiUrl: "",
                     views: 40 + i * 9,
                     downloads: 12 + i * 3,
-                    abstract: p.excerpt,
+                    abstract: p.excerpt ?? "",
                   }}
                 />
               ))}
@@ -162,9 +125,9 @@ function Home() {
             <div className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-6">
               <p className="label-mono mb-3 text-ink-faint">Joriy son</p>
               <p className="font-semibold text-ink text-xl leading-tight">
-                70-jild · 3-son
+                {issue.volume}-jild · {issue.number}-son
               </p>
-              <p className="text-[13px] text-ink-muted mt-1 mb-5">Iyul 2026</p>
+              <p className="text-[13px] text-ink-muted mt-1 mb-5">{issue.month} {issue.year}</p>
               <Link
                 to="/joriy-son"
                 className="inline-flex w-full items-center justify-center rounded-full bg-[color:var(--accent-oxblood)] text-page px-4 py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity"
