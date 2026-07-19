@@ -87,9 +87,9 @@ const PREVIEW_PAPERS: PaperPreview[] = [
   },
 ];
 
-const FIELDS: [string, string][] = [
-  ["Filologiya", "2286"],
-  ["Pedagogika", "1010"],
+const FIELDS: [string, string, string][] = [
+  ["Filologiya", "10.00.00", "2286"],
+  ["Pedagogika", "13.00.00", "1010"],
 ];
 
 function Home() {
