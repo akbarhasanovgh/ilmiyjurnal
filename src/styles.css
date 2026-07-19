@@ -13,32 +13,35 @@
  * -------------------------------------------------------------------------- */
 
 :root {
-  --radius: 0.25rem;
+  --radius: 1rem;
 
-  /* Paper palette — three-color archival system */
-  --page:            #FDFCFB;                    /* warm archival white */
-  --ink:             #1A1A1A;                    /* deep ink */
-  --ink-soft:        #3a3a3a;
-  --ink-muted:       #6b6b6b;
-  --ink-faint:       #9a9a9a;
-  --rule:            rgba(26, 26, 26, 0.10);
-  --rule-strong:     rgba(26, 26, 26, 0.18);
-  --surface-sunken:  #F7F4F0;                    /* toned paper */
-  --accent-oxblood:  #9B2226;                    /* editorial carmine — mature, not childish */
-  --accent-oxblood-strong: #7A1A1D;
+  /* Paper palette — warm cream archival system */
+  --page:            #f7f3ec;                    /* warm cream — main surface */
+  --page-elevated:   #fbf8f2;                    /* card face, sits above page */
+  --ink:             #171412;                    /* warm near-black */
+  --ink-soft:        #2f2a26;
+  --ink-muted:       #6a6259;
+  --ink-faint:       #a39a8e;
+  --rule:            rgba(23, 20, 18, 0.09);
+  --rule-strong:     rgba(23, 20, 18, 0.16);
+  --surface-sunken:  #ede6d8;                    /* toned paper — chips, filters, breadcrumbs */
+  --surface-tint:    #f0eadb;                    /* between page and sunken */
+  --accent-oxblood:  #8b1e2b;                    /* oxblood — primary accent */
+  --accent-oxblood-strong: #6d1621;
+  --accent-oxblood-soft:   rgba(139, 30, 43, 0.08);
 
   /* Semantic (shadcn compat) */
   --background: var(--page);
   --foreground: var(--ink);
-  --card: var(--page);
+  --card: var(--page-elevated);
   --card-foreground: var(--ink);
-  --popover: var(--page);
+  --popover: var(--page-elevated);
   --popover-foreground: var(--ink);
-  --primary: var(--ink);
+  --primary: var(--accent-oxblood);
   --primary-foreground: var(--page);
-  --secondary: oklch(0.96 0.003 285);
+  --secondary: var(--surface-sunken);
   --secondary-foreground: var(--ink);
-  --muted: oklch(0.96 0.003 285);
+  --muted: var(--surface-sunken);
   --muted-foreground: var(--ink-muted);
   --accent: var(--accent-oxblood);
   --accent-foreground: var(--page);
@@ -46,19 +49,19 @@
   --destructive-foreground: var(--page);
   --border: var(--rule);
   --input: var(--rule-strong);
-  --ring: var(--ink);
+  --ring: var(--accent-oxblood);
 
-  /* Workflow-state ramp — monochrome with oxblood accent for active states */
-  --state-draft:              #9a9a9a;
+  /* Workflow-state ramp — warmer, cohesive with cream/oxblood DNA */
+  --state-draft:              #a39a8e;
   --state-submitted:          var(--accent-oxblood);
   --state-screening:          var(--accent-oxblood);
-  --state-editor-assigned:    #1A1A1A;
+  --state-editor-assigned:    #171412;
   --state-under-review:       var(--accent-oxblood);
-  --state-revision-requested: #1A1A1A;
-  --state-revised:            #1A1A1A;
+  --state-revision-requested: #171412;
+  --state-revised:            #171412;
   --state-accepted:           var(--accent-oxblood);
-  --state-rejected:           #6b6b6b;
-  --state-withdrawn:          #9a9a9a;
+  --state-rejected:           #6a6259;
+  --state-withdrawn:          #a39a8e;
 }
 
 @theme inline {
