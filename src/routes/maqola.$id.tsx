@@ -149,7 +149,9 @@ function PaperPage() {
           )}
           <div className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--surface-sunken)] px-3 py-1.5 text-[12.5px]">
             <Eye size={15} className="text-[color:var(--accent-oxblood)]" strokeWidth={1.75} />
-            <span className="text-ink-muted">Ochilgan</span>
+            <span className="text-ink-muted tabular-nums">
+              {viewCount.toLocaleString("uz-UZ")} ko‘rish
+            </span>
           </div>
         </div>
 
