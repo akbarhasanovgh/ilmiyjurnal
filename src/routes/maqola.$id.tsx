@@ -5,6 +5,7 @@ import { Eye, Download, ArrowLeft } from "lucide-react";
 import { PublicShell } from "@/components/public-shell";
 import { findPaper, type ArchivePaper, type ArchiveIssue } from "@/lib/archive-preview";
 import { incrementArticleView, incrementArticleDownload, getArticleStats } from "@/lib/article-views";
+import { getArticleThumb } from "@/lib/article-thumbs";
 
 export const Route = createFileRoute("/maqola/$id")({
   loader: ({ params }) => {
