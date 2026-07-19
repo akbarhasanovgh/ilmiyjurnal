@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PublicShell } from "@/components/public-shell";
+import { ArticleCard } from "@/components/article-card";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -19,28 +20,19 @@ type PaperPreview = {
   field: string;
   title: string;
   authors: string;
-  affiliation?: string;
   excerpt: string;
-  keywords: string[];
   date: string;
   issue: string;
   manuscriptId: string;
 };
 
-// Editorial preview entries. These are illustrative until the archive is
-// populated with real published records — Phase 0's vertical workflow does
-// not yet include publication. They are labeled as such in the section
-// heading so nothing is presented as a real DOI'd article.
 const PREVIEW_PAPERS: PaperPreview[] = [
   {
     field: "Filologiya",
     title: "O‘zbek tilida zamon kategoriyasining zamonaviy talqinlari",
     authors: "Akmal Karimov · Dilnoza Rasulova",
-    affiliation:
-      "Alisher Navoiy nomidagi Toshkent davlat o‘zbek tili va adabiyoti universiteti",
     excerpt:
       "Ushbu maqolada o‘zbek tili grammatikasidagi zamon kategoriyasining an’anaviy va zamonaviy tilshunoslikdagi talqinlari qiyosiy tahlil qilinadi. Fe’l zamonlarining nutqiy vaziyatga bog‘liqligi masalasi struktural va kognitiv yondashuvlar asosida yoritilgan.",
-    keywords: ["o‘zbek tili", "grammatika", "zamon kategoriyasi", "morfologiya"],
     date: "9 iyul 2026",
     issue: "70-jild · 3-son",
     manuscriptId: "OTA-2026-0042",
@@ -50,40 +42,22 @@ const PREVIEW_PAPERS: PaperPreview[] = [
     title:
       "Alisher Navoiy g‘azallarida ramziy obrazlar tizimi: matnshunoslik yondashuvi",
     authors: "Dilnoza Rasulova",
-    affiliation: "Samarqand davlat universiteti",
     excerpt:
       "Maqolada Alisher Navoiyning «Xazoyin ul-maoniy» devonidagi g‘azallarda takrorlanuvchi ramziy obrazlarning matnlararo aloqalari va sharh an’anasidagi o‘rni tahlil qilinadi.",
-    keywords: ["Alisher Navoiy", "g‘azal", "matnshunoslik", "ramziy obraz"],
     date: "3 iyul 2026",
     issue: "70-jild · 3-son",
     manuscriptId: "OTA-2026-0041",
   },
   {
-    field: "Filologiya",
+    field: "Pedagogika",
     title:
       "XIX asr Buxoro qo‘lyozmalarida imlo tizimi: tanqidiy nashr masalalari",
     authors: "Bahodir Ergashev",
-    affiliation:
-      "O‘zbekiston Respublikasi Fanlar akademiyasi Sharqshunoslik instituti",
     excerpt:
       "Buxoro madrasalarida ko‘chirilgan qo‘lyozmalardagi imlo o‘zgarishlari va ularning tanqidiy nashr amaliyotidagi aks etishi tahlil qilinadi. Muallif matnlararo qiyoslash uslubini taklif etadi.",
-    keywords: ["qo‘lyozma", "tanqidiy nashr", "imlo", "XIX asr"],
     date: "27 iyun 2026",
     issue: "70-jild · 2-son",
     manuscriptId: "OTA-2026-0038",
-  },
-  {
-    field: "Filologiya",
-    title:
-      "Qoraqalpoq xalq dostonlaridagi ovozli formulalar: qiyosiy tahlil",
-    authors: "Nodira Yusupova · Rustam Sattorov",
-    affiliation: "Qoraqalpoq davlat universiteti",
-    excerpt:
-      "O‘zbek va qoraqalpoq epik an’analaridagi takrorlanuvchi ovozli formulalar tizimi qiyoslanadi. Tadqiqot og‘zaki ijro amaliyotining o‘rganilishiga metodologik hissa qo‘shadi.",
-    keywords: ["folklor", "doston", "og‘zaki ijod", "qoraqalpoq"],
-    date: "18 iyun 2026",
-    issue: "70-jild · 2-son",
-    manuscriptId: "OTA-2026-0035",
   },
 ];
 
@@ -95,12 +69,60 @@ const FIELDS: [string, string, string][] = [
 function Home() {
   return (
     <PublicShell>
-      <div className="max-w-6xl mx-auto px-6 md:px-10 py-12">
-        {/* Search bar — quiet, prominent */}
-        <div className="mb-14 border border-ink flex items-stretch">
+      <div className="max-w-6xl mx-auto px-4 md:px-8 pt-8 pb-16">
+        {/* Hero */}
+        <div className="rounded-3xl bg-[color:var(--surface-sunken)] p-8 md:p-12 mb-10">
+          <div className="flex flex-wrap items-end justify-between gap-8">
+            <div className="max-w-[42rem]">
+              <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em] mb-5">
+                Ilmiy-nazariy jurnal
+              </span>
+              <h1
+                className="font-semibold leading-[1.1] tracking-tight text-ink"
+                style={{ fontSize: "clamp(2rem, 4.2vw, 3rem)" }}
+              >
+                O‘zbek tili va adabiyoti
+              </h1>
+              <p className="mt-4 text-[15px] text-ink-soft leading-relaxed max-w-[58ch]">
+                Filologiya va pedagogika sohalarida ikki tomonlama anonim
+                taqrizdan o‘tgan ilmiy tadqiqotlar. 1958-yildan buyon nashr
+                etiladi. ISSN 2010-5584.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link
+                  to="/joriy-son"
+                  className="inline-flex items-center rounded-full bg-[color:var(--accent-oxblood)] text-page px-5 py-2.5 text-[13px] font-semibold hover:opacity-90 transition-opacity"
+                >
+                  Joriy sonni ochish
+                </Link>
+                <Link
+                  to="/for-authors"
+                  className="inline-flex items-center rounded-full border border-rule-strong bg-[color:var(--page-elevated)] px-5 py-2.5 text-[13px] font-semibold text-ink hover:bg-[color:var(--page)] transition-colors"
+                >
+                  Mualliflar uchun
+                </Link>
+              </div>
+            </div>
+            <div className="flex items-center gap-8">
+              <div className="text-right">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Joriy son</p>
+                <p className="text-2xl font-semibold text-ink mt-1">70 · 3</p>
+                <p className="text-[12px] text-ink-muted mt-0.5">Iyul 2026</p>
+              </div>
+              <div className="text-right">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Arxiv</p>
+                <p className="text-2xl font-semibold text-ink mt-1 tabular-nums">3 296</p>
+                <p className="text-[12px] text-ink-muted mt-0.5">maqola</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Search */}
+        <div className="rounded-full bg-[color:var(--page-elevated)] border border-rule flex items-stretch overflow-hidden mb-12 shadow-[0_1px_0_rgba(23,20,18,0.03)]">
           <label
             htmlFor="q"
-            className="hidden md:flex items-center px-4 border-r border-ink text-[10px] uppercase tracking-[0.22em] font-bold text-ink-muted"
+            className="hidden md:flex items-center pl-6 pr-3 text-[10px] uppercase tracking-[0.22em] font-bold text-ink-faint"
           >
             Qidiruv
           </label>
@@ -108,141 +130,91 @@ function Home() {
             id="q"
             type="search"
             placeholder="Maqola, muallif, kalit so‘z yoki mavzu bo‘yicha qidiring"
-            className="flex-1 bg-transparent px-4 py-3.5 text-sm placeholder:text-ink-faint focus:outline-none"
+            className="flex-1 bg-transparent px-4 md:px-2 py-4 text-[14px] placeholder:text-ink-faint focus:outline-none"
           />
           <button
             type="button"
-            className="bg-ink text-page px-5 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-[color:var(--accent-oxblood)] transition-colors"
+            className="bg-[color:var(--accent-oxblood)] text-page px-6 md:px-8 text-[12px] font-semibold hover:opacity-90 transition-opacity"
           >
             Qidirish
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-14">
-          {/* LATEST RESEARCH — dominant column */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* LATEST */}
           <section className="lg:col-span-8">
-            <div className="flex items-baseline justify-between border-b border-ink pb-2 mb-8">
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.22em]">
+            <div className="flex items-baseline justify-between mb-6">
+              <h2 className="text-[11px] font-bold uppercase tracking-[0.22em] text-ink">
                 So‘nggi tadqiqotlar
               </h2>
-              <span className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">
-                Tahririy ko‘rinish
-              </span>
+              <Link
+                to="/arxiv"
+                className="text-[11px] uppercase tracking-[0.2em] font-semibold text-ink-muted hover:text-[color:var(--accent-oxblood)] transition-colors"
+              >
+                Barchasi →
+              </Link>
             </div>
 
-            <div>
+            <div className="space-y-6">
               {PREVIEW_PAPERS.map((p, i) => (
-                <article
+                <ArticleCard
                   key={p.manuscriptId}
-                  className={
-                    "group py-8 " +
-                    (i !== PREVIEW_PAPERS.length - 1 ? "border-b border-rule" : "")
-                  }
-                >
-                  <div className="flex flex-wrap items-center gap-3 mb-3">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-[color:var(--accent-oxblood)] border border-[color:var(--accent-oxblood)]/25 px-2 py-0.5">
-                      {p.field}
-                    </span>
-                    <span className="text-[11px] font-mono text-ink-faint tracking-wider">
-                      {p.manuscriptId}
-                    </span>
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-ink-faint">
-                      {p.issue}
-                    </span>
-                  </div>
-
-                  <h3
-                    className="text-[1.55rem] md:text-[1.75rem] leading-[1.15] font-medium mb-3 text-balance group-hover:text-[color:var(--accent-oxblood)] transition-colors cursor-pointer"
-                    style={{ fontFamily: "var(--font-serif)" }}
-                  >
-                    {p.title}
-                  </h3>
-
-                  <div className="text-sm mb-2">
-                    <span className="font-medium">{p.authors}</span>
-                  </div>
-                  {p.affiliation && (
-                    <p className="text-xs text-ink-muted mb-3 leading-relaxed">
-                      {p.affiliation}
-                    </p>
-                  )}
-
-                  <p className="text-sm text-ink-soft leading-relaxed max-w-[68ch] mb-4">
-                    {p.excerpt}
-                  </p>
-
-                  <div className="flex flex-wrap gap-x-3 gap-y-1 mb-5">
-                    {p.keywords.map((k, idx) => (
-                      <span key={k} className="text-[11px] text-ink-muted">
-                        {k}
-                        {idx < p.keywords.length - 1 && (
-                          <span className="text-ink-faint ml-3">·</span>
-                        )}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-6 text-[11px] font-bold uppercase tracking-[0.2em]">
-                    <button className="hover:text-[color:var(--accent-oxblood)] transition-colors">
-                      Annotatsiya
-                    </button>
-                    <button className="hover:text-[color:var(--accent-oxblood)] transition-colors">
-                      PDF
-                    </button>
-                    <button className="hover:text-[color:var(--accent-oxblood)] transition-colors">
-                      Iqtibos
-                    </button>
-                    <span className="ml-auto text-ink-faint font-normal normal-case tracking-normal">
-                      {p.date}
-                    </span>
-                  </div>
-                </article>
+                  article={{
+                    id: p.manuscriptId,
+                    kind: p.field,
+                    title: p.title,
+                    authors: `${p.authors} · ${p.issue} · ${p.date}`,
+                    doi: "https://www.google.com/",
+                    doiUrl: "https://www.google.com/",
+                    views: 40 + i * 9,
+                    downloads: 12 + i * 3,
+                    abstract: p.excerpt,
+                  }}
+                />
               ))}
             </div>
           </section>
 
-          {/* RAIL — current issue, fields, editorial */}
-          <aside className="lg:col-span-4 space-y-12">
-            <div>
-              <p className="label-mono mb-3">Joriy son</p>
-              <p
-                className="font-medium leading-tight mb-1"
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "1.5rem",
-                }}
-              >
+          {/* RAIL */}
+          <aside className="lg:col-span-4 space-y-6">
+            {/* Current issue card */}
+            <div className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-6">
+              <p className="label-mono mb-3 text-ink-faint">Joriy son</p>
+              <p className="font-semibold text-ink text-xl leading-tight">
                 70-jild · 3-son
               </p>
-              <p className="text-xs text-ink-muted mb-4">Iyul 2026</p>
-              <div className="flex gap-4 text-[11px] font-bold uppercase tracking-[0.2em]">
-                <button className="border-b border-ink pb-0.5 hover:text-[color:var(--accent-oxblood)] hover:border-[color:var(--accent-oxblood)] transition-colors">
-                  Sonni ko‘rish
-                </button>
-                <button className="text-ink-muted hover:text-ink transition-colors">
-                  PDF
-                </button>
-              </div>
+              <p className="text-[13px] text-ink-muted mt-1 mb-5">Iyul 2026</p>
+              <Link
+                to="/joriy-son"
+                className="inline-flex w-full items-center justify-center rounded-full bg-[color:var(--accent-oxblood)] text-page px-4 py-2.5 text-[12px] font-semibold hover:opacity-90 transition-opacity"
+              >
+                Sonni ko‘rish
+              </Link>
             </div>
 
-            <div>
-              <div className="flex items-baseline justify-between border-b border-rule-strong pb-2 mb-3">
-                <p className="label-mono">Yo‘nalishlar</p>
-                <span className="text-[10px] text-ink-faint">Maqolalar</span>
+            {/* Fields card */}
+            <div className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-6">
+              <div className="flex items-baseline justify-between mb-4">
+                <p className="label-mono text-ink-faint">Yo‘nalishlar</p>
+                <span className="text-[10px] uppercase tracking-[0.2em] text-ink-faint">
+                  Maqolalar
+                </span>
               </div>
-              <ul>
+              <ul className="space-y-1">
                 {FIELDS.map(([name, shifr, count]) => (
                   <li
                     key={name}
-                    className="flex items-baseline justify-between py-2 border-b border-rule group cursor-pointer gap-3"
+                    className="flex items-center justify-between rounded-2xl px-3 py-2.5 hover:bg-[color:var(--surface-sunken)] transition-colors gap-3 cursor-pointer"
                   >
-                    <span className="text-sm group-hover:text-[color:var(--accent-oxblood)] transition-colors">
-                      {name}
-                    </span>
-                    <span className="text-[10px] font-mono text-ink-faint tracking-wider ml-auto mr-3">
-                      {shifr}
-                    </span>
-                    <span className="text-[11px] font-mono text-ink-faint tracking-wider">
+                    <div className="min-w-0">
+                      <p className="text-[14px] font-medium text-ink truncate">
+                        {name}
+                      </p>
+                      <p className="text-[10px] font-mono text-ink-faint tracking-wider mt-0.5">
+                        {shifr}
+                      </p>
+                    </div>
+                    <span className="text-[13px] font-mono text-ink-muted tabular-nums">
                       {count}
                     </span>
                   </li>
@@ -250,20 +222,19 @@ function Home() {
               </ul>
             </div>
 
-            <div className="border-t border-ink pt-4">
-              <p className="label-mono mb-3">Taqriz modeli</p>
-              <p className="text-sm text-ink-soft leading-relaxed">
-                Ikki tomonlama anonim (double-blind) taqriz. Muallif va taqrizchi
-                bir-biri haqida ma’lumotga ega bo‘lmaydi.
+            {/* Review model card */}
+            <div className="rounded-3xl bg-[color:var(--surface-sunken)] p-6">
+              <p className="label-mono mb-3 text-ink-faint">Taqriz modeli</p>
+              <p className="text-[13px] text-ink-soft leading-relaxed">
+                Ikki tomonlama anonim (double-blind) taqriz. Muallif va
+                taqrizchi bir-biri haqida ma’lumotga ega bo‘lmaydi.
               </p>
-              <div className="mt-5">
-                <Link
-                  to="/for-authors"
-                  className="inline-flex text-[11px] font-bold uppercase tracking-[0.2em] border-b border-ink pb-0.5 hover:text-[color:var(--accent-oxblood)] hover:border-[color:var(--accent-oxblood)] transition-colors"
-                >
-                  Mualliflar uchun ko‘rsatmalar
-                </Link>
-              </div>
+              <Link
+                to="/for-authors"
+                className="mt-5 inline-flex items-center text-[11px] font-bold uppercase tracking-[0.2em] text-ink hover:text-[color:var(--accent-oxblood)] transition-colors"
+              >
+                Ko‘rsatmalar →
+              </Link>
             </div>
           </aside>
         </div>
