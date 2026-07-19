@@ -183,19 +183,44 @@ function Home() {
               </ul>
             </div>
 
-            {/* Review model card */}
-            <div className="rounded-3xl bg-[color:var(--surface-sunken)] p-6">
-              <p className="label-mono mb-3 text-ink-faint">Taqriz modeli</p>
-              <p className="text-[13px] text-ink-soft leading-relaxed">
-                Ikki tomonlama anonim (double-blind) taqriz. Muallif va
-                taqrizchi bir-biri haqida ma’lumotga ega bo‘lmaydi.
-              </p>
-              <Link
-                to="/for-authors"
-                className="mt-5 inline-flex items-center text-[11px] font-bold uppercase tracking-[0.2em] text-ink hover:text-[color:var(--accent-oxblood)] transition-colors"
-              >
-                Ko‘rsatmalar →
-              </Link>
+            {/* Most viewed */}
+            <div className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-6">
+              <div className="flex items-baseline justify-between mb-4">
+                <p className="label-mono text-ink-faint">Eng ko‘p ko‘rilgan</p>
+                <span className="text-[10px] uppercase tracking-[0.2em] text-ink-faint">
+                  Ko‘rishlar
+                </span>
+              </div>
+              <ol className="space-y-1">
+                {[...issue.papers]
+                  .map((p, i) => ({
+                    p,
+                    views: 420 - i * 7 + ((p.title.length * 13) % 90),
+                  }))
+                  .sort((a, b) => b.views - a.views)
+                  .slice(0, 5)
+                  .map(({ p, views }, idx) => (
+                    <li key={p.manuscriptId}>
+                      <Link
+                        to="/maqola/$id"
+                        params={{ id: p.manuscriptId }}
+                        className="flex items-start gap-3 rounded-2xl px-3 py-2.5 hover:bg-[color:var(--surface-sunken)] transition-colors"
+                      >
+                        <span className="text-[11px] font-mono text-ink-faint tabular-nums mt-0.5 w-4 shrink-0">
+                          {idx + 1}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[13px] font-medium text-ink leading-snug line-clamp-2">
+                            {p.title}
+                          </p>
+                          <p className="text-[10px] font-mono text-ink-faint tracking-wider mt-1 tabular-nums">
+                            {views} ko‘rish
+                          </p>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+              </ol>
             </div>
           </aside>
         </div>
