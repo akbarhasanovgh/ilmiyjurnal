@@ -88,12 +88,8 @@ const PREVIEW_PAPERS: PaperPreview[] = [
 ];
 
 const FIELDS: [string, string][] = [
-  ["Tilshunoslik", "1240"],
-  ["Adabiyotshunoslik", "986"],
-  ["Matnshunoslik", "412"],
-  ["Folklorshunoslik", "308"],
-  ["Tarjimashunoslik", "184"],
-  ["Dialektologiya", "156"],
+  ["Filologiya", "2286"],
+  ["Pedagogika", "1010"],
 ];
 
 function Home() {
