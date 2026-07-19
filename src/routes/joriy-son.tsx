@@ -95,9 +95,11 @@ function CurrentIssuePage() {
                 views: 40 + idx * 7,
                 downloads: 0,
                 abstract: p.excerpt,
+                slug: p.manuscriptId,
               }}
             />
           ))}
+
         </div>
       </div>
     </PublicShell>
