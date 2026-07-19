@@ -11,7 +11,7 @@ export const Route = createFileRoute("/joriy-son")({
       },
       {
         name: "description",
-        content: `O‘zbek tili va adabiyoti jurnalining joriy soni: ${CURRENT_ISSUE.volume}-jild, ${CURRENT_ISSUE.number}-son (${CURRENT_ISSUE.month} ${CURRENT_ISSUE.year}). ${CURRENT_ISSUE.papers.length} ta maqola.`,
+        content: `“Filologiya va Pedagogika” jurnalining joriy soni: ${CURRENT_ISSUE.volume}-jild, ${CURRENT_ISSUE.number}-son (${CURRENT_ISSUE.month} ${CURRENT_ISSUE.year}). ${CURRENT_ISSUE.papers.length} ta maqola. e-ISSN 3060-4885.`,
       },
     ],
   }),
@@ -47,8 +47,10 @@ function CurrentIssuePage() {
                 {issue.month} {issue.year}
               </p>
               <p className="mt-4 text-[14px] text-ink-soft max-w-[64ch] leading-relaxed">
-                Ushbu sondagi maqolalar tahririyat tomonidan tayyorlangan va
-                ikki tomonlama anonim taqrizdan o‘tgan.
+                “Filologiya va Pedagogika” ilmiy-metodik elektron jurnalining
+                navbatdagi soni. Ushbu sondagi maqolalar tahririyat tomonidan
+                tayyorlangan va ikki tomonlama anonim taqrizdan o‘tgan.
+                Nashr sanasi: {issue.publishedAt ? new Date(issue.publishedAt).toLocaleDateString("uz-UZ") : "15.07.2026"}.
               </p>
             </div>
             <div className="flex items-center gap-6">
@@ -56,12 +58,24 @@ function CurrentIssuePage() {
                 <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Maqolalar</p>
                 <p className="text-3xl font-semibold tabular-nums text-ink mt-1">{issue.papers.length}</p>
               </div>
-              <Link
-                to="/arxiv"
-                className="inline-flex items-center rounded-full border border-rule-strong bg-[color:var(--page-elevated)] px-4 py-2 text-[13px] font-semibold text-ink hover:bg-[color:var(--page)] transition-colors"
-              >
-                Arxiv →
-              </Link>
+              <div className="flex flex-col gap-2">
+                <Link
+                  to="/arxiv"
+                  className="inline-flex items-center justify-center rounded-full border border-rule-strong bg-[color:var(--page-elevated)] px-4 py-2 text-[13px] font-semibold text-ink hover:bg-[color:var(--page)] transition-colors"
+                >
+                  Arxiv →
+                </Link>
+                {issue.pdfUrl && (
+                  <a
+                    href={issue.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center rounded-full bg-[color:var(--accent-oxblood)] text-page px-4 py-2 text-[13px] font-semibold hover:opacity-90 transition-opacity"
+                  >
+                    PDFni yuklab olish
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -73,11 +87,11 @@ function CurrentIssuePage() {
               key={p.manuscriptId}
               article={{
                 id: 150 + idx,
-                kind: "Maqola",
+                kind: p.field,
                 title: p.title,
                 authors: p.authors,
-                doi: "https://www.google.com/",
-                doiUrl: "https://www.google.com/",
+                doi: "",
+                doiUrl: "",
                 views: 40 + idx * 7,
                 downloads: 0,
                 abstract: p.excerpt,

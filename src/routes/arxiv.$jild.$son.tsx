@@ -93,9 +93,21 @@ function IssuePage() {
                 {issue.volume}-jild · {issue.number}-son
               </h1>
             </div>
-            <div className="text-right">
-              <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Maqolalar</p>
-              <p className="text-3xl font-semibold tabular-nums mt-1">{issue.papers.length}</p>
+            <div className="flex items-center gap-6">
+              <div className="text-right">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Maqolalar</p>
+                <p className="text-3xl font-semibold tabular-nums mt-1">{issue.papers.length}</p>
+              </div>
+              {issue.pdfUrl && (
+                <a
+                  href={issue.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center rounded-full bg-[color:var(--accent-oxblood)] text-page px-4 py-2 text-[13px] font-semibold hover:opacity-90 transition-opacity"
+                >
+                  PDFni yuklab olish
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -110,8 +122,8 @@ function IssuePage() {
                 kind: p.field,
                 title: p.title,
                 authors: p.authors,
-                doi: "https://www.google.com/",
-                doiUrl: "https://www.google.com/",
+                doi: "",
+                doiUrl: "",
                 views: 20 + idx * 5,
                 downloads: 0,
                 abstract: p.excerpt,
@@ -123,3 +135,4 @@ function IssuePage() {
     </PublicShell>
   );
 }
+
