@@ -102,12 +102,11 @@ function AuthPage() {
     <div className="min-h-dvh bg-white text-ink grid lg:grid-cols-2">
       {/* Left — brand / illustration */}
       <aside className="hidden lg:flex relative overflow-hidden border-r border-rule bg-white flex-col justify-between p-12">
-        <div className="flex items-center justify-between">
+        <div>
           <Link to="/" className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink transition-colors">
             <ArrowLeft className="h-4 w-4" />
             Bosh sahifaga
           </Link>
-          <p className="label-mono">ISSN 2010-5584</p>
         </div>
 
         <div className="flex-1 flex items-center justify-center py-8">
@@ -119,18 +118,7 @@ function AuthPage() {
           />
         </div>
 
-        <div className="space-y-4">
-          <div className="h-px bg-rule" />
-          <div className="flex items-end justify-between gap-6">
-            <div>
-              <p className="label-mono mb-1">Tahririyat · 2026</p>
-              <p className="text-lg font-medium leading-tight">O‘zbek tili<br/>va adabiyoti</p>
-            </div>
-            <p className="text-xs text-ink-muted max-w-[14rem] text-right leading-relaxed">
-              Peer-reviewed jurnal.<br/>Pedagogika &amp; filologiya.
-            </p>
-          </div>
-        </div>
+        <div />
       </aside>
 
       {/* Right — form */}
@@ -141,16 +129,14 @@ function AuthPage() {
             <ArrowLeft className="h-4 w-4" />
             Bosh sahifa
           </Link>
-          <p className="label-mono">ISSN 2010-5584</p>
         </div>
+
 
         <div className="flex-1 flex items-center justify-center px-6 py-10 lg:p-12">
           <div className="w-full max-w-md">
             {/* Header */}
             <div className="mb-8 space-y-3">
-              <span className="inline-flex items-center gap-2 rounded-full bg-surface-sunken px-3 py-1 text-[11px] font-medium tracking-wide uppercase text-ink-muted">
-                {isSignup ? "Ro‘yxatdan o‘tish" : "Kirish"}
-              </span>
+
               <h1 className="text-3xl md:text-4xl font-semibold leading-[1.1] tracking-tight">
                 {isSignup ? "Yangi hisob\nyarating." : "Xush kelibsiz.\nHisobingizga kiring."}
               </h1>
