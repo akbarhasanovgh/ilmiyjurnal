@@ -42,6 +42,7 @@ export const CURRENT_ISSUE: ArchiveIssue = {
   month: "Iyul",
   publishedAt: "2026-07-15",
   pdfUrl: issuePdfAsset.url,
+  coverUrl: issue1332CoverAsset.url,
   papers: [
     // 10.00.00 – FILOLOGIYA
     {
