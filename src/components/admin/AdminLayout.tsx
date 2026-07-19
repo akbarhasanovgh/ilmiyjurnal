@@ -183,79 +183,102 @@ export function AdminLayout({ children, title, description, actions }: AdminLayo
     );
   };
 
-  return (
-    <div className="min-h-screen flex bg-muted/40">
-      <aside className="w-[260px] shrink-0 flex flex-col p-3">
-        <div className="flex-1 flex flex-col rounded-3xl bg-card/70 backdrop-blur border border-border/60 shadow-sm overflow-hidden">
-          <div className="p-4 pb-2">
-            <Link
-              to="/"
-              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors rounded-full px-2 py-1 -ml-2 hover:bg-muted"
-            >
-              <ChevronLeft className="h-3.5 w-3.5" />
-              Saytga qaytish
-            </Link>
-          </div>
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-          <ScrollArea className="flex-1 px-2">
-            <nav className="py-2 space-y-4">
-              {SECTIONS.map((section, idx) => {
-                const items = section.items.filter((n) => !n.perm || perms.has(n.perm));
-                if (items.length === 0) return null;
-                return (
-                  <div key={idx}>
-                    {section.label ? (
-                      <p className="px-3 mb-1 text-[10.5px] font-semibold tracking-[0.08em] uppercase text-muted-foreground/60">
-                        {section.label}
-                      </p>
-                    ) : null}
-                    <div className="space-y-0.5">{items.map(renderItem)}</div>
-                  </div>
-                );
-              })}
-            </nav>
-          </ScrollArea>
+  const sidebarBody = (
+    <div className="flex-1 flex flex-col rounded-3xl bg-card/70 backdrop-blur border border-border/60 shadow-sm overflow-hidden">
+      <div className="p-4 pb-2">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors rounded-full px-2 py-1 -ml-2 hover:bg-muted"
+        >
+          <ChevronLeft className="h-3.5 w-3.5" />
+          Saytga qaytish
+        </Link>
+      </div>
 
-          <div className="p-3 border-t border-border/60 mt-2">
-            {ctx?.profile ? (
-              <div className="flex items-center gap-2.5 px-2 py-2 rounded-2xl">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-[13px] font-semibold text-primary shrink-0">
-                  {(ctx.profile.full_name || ctx.profile.email || "?").trim().charAt(0).toUpperCase()}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[13px] font-medium truncate leading-tight">
-                    {ctx.profile.full_name || ctx.profile.email}
+      <ScrollArea className="flex-1 px-2">
+        <nav className="py-2 space-y-4" onClick={() => setMobileOpen(false)}>
+          {SECTIONS.map((section, idx) => {
+            const items = section.items.filter((n) => !n.perm || perms.has(n.perm));
+            if (items.length === 0) return null;
+            return (
+              <div key={idx}>
+                {section.label ? (
+                  <p className="px-3 mb-1 text-[10.5px] font-semibold tracking-[0.08em] uppercase text-muted-foreground/60">
+                    {section.label}
                   </p>
-                  <p className="text-[11px] text-muted-foreground truncate leading-tight">
-                    {ctx.roles.map((r) => r.name).join(" · ") || "Muallif"}
-                  </p>
-                </div>
+                ) : null}
+                <div className="space-y-0.5">{items.map(renderItem)}</div>
               </div>
-            ) : null}
-            <Button
-              variant="ghost"
-              onClick={signOut}
-              className="w-full justify-start gap-2 h-10 rounded-2xl text-muted-foreground hover:text-foreground mt-1 text-[13.5px]"
-            >
-              <LogOut className="h-4 w-4" />
-              Chiqish
-            </Button>
+            );
+          })}
+        </nav>
+      </ScrollArea>
+
+      <div className="p-3 border-t border-border/60 mt-2">
+        {ctx?.profile ? (
+          <div className="flex items-center gap-2.5 px-2 py-2 rounded-2xl">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-[13px] font-semibold text-primary shrink-0">
+              {(ctx.profile.full_name || ctx.profile.email || "?").trim().charAt(0).toUpperCase()}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[13px] font-medium truncate leading-tight">
+                {ctx.profile.full_name || ctx.profile.email}
+              </p>
+              <p className="text-[11px] text-muted-foreground truncate leading-tight">
+                {ctx.roles.map((r) => r.name).join(" · ") || "Muallif"}
+              </p>
+            </div>
           </div>
-        </div>
+        ) : null}
+        <Button
+          variant="ghost"
+          onClick={signOut}
+          className="w-full justify-start gap-2 h-10 rounded-2xl text-muted-foreground hover:text-foreground mt-1 text-[13.5px]"
+        >
+          <LogOut className="h-4 w-4" />
+          Chiqish
+        </Button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen lg:flex bg-muted/40">
+      {/* Mobile top bar */}
+      <div className="lg:hidden sticky top-0 z-30 flex items-center gap-3 px-4 h-14 bg-card/85 backdrop-blur border-b border-border/60">
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetTrigger asChild>
+            <button aria-label="Menyu" className="inline-flex items-center justify-center h-9 w-9 rounded-xl bg-muted text-foreground hover:bg-background transition-colors">
+              <Menu className="h-[18px] w-[18px]" />
+            </button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-[min(86vw,300px)] p-3 bg-muted/40 border-r border-border/60">
+            <SheetTitle className="sr-only">Admin menyu</SheetTitle>
+            <SheetClose className="sr-only">Yopish</SheetClose>
+            <div className="flex flex-col h-full">{sidebarBody}</div>
+          </SheetContent>
+        </Sheet>
+        <p className="font-serif text-[16px] tracking-tight text-foreground truncate">{title}</p>
+      </div>
+
+      <aside className="hidden lg:flex w-[260px] shrink-0 flex-col p-3 sticky top-0 h-screen">
+        {sidebarBody}
       </aside>
 
-      <main className="flex-1 min-w-0 py-3 pr-3">
+      <main className="flex-1 min-w-0 p-3 lg:py-3 lg:pr-3 lg:pl-0">
         <div className="rounded-3xl bg-card border border-border/60 shadow-sm min-h-[calc(100vh-1.5rem)] overflow-hidden">
-          <header className="px-8 pt-8 pb-6 flex items-start justify-between gap-6">
+          <header className="px-5 sm:px-8 pt-6 sm:pt-8 pb-5 sm:pb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
             <div className="min-w-0">
-              <h2 className="text-[28px] font-semibold font-serif tracking-tight leading-tight">{title}</h2>
+              <h2 className="text-[22px] sm:text-[28px] font-semibold font-serif tracking-tight leading-tight">{title}</h2>
               {description ? (
-                <p className="text-[15px] text-muted-foreground mt-1.5 max-w-2xl">{description}</p>
+                <p className="text-[14px] sm:text-[15px] text-muted-foreground mt-1.5 max-w-2xl">{description}</p>
               ) : null}
             </div>
-            {actions ? <div className="flex items-center gap-2 shrink-0">{actions}</div> : null}
+            {actions ? <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap sm:shrink-0">{actions}</div> : null}
           </header>
-          <div className="px-8 pb-8 animate-fade-in">{children}</div>
+          <div className="px-5 sm:px-8 pb-6 sm:pb-8 animate-fade-in">{children}</div>
         </div>
       </main>
     </div>
