@@ -40,61 +40,75 @@ function MySubmissions() {
   });
 
   const [openId, setOpenId] = useState<string | null>(null);
+  const rows = (q.data ?? []) as Row[];
 
   return (
     <AuthorShell>
-      <div className="px-10 md:px-14 py-12 max-w-5xl">
-        <div className="flex items-end justify-between gap-6 mb-10">
-          <div>
-            <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-muted-foreground">
-              Mening maqolalarim
-            </p>
-            <h1 className="font-serif text-[36px] leading-tight tracking-tight mt-3 text-foreground">
-              Topshirilgan ishlar
-            </h1>
+      <div className="max-w-5xl mx-auto px-6 md:px-10 py-10">
+        {/* Hero */}
+        <div className="rounded-3xl bg-[color:var(--surface-sunken)] p-8 md:p-10 mb-8">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+                Mening maqolalarim
+              </span>
+              <h1
+                className="font-semibold leading-tight tracking-tight text-ink"
+                style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.25rem)" }}
+              >
+                Topshirilgan ishlar
+              </h1>
+              <p className="mt-3 text-[14px] text-ink-soft max-w-[52ch]">
+                Har bir ish holati va bosqichini shu yerdan kuzating.
+              </p>
+            </div>
+            <div className="flex items-center gap-6">
+              <div className="text-right">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Jami</p>
+                <p className="text-3xl font-semibold text-ink mt-1 tabular-nums">{rows.length}</p>
+              </div>
+              <button
+                onClick={() => m.mutate()}
+                disabled={m.isPending}
+                className="inline-flex items-center gap-2 rounded-full bg-[color:var(--accent-oxblood)] text-page px-5 py-2.5 text-[13px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                <FilePlus2 className="h-4 w-4" strokeWidth={1.8} />
+                {m.isPending ? "..." : "Yangi maqola"}
+              </button>
+            </div>
           </div>
-          <button
-            onClick={() => m.mutate()}
-            disabled={m.isPending}
-            className="inline-flex items-center gap-2 rounded-full bg-foreground text-background px-5 py-2.5 text-[13.5px] font-medium hover:opacity-90 transition-opacity active:scale-[0.97] disabled:opacity-50"
-          >
-            <FilePlus2 className="h-4 w-4" strokeWidth={1.8} />
-            {m.isPending ? "..." : "Yangi maqola"}
-          </button>
         </div>
 
         {q.isPending ? (
           <div className="space-y-2">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="h-20 rounded-2xl bg-muted/50 animate-pulse" />
+              <div key={i} className="h-20 rounded-3xl bg-[color:var(--surface-sunken)] animate-pulse" />
             ))}
           </div>
         ) : q.error ? (
-          <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-6">
-            <p className="text-[13px] font-medium text-destructive">Xatolik</p>
-            <p className="text-sm mt-2 text-foreground">{(q.error as Error).message}</p>
+          <div className="rounded-3xl border border-[color:var(--accent-oxblood)]/30 bg-[color:var(--accent-oxblood)]/5 p-6">
+            <p className="text-[13px] font-semibold text-[color:var(--accent-oxblood)]">Xatolik</p>
+            <p className="text-sm mt-2 text-ink">{(q.error as Error).message}</p>
           </div>
-        ) : (q.data ?? []).length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-border/70 p-12 text-center">
-            <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-muted-foreground">
-              Bo‘sh
-            </p>
-            <p className="font-serif text-[24px] mt-3 text-foreground">Hali maqola topshirmadingiz</p>
-            <p className="text-[14px] text-muted-foreground mt-2 max-w-md mx-auto leading-relaxed">
+        ) : rows.length === 0 ? (
+          <div className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-12 text-center">
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-ink-faint">Bo‘sh</p>
+            <p className="text-2xl font-semibold mt-3 text-ink">Hali maqola topshirmadingiz</p>
+            <p className="text-[14px] text-ink-muted mt-2 max-w-md mx-auto leading-relaxed">
               Birinchi maqolangizni topshirish uchun shaklni to‘ldiring.
             </p>
             <button
               onClick={() => m.mutate()}
               disabled={m.isPending}
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-foreground text-background px-5 py-2.5 text-[13.5px] font-medium hover:opacity-90 transition-opacity active:scale-[0.97] disabled:opacity-50"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-[color:var(--accent-oxblood)] text-page px-5 py-2.5 text-[13px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
             >
               <FilePlus2 className="h-4 w-4" strokeWidth={1.8} />
               {m.isPending ? "..." : "Yangi maqola boshlash"}
             </button>
           </div>
         ) : (
-          <div className="rounded-3xl border border-border/60 divide-y divide-border/60 overflow-hidden">
-            {(q.data as Row[]).map((s) => (
+          <div className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule divide-y divide-[color:var(--rule)] overflow-hidden shadow-[0_1px_0_rgba(23,20,18,0.03)]">
+            {rows.map((s) => (
               <SubmissionRow
                 key={s.id}
                 row={s}
@@ -110,9 +124,7 @@ function MySubmissions() {
 }
 
 function SubmissionRow({
-  row,
-  open,
-  onToggle,
+  row, open, onToggle,
 }: {
   row: Row;
   open: boolean;
@@ -145,34 +157,34 @@ function SubmissionRow({
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center gap-5 px-5 py-5 hover:bg-muted/40 transition-colors text-left"
+        className="w-full flex items-center gap-5 px-6 py-5 hover:bg-[color:var(--surface-sunken)] transition-colors text-left"
       >
-        <div className="w-24 shrink-0 text-[11.5px] font-mono tracking-wide text-muted-foreground">
+        <div className="w-28 shrink-0 text-[11.5px] font-mono tracking-wider text-ink-faint">
           {row.manuscript_id}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-[15.5px] font-medium text-foreground leading-snug truncate">
-            {row.title || <span className="italic text-muted-foreground">Sarlavhasiz qoralama</span>}
+          <p className="text-[15.5px] font-medium text-ink leading-snug truncate">
+            {row.title || <span className="italic text-ink-faint">Sarlavhasiz qoralama</span>}
           </p>
-          <p className="text-[11.5px] text-muted-foreground mt-1">
+          <p className="text-[11.5px] text-ink-muted mt-1">
             {new Date(row.updated_at).toLocaleString("uz-UZ")}
           </p>
         </div>
         <WorkflowBadge state={state} />
         <ChevronDown
-          className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 text-ink-muted transition-transform ${open ? "rotate-180" : ""}`}
           strokeWidth={1.8}
         />
       </button>
 
       {open && (
-        <div className="px-5 pb-5 pt-1 bg-muted/20 border-t border-border/60">
+        <div className="px-6 pb-5 pt-1 bg-[color:var(--surface-sunken)]">
           <div className="flex flex-wrap gap-2">
             {(isDraft || canRevise) && (
               <Link
                 to="/submissions/$id/edit"
                 params={{ id: row.id }}
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-[13px] font-medium hover:bg-muted/60 transition-colors"
+                className="inline-flex items-center gap-2 rounded-full border border-rule-strong bg-[color:var(--page-elevated)] px-4 py-2 text-[13px] font-semibold text-ink hover:border-[color:var(--accent-oxblood)] transition-colors"
               >
                 <Pencil className="h-3.5 w-3.5" strokeWidth={1.8} />
                 Tahrirlash
@@ -182,7 +194,7 @@ function SubmissionRow({
               <Link
                 to="/submissions/$id/edit"
                 params={{ id: row.id }}
-                className="inline-flex items-center gap-2 rounded-full bg-foreground text-background px-4 py-2 text-[13px] font-medium hover:opacity-90 transition-opacity"
+                className="inline-flex items-center gap-2 rounded-full bg-[color:var(--accent-oxblood)] text-page px-4 py-2 text-[13px] font-semibold hover:opacity-90 transition-opacity"
               >
                 <Send className="h-3.5 w-3.5" strokeWidth={1.8} />
                 Topshirish
@@ -192,7 +204,7 @@ function SubmissionRow({
               <Link
                 to="/submissions/$id"
                 params={{ id: row.id }}
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-[13px] font-medium hover:bg-muted/60 transition-colors"
+                className="inline-flex items-center gap-2 rounded-full border border-rule-strong bg-[color:var(--page-elevated)] px-4 py-2 text-[13px] font-semibold text-ink hover:border-[color:var(--accent-oxblood)] transition-colors"
               >
                 <Eye className="h-3.5 w-3.5" strokeWidth={1.8} />
                 Ko‘rib chiqilganini ko‘rish
@@ -204,26 +216,26 @@ function SubmissionRow({
                   <button
                     type="button"
                     onClick={() => setConfirming(true)}
-                    className="inline-flex items-center gap-2 rounded-full border border-destructive/40 text-destructive px-4 py-2 text-[13px] font-medium hover:bg-destructive/5 transition-colors"
+                    className="inline-flex items-center gap-2 rounded-full border border-[color:var(--accent-oxblood)]/40 text-[color:var(--accent-oxblood)] px-4 py-2 text-[13px] font-semibold hover:bg-[color:var(--accent-oxblood)]/5 transition-colors"
                   >
                     <Trash2 className="h-3.5 w-3.5" strokeWidth={1.8} />
                     O‘chirish
                   </button>
                 ) : (
                   <div className="inline-flex items-center gap-2">
-                    <span className="text-[13px] text-muted-foreground">Ishonchingiz komilmi?</span>
+                    <span className="text-[13px] text-ink-muted">Ishonchingiz komilmi?</span>
                     <button
                       type="button"
                       disabled={dm.isPending}
                       onClick={() => dm.mutate()}
-                      className="rounded-full bg-destructive text-destructive-foreground px-3 py-1.5 text-[12.5px] font-medium hover:opacity-90 disabled:opacity-50"
+                      className="rounded-full bg-[color:var(--accent-oxblood)] text-page px-3 py-1.5 text-[12.5px] font-semibold hover:opacity-90 disabled:opacity-50"
                     >
                       {dm.isPending ? "..." : "Ha, o‘chir"}
                     </button>
                     <button
                       type="button"
                       onClick={() => setConfirming(false)}
-                      className="rounded-full border border-border px-3 py-1.5 text-[12.5px] font-medium hover:bg-muted/60"
+                      className="rounded-full border border-rule-strong bg-[color:var(--page-elevated)] px-3 py-1.5 text-[12.5px] font-semibold text-ink hover:border-[color:var(--accent-oxblood)]"
                     >
                       Bekor
                     </button>

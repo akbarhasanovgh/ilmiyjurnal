@@ -36,7 +36,7 @@ function Kutubxona() {
       const key = `${r.volume}-${r.number}`;
       const prev = seen.get(key);
       if (prev) prev.count += 1;
-      else seen.set(key, { key, label: `${r.volume}-jild, ${r.number}-son`, count: 1 });
+      else seen.set(key, { key, label: `${r.volume}-jild · ${r.number}-son`, count: 1 });
     }
     return Array.from(seen.values());
   }, [rows]);
@@ -60,115 +60,145 @@ function Kutubxona() {
     setState(next);
   };
 
+  const clearAll = () => {
+    setIssueFilter(new Set());
+    setFieldFilter(new Set());
+  };
+  const hasFilters = issueFilter.size + fieldFilter.size > 0;
+
   return (
     <AuthorShell>
-      <div className="px-10 md:px-14 py-12">
-        <header className="mb-10 max-w-3xl">
-          <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-muted-foreground">
-            Jurnal arxivi
-          </p>
-          <h1 className="font-serif text-[36px] leading-tight tracking-tight mt-3 text-foreground">
-            Maqolalar
-          </h1>
-          <p className="text-[14px] text-muted-foreground mt-3 leading-relaxed">
-            Nashr etilgan sonlardagi maqolalar ro‘yxati. Har bir maqola tegishli
-            sonning ichida ochiladi.
-          </p>
-        </header>
+      <div className="max-w-6xl mx-auto px-6 md:px-10 py-10">
+        {/* Hero */}
+        <div className="rounded-3xl bg-[color:var(--surface-sunken)] p-8 md:p-10 mb-8">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div className="max-w-[42rem]">
+              <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+                Jurnal arxivi
+              </span>
+              <h1
+                className="font-semibold leading-tight tracking-tight text-ink"
+                style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.25rem)" }}
+              >
+                Maqolalar
+              </h1>
+              <p className="mt-3 text-[14px] text-ink-soft leading-relaxed max-w-[60ch]">
+                Nashr etilgan sonlardagi maqolalar ro‘yxati. Yo‘nalish yoki son
+                bo‘yicha filtrlang.
+              </p>
+            </div>
+            <div className="flex items-center gap-8">
+              <div className="text-right">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint">Maqolalar</p>
+                <p className="text-3xl font-semibold text-ink mt-1 tabular-nums">{filtered.length}</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-12 gap-10">
+        <div className="grid grid-cols-12 gap-6">
           {/* Facets */}
-          <aside className="col-span-12 md:col-span-3 space-y-8">
-            <FilterGroup title="Jild va son">
-              {issues.map((i) => (
-                <FilterRow
-                  key={i.key}
-                  label={i.label}
-                  count={i.count}
-                  checked={issueFilter.has(i.key)}
-                  onChange={() => toggle(issueFilter, i.key, setIssueFilter)}
-                />
-              ))}
-            </FilterGroup>
-
-            <FilterGroup title="Yo‘nalish">
-              {fields.map((f) => (
-                <FilterRow
-                  key={f.label}
-                  label={f.label}
-                  count={f.count}
-                  checked={fieldFilter.has(f.label)}
-                  onChange={() => toggle(fieldFilter, f.label, setFieldFilter)}
-                />
-              ))}
-            </FilterGroup>
+          <aside className="col-span-12 md:col-span-3 space-y-4">
+            <div className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-6">
+              <div className="flex items-baseline justify-between mb-4">
+                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-ink">Filtrlar</p>
+                {hasFilters && (
+                  <button
+                    onClick={clearAll}
+                    className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[color:var(--accent-oxblood)] hover:opacity-80"
+                  >
+                    Tozalash
+                  </button>
+                )}
+              </div>
+              <FilterGroup title="Yo‘nalish">
+                {fields.map((f) => (
+                  <FilterRow
+                    key={f.label}
+                    label={f.label}
+                    count={f.count}
+                    checked={fieldFilter.has(f.label)}
+                    onChange={() => toggle(fieldFilter, f.label, setFieldFilter)}
+                  />
+                ))}
+              </FilterGroup>
+              <div className="h-px bg-[color:var(--rule)] my-5" />
+              <FilterGroup title="Jild va son">
+                {issues.map((i) => (
+                  <FilterRow
+                    key={i.key}
+                    label={i.label}
+                    count={i.count}
+                    checked={issueFilter.has(i.key)}
+                    onChange={() => toggle(issueFilter, i.key, setIssueFilter)}
+                  />
+                ))}
+              </FilterGroup>
+            </div>
           </aside>
 
           {/* List */}
-          <section className="col-span-12 md:col-span-9">
+          <section className="col-span-12 md:col-span-9 space-y-4">
             {filtered.length === 0 ? (
-              <div className="rounded-3xl border border-dashed border-border/70 p-12 text-center">
-                <p className="font-serif text-[18px] text-foreground">
-                  Filtrlar bo‘yicha maqola topilmadi
-                </p>
-                <p className="text-[13px] text-muted-foreground mt-2">
+              <div className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-12 text-center">
+                <p className="text-lg font-semibold text-ink">Maqola topilmadi</p>
+                <p className="text-[13px] text-ink-muted mt-2">
                   Filtrni tozalab, boshqadan urinib ko‘ring.
                 </p>
               </div>
             ) : (
-              <ul className="divide-y divide-border/60 border-y border-border/60">
-                {filtered.map((r) => (
-                  <li key={r.manuscriptId} className="py-7">
-                    <div className="flex items-baseline justify-between gap-6 mb-3">
-                      <p className="text-[10.5px] font-semibold tracking-[0.16em] uppercase text-muted-foreground">
-                        {r.field}
-                      </p>
-                      <p className="text-[11.5px] font-mono tracking-wide text-muted-foreground shrink-0">
-                        {r.manuscriptId}
-                      </p>
+              filtered.map((r) => (
+                <article
+                  key={r.manuscriptId}
+                  className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-6 md:p-8 shadow-[0_1px_0_rgba(23,20,18,0.03)]"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em]">
+                      {r.field}
+                    </span>
+                    <span className="text-[11.5px] font-mono tracking-wider text-ink-faint">
+                      {r.manuscriptId}
+                    </span>
+                  </div>
+                  <h2 className="text-xl md:text-[22px] font-semibold leading-snug tracking-tight text-ink">
+                    {r.title}
+                  </h2>
+                  <p className="text-[13.5px] text-ink mt-3">{r.authors}</p>
+                  {r.affiliation && (
+                    <p className="text-[12.5px] text-ink-muted mt-1 italic">{r.affiliation}</p>
+                  )}
+                  {r.excerpt && (
+                    <p className="text-[13.5px] text-ink-soft mt-3 leading-relaxed max-w-[70ch]">
+                      {r.excerpt}
+                    </p>
+                  )}
+                  <div className="flex flex-wrap items-center gap-4 mt-5 text-[12px] text-ink-muted">
+                    <span>
+                      {r.volume}-jild · {r.number}-son · {r.month} {r.year}
+                    </span>
+                    <span className="font-mono">bet {r.pages}</span>
+                    <Link
+                      to="/arxiv/$jild/$son"
+                      params={{ jild: String(r.volume), son: String(r.number) }}
+                      className="ml-auto inline-flex items-center rounded-full border border-rule-strong bg-[color:var(--surface-sunken)] px-4 py-1.5 text-[12px] font-semibold text-ink hover:border-[color:var(--accent-oxblood)] hover:text-[color:var(--accent-oxblood)] transition-colors"
+                    >
+                      Sonda ko‘rish →
+                    </Link>
+                  </div>
+                  {r.keywords && r.keywords.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mt-4">
+                      {r.keywords.map((k) => (
+                        <span
+                          key={k}
+                          className="text-[11px] px-2.5 py-0.5 rounded-full bg-[color:var(--surface-sunken)] text-ink-muted"
+                        >
+                          {k}
+                        </span>
+                      ))}
                     </div>
-                    <h2 className="font-serif text-[22px] leading-snug tracking-tight text-foreground">
-                      {r.title}
-                    </h2>
-                    <p className="text-[13.5px] text-foreground mt-2">{r.authors}</p>
-                    {r.affiliation && (
-                      <p className="text-[12.5px] text-muted-foreground mt-1 italic">
-                        {r.affiliation}
-                      </p>
-                    )}
-                    {r.excerpt && (
-                      <p className="text-[13.5px] text-muted-foreground mt-3 leading-relaxed max-w-[68ch]">
-                        {r.excerpt}
-                      </p>
-                    )}
-                    <div className="flex items-center gap-5 mt-5 text-[12px] text-muted-foreground">
-                      <span>
-                        {r.volume}-jild, {r.number}-son · {r.month} {r.year}
-                      </span>
-                      <span className="font-mono">bet {r.pages}</span>
-                      <Link
-                        to="/arxiv/$jild/$son"
-                        params={{ jild: String(r.volume), son: String(r.number) }}
-                        className="ml-auto text-[12.5px] text-foreground underline underline-offset-4 decoration-1 hover:decoration-2 transition-all"
-                      >
-                        Sonda ko‘rish →
-                      </Link>
-                    </div>
-                    {r.keywords && r.keywords.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mt-4">
-                        {r.keywords.map((k) => (
-                          <span
-                            key={k}
-                            className="text-[11px] px-2 py-0.5 rounded-full border border-border/60 text-muted-foreground"
-                          >
-                            {k}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
+                  )}
+                </article>
+              ))
             )}
           </section>
         </div>
@@ -180,19 +210,16 @@ function Kutubxona() {
 function FilterGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-foreground mb-3">
+      <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-ink-muted mb-3">
         {title}
       </p>
-      <ul className="space-y-1.5">{children}</ul>
+      <ul className="space-y-1">{children}</ul>
     </div>
   );
 }
 
 function FilterRow({
-  label,
-  count,
-  checked,
-  onChange,
+  label, count, checked, onChange,
 }: {
   label: string;
   count: number;
@@ -201,17 +228,19 @@ function FilterRow({
 }) {
   return (
     <li>
-      <label className="flex items-center gap-2.5 text-[13px] text-foreground cursor-pointer group">
+      <label
+        className={`flex items-center gap-2.5 text-[13px] cursor-pointer px-2.5 py-1.5 rounded-2xl transition-colors ${
+          checked ? "bg-[color:var(--surface-sunken)] text-ink" : "text-ink-soft hover:bg-[color:var(--surface-sunken)]"
+        }`}
+      >
         <input
           type="checkbox"
           checked={checked}
           onChange={onChange}
-          className="w-3.5 h-3.5 rounded-sm border-border accent-foreground"
+          className="w-3.5 h-3.5 rounded-sm accent-[color:var(--accent-oxblood)]"
         />
-        <span className="flex-1 group-hover:text-foreground transition-colors">
-          {label}
-        </span>
-        <span className="text-[11.5px] font-mono text-muted-foreground">({count})</span>
+        <span className="flex-1">{label}</span>
+        <span className="text-[11px] font-mono text-ink-faint">({count})</span>
       </label>
     </li>
   );

@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { FilePlus2, FileText, BookMarked, ArrowRight } from "lucide-react";
+import { FilePlus2, FileText, ArrowRight } from "lucide-react";
 import { AuthorShell } from "@/components/author-shell";
 import { WorkflowBadge } from "@/components/workflow-badge";
 import { getSessionContext } from "@/lib/auth.functions";
@@ -10,7 +10,7 @@ import { ARCHIVE_VOLUMES } from "@/lib/archive-preview";
 import type { WorkflowState } from "@/lib/workflow";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Bosh panel — Tahririyat" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Bosh sahifa — Tahririyat" }, { name: "robots", content: "noindex" }] }),
   component: Dashboard,
 });
 
@@ -32,34 +32,37 @@ function Dashboard() {
   const firstName = ctx?.profile?.full_name?.split(" ")[0] ?? "";
   const recent = (subsQ.data ?? []).slice(0, 5);
 
-  // latest 3 published issues for the "explore" strip
   const publishedIssues = ARCHIVE_VOLUMES
     .flatMap((v) => v.issues.map((i) => ({ ...i, volume: v.volume, year: v.year })))
     .slice(0, 3);
 
   return (
     <AuthorShell>
-      <div className="px-10 md:px-14 py-12 max-w-5xl">
-        <div className="mb-12">
-          <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-muted-foreground">
+      <div className="max-w-5xl mx-auto px-6 md:px-10 py-10">
+        {/* Hero */}
+        <div className="rounded-3xl bg-[color:var(--surface-sunken)] p-8 md:p-12 mb-8">
+          <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
             Bosh sahifa
-          </p>
-          <h1 className="font-serif text-[40px] leading-[1.1] tracking-tight mt-3 text-foreground">
+          </span>
+          <h1
+            className="font-semibold leading-tight tracking-tight text-ink"
+            style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)" }}
+          >
             Xush kelibsiz{firstName ? `, ${firstName}` : ""}
           </h1>
-          <p className="text-[15px] text-muted-foreground mt-4 max-w-xl leading-relaxed">
-            Bu yerdan yangi maqola topshirasiz, topshirilgan ishlaringiz holatini
-            kuzatasiz va jurnalning oxirgi nashrlarini o‘qiysiz.
+          <p className="mt-4 text-[15px] text-ink-soft leading-relaxed max-w-[58ch]">
+            Bu yerdan yangi maqola topshirasiz, topshirilgan ishlaringiz
+            holatini kuzatasiz va jurnalning oxirgi nashrlarini o‘qiysiz.
           </p>
         </div>
 
         {/* Primary actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
           <ActionTile
             to="/submissions/new"
             icon={FilePlus2}
             title="Yangi maqola topshirish"
-            note="Besh bosqichli topshirish shakli"
+            note="Yetti bosqichli topshirish shakli"
             primary
           />
           <ActionTile
@@ -70,17 +73,14 @@ function Dashboard() {
           />
         </div>
 
-        {/* Recent submissions */}
-        <section className="mb-14">
-          <div className="flex items-baseline justify-between mb-5">
-            <h2 className="font-serif text-[22px] tracking-tight text-foreground">
+        {/* Recent */}
+        <section className="mb-10">
+          <div className="flex items-baseline justify-between mb-4">
+            <h2 className="text-[11px] font-bold uppercase tracking-[0.22em] text-ink">
               So‘nggi maqolalaringiz
             </h2>
             {(subsQ.data?.length ?? 0) > 5 && (
-              <Link
-                to="/submissions"
-                className="text-[13px] text-muted-foreground hover:text-foreground transition-colors"
-              >
+              <Link to="/submissions" className="text-[11px] uppercase tracking-[0.2em] font-semibold text-ink-muted hover:text-[color:var(--accent-oxblood)] transition-colors">
                 Barchasi →
               </Link>
             )}
@@ -89,36 +89,36 @@ function Dashboard() {
           {subsQ.isPending ? (
             <div className="space-y-2">
               {[0, 1, 2].map((i) => (
-                <div key={i} className="h-16 rounded-2xl bg-muted/50 animate-pulse" />
+                <div key={i} className="h-16 rounded-3xl bg-[color:var(--surface-sunken)] animate-pulse" />
               ))}
             </div>
           ) : recent.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-border/70 p-10 text-center">
-              <p className="font-serif text-[18px] text-foreground">Hali maqola topshirmadingiz</p>
-              <p className="text-[13.5px] text-muted-foreground mt-2 mb-5">
+            <div className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-10 text-center">
+              <p className="text-lg font-semibold text-ink">Hali maqola topshirmadingiz</p>
+              <p className="text-[13.5px] text-ink-muted mt-2 mb-5">
                 Birinchi maqolangizni topshirish uchun shaklni to‘ldiring.
               </p>
               <Link
                 to="/submissions/new"
-                className="inline-flex items-center gap-1.5 rounded-full bg-foreground text-background px-5 py-2.5 text-[13.5px] font-medium hover:opacity-90 transition-opacity active:scale-[0.97]"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--accent-oxblood)] text-page px-5 py-2.5 text-[13px] font-semibold hover:opacity-90 transition-opacity"
               >
                 Boshlash <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
           ) : (
-            <div className="rounded-3xl border border-border/60 divide-y divide-border/60 overflow-hidden">
+            <div className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule divide-y divide-[color:var(--rule)] overflow-hidden shadow-[0_1px_0_rgba(23,20,18,0.03)]">
               {recent.map((s) => (
                 <Link
                   key={s.id}
                   to="/submissions/$id"
                   params={{ id: s.id }}
-                  className="flex items-center gap-4 px-5 py-4 hover:bg-muted/40 transition-colors group"
+                  className="flex items-center gap-4 px-6 py-4 hover:bg-[color:var(--surface-sunken)] transition-colors"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-[15px] font-medium text-foreground truncate">
-                      {s.title || <span className="italic text-muted-foreground">Sarlavhasiz qoralama</span>}
+                    <p className="text-[15px] font-medium text-ink truncate">
+                      {s.title || <span className="italic text-ink-faint">Sarlavhasiz qoralama</span>}
                     </p>
-                    <p className="text-[11.5px] font-mono tracking-wide text-muted-foreground mt-1">
+                    <p className="text-[11.5px] font-mono tracking-wider text-ink-faint mt-1">
                       {s.manuscript_id} · {new Date(s.updated_at).toLocaleDateString("uz-UZ")}
                     </p>
                   </div>
@@ -131,32 +131,29 @@ function Dashboard() {
 
         {/* Explore */}
         <section>
-          <div className="flex items-baseline justify-between mb-5">
-            <h2 className="font-serif text-[22px] tracking-tight text-foreground">
+          <div className="flex items-baseline justify-between mb-4">
+            <h2 className="text-[11px] font-bold uppercase tracking-[0.22em] text-ink">
               Jurnalni o‘qing
             </h2>
-            <Link
-              to="/arxiv"
-              className="text-[13px] text-muted-foreground hover:text-foreground transition-colors"
-            >
+            <Link to="/kutubxona" className="text-[11px] uppercase tracking-[0.2em] font-semibold text-ink-muted hover:text-[color:var(--accent-oxblood)] transition-colors">
               Arxivga o‘tish →
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {publishedIssues.map((iss) => (
-              <a
+              <Link
                 key={`${iss.volume}-${iss.number}`}
-                href={`/arxiv/${iss.volume}/${iss.number}`}
-                className="rounded-2xl border border-border/60 p-5 hover:border-foreground/40 hover:shadow-sm transition-all group"
+                to="/arxiv/$jild/$son"
+                params={{ jild: String(iss.volume), son: String(iss.number) }}
+                className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-5 hover:border-[color:var(--accent-oxblood)] transition-colors"
               >
-                <BookMarked className="h-4 w-4 text-muted-foreground mb-3" strokeWidth={1.8} />
-                <p className="font-serif text-[17px] leading-snug text-foreground">
-                  {iss.volume}-jild, {iss.number}-son
+                <p className="text-[10px] uppercase tracking-[0.22em] text-ink-faint mb-2">
+                  {iss.month} {iss.year}
                 </p>
-                <p className="text-[11.5px] font-mono tracking-wide text-muted-foreground mt-2">
-                  {iss.year}
+                <p className="text-[17px] font-semibold text-ink leading-snug">
+                  {iss.volume}-jild · {iss.number}-son
                 </p>
-              </a>
+              </Link>
             ))}
           </div>
         </section>
@@ -166,11 +163,7 @@ function Dashboard() {
 }
 
 function ActionTile({
-  to,
-  icon: Icon,
-  title,
-  note,
-  primary,
+  to, icon: Icon, title, note, primary,
 }: {
   to: string;
   icon: typeof FilePlus2;
@@ -178,34 +171,31 @@ function ActionTile({
   note: string;
   primary?: boolean;
 }) {
+  const base =
+    "group relative rounded-3xl p-7 flex flex-col justify-between min-h-[168px] transition-all active:scale-[0.99]";
+  const primaryCls =
+    "bg-[color:var(--accent-oxblood)] text-page hover:opacity-95";
+  const secondaryCls =
+    "bg-[color:var(--page-elevated)] border border-rule text-ink hover:border-[color:var(--accent-oxblood)] shadow-[0_1px_0_rgba(23,20,18,0.03)]";
+
   return (
     <Link
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       to={to as any}
-      className={
-        primary
-          ? "group relative rounded-3xl bg-foreground text-background p-7 flex flex-col justify-between min-h-[168px] hover:opacity-95 transition-all active:scale-[0.99] shadow-sm"
-          : "group relative rounded-3xl bg-muted/40 border border-border/60 p-7 flex flex-col justify-between min-h-[168px] hover:bg-muted/60 hover:border-border transition-all active:scale-[0.99]"
-      }
+      className={`${base} ${primary ? primaryCls : secondaryCls}`}
     >
       <div
         className={
           primary
-            ? "w-11 h-11 rounded-2xl bg-background/15 flex items-center justify-center"
-            : "w-11 h-11 rounded-2xl bg-background flex items-center justify-center border border-border/60"
+            ? "w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center"
+            : "w-11 h-11 rounded-2xl bg-[color:var(--surface-sunken)] flex items-center justify-center"
         }
       >
         <Icon className="h-5 w-5" strokeWidth={1.8} />
       </div>
       <div>
-        <p className="font-serif text-[22px] leading-tight tracking-tight">{title}</p>
-        <p
-          className={
-            primary
-              ? "text-[13px] mt-1.5 text-background/70 flex items-center gap-1"
-              : "text-[13px] mt-1.5 text-muted-foreground flex items-center gap-1"
-          }
-        >
+        <p className="text-[22px] font-semibold leading-tight tracking-tight">{title}</p>
+        <p className={`text-[13px] mt-1.5 flex items-center gap-1 ${primary ? "opacity-80" : "text-ink-muted"}`}>
           {note}
           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
         </p>

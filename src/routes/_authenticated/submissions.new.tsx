@@ -15,60 +15,59 @@ function NewSubmission() {
   const firedRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
 
+  const start = async () => {
+    try {
+      const row = await create();
+      navigate({ to: "/submissions/$id/edit", params: { id: row.id }, replace: true });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Qoralama yaratib bo‘lmadi");
+    }
+  };
+
   useEffect(() => {
     if (firedRef.current) return;
     firedRef.current = true;
-    (async () => {
-      try {
-        const row = await create();
-        navigate({ to: "/submissions/$id/edit", params: { id: row.id }, replace: true });
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Qoralama yaratib bo‘lmadi");
-      }
-    })();
-  }, [create, navigate]);
+    void start();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AuthorShell>
-      <div className="px-10 md:px-14 py-16 max-w-2xl">
+      <div className="max-w-3xl mx-auto px-6 md:px-10 py-16">
         {error ? (
-          <div className="space-y-4">
-            <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-muted-foreground">
+          <div className="rounded-3xl bg-[color:var(--page-elevated)] border border-rule p-8">
+            <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
               Xatolik
-            </p>
-            <p className="font-serif text-[22px] leading-snug text-foreground">
+            </span>
+            <p className="text-2xl font-semibold text-ink leading-snug">
               Qoralama yaratib bo‘lmadi
             </p>
-            <p className="text-[13.5px] text-muted-foreground">{error}</p>
+            <p className="text-[14px] text-ink-soft mt-3 leading-relaxed">{error}</p>
             <button
               onClick={() => {
-                firedRef.current = false;
+                firedRef.current = true;
                 setError(null);
-                // Trigger effect again via state change
-                setError((s) => s);
-                (async () => {
-                  firedRef.current = true;
-                  try {
-                    const row = await create();
-                    navigate({ to: "/submissions/$id/edit", params: { id: row.id }, replace: true });
-                  } catch (e) {
-                    setError(e instanceof Error ? e.message : "Qoralama yaratib bo‘lmadi");
-                  }
-                })();
+                void start();
               }}
-              className="inline-flex rounded-full bg-foreground text-background px-5 py-2.5 text-[13.5px] font-medium hover:opacity-90 transition-opacity"
+              className="mt-6 inline-flex rounded-full bg-[color:var(--accent-oxblood)] text-page px-5 py-2.5 text-[13px] font-semibold hover:opacity-90 transition-opacity"
             >
               Qayta urinib ko‘rish
             </button>
           </div>
         ) : (
-          <div className="space-y-6 animate-pulse">
-            <div className="h-3 w-32 rounded bg-muted" />
-            <div className="h-8 w-2/3 rounded bg-muted" />
-            <div className="h-3 w-1/2 rounded bg-muted" />
-            <div className="pt-6 space-y-3">
-              <div className="h-24 rounded-2xl bg-muted/60" />
-              <div className="h-24 rounded-2xl bg-muted/60" />
+          <div className="rounded-3xl bg-[color:var(--surface-sunken)] p-10">
+            <span className="inline-flex items-center px-3 py-1 rounded-full bg-[color:var(--accent-oxblood)] text-page text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+              Yangi maqola
+            </span>
+            <p className="text-2xl font-semibold text-ink leading-snug">
+              Qoralama tayyorlanmoqda…
+            </p>
+            <p className="text-[14px] text-ink-soft mt-3">
+              Sizni topshirish shakliga o‘tkazamiz.
+            </p>
+            <div className="pt-8 space-y-3 animate-pulse">
+              <div className="h-24 rounded-3xl bg-[color:var(--page-elevated)]" />
+              <div className="h-24 rounded-3xl bg-[color:var(--page-elevated)]" />
             </div>
           </div>
         )}
