@@ -4,7 +4,6 @@ import { PublicShell } from "@/components/public-shell";
 import { ArticleCard } from "@/components/article-card";
 import { CURRENT_ISSUE } from "@/lib/archive-preview";
 import { getTopViewedArticles, getArticleStatsMap } from "@/lib/article-views";
-import coverAsset from "@/assets/issue-13-32-cover.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -27,6 +26,7 @@ const FIELDS: [string, string, number][] = [
 
 function Home() {
   const issue = CURRENT_ISSUE;
+  const issueCoverUrl = issue.coverUrl;
   const previewPapers = issue.papers.slice(0, 3);
   const previewIds = previewPapers.map((p) => p.manuscriptId);
 
@@ -101,17 +101,19 @@ function Home() {
                   <p className="text-2xl font-semibold text-ink mt-1 tabular-nums">{issue.papers.length}</p>
                 </div>
               </div>
-              <Link
-                to="/joriy-son"
-                className="block w-[168px] md:w-[184px] aspect-[210/297] overflow-hidden rounded-2xl border border-rule bg-[color:var(--page-elevated)] shadow-[0_8px_28px_rgba(23,20,18,0.12)] hover:shadow-[0_14px_36px_rgba(23,20,18,0.18)] transition-shadow"
-                aria-label="Joriy son muqovasi"
-              >
-                <img
-                  src={coverAsset.url}
-                  alt={`${issue.volume}-jild · ${issue.number}-son muqovasi`}
-                  className="h-full w-full object-cover"
-                />
-              </Link>
+              {issueCoverUrl && (
+                <Link
+                  to="/joriy-son"
+                  className="block w-[168px] md:w-[184px] aspect-[210/297] overflow-hidden rounded-2xl border border-rule bg-[color:var(--page-elevated)] shadow-[0_8px_28px_rgba(23,20,18,0.12)] hover:shadow-[0_14px_36px_rgba(23,20,18,0.18)] transition-shadow"
+                  aria-label="Joriy son muqovasi"
+                >
+                  <img
+                    src={issueCoverUrl}
+                    alt={`${issue.volume}-jild · ${issue.number}-son muqovasi`}
+                    className="h-full w-full object-cover"
+                  />
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -146,7 +148,7 @@ function Home() {
                     downloads: previewStats?.get(p.manuscriptId)?.download_count ?? 0,
                     abstract: p.excerpt ?? "",
                     slug: p.manuscriptId,
-                    coverUrl: coverAsset.url,
+                    coverUrl: issueCoverUrl,
                     issueLabel: `${issue.volume}-jild · ${issue.number}-son`,
                   }}
                 />
